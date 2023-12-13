@@ -1,0 +1,19 @@
+*~
+*.swp
+.idea/
+ci/.bootstrap
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Test caches
+.coverage
+.mypy.cache/
+.tox/
+
+# MacOS
+.DS_Store
+.AppleDouble
+.LSOverride

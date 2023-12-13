@@ -1,0 +1,34 @@
+---
+# See https://pre-commit.com/#new-hooks
+# reliabot: mapping=2 offset=0 sequence=2 width=77
+- id: reliabot
+  name: Maintain dependabot configuration
+  description: Searches repo for package ecosystems and updates dependabot.
+  entry: reliabot
+  args: [--update]
+  pass_filenames: false
+  language: python
+  stages: [manual, pre-commit, pre-merge-commit, pre-push]
+  exclude_types: [binary, directory, symlink]
+  # prettier-ignore
+  files: >-
+    (?x)(^|/)(
+      gem(s[.]rb|file)|.*[.]gemspec|
+      cargo[.]toml|
+      composer[.]json|
+      .*(dockerfile.*|values[\w-]*[.]ya?ml)|
+      elm(-package)?[.]json|
+      action[.]yml|
+      [.]gitmodules|
+      go[.]mod|
+      build[.]gradle([.]kts)?|
+      mix[.]exs|
+      pom[.]xml|
+      package[.]json|
+      nuget[.]config|
+      requirements[.]txt|pyproject[.]toml|
+      pubspec[.]yaml|
+      .*[.](?:hcl|tf)|
+      [.]github/workflows/[^/]*[.]ya?ml|
+      [.]github/dependabot[.]yml
+      )$

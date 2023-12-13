@@ -1,0 +1,20 @@
+---
+# reliabot: mapping=9 offset=4
+# reliabot: sequence=7
+# reliabot: width=50
+# reliabot: yaml-start=off
+# reliabot: unknown=known sequence=nonsense
+# did-not-say=reliabot: sequence=1
+name: reliabot-testing
+description: Test configure_dumper()
+runs:
+  using: composite
+  steps:
+    - run: >
+        echo Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
+        echo Nor is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but occasionally circumstances occur in which toil and pain can procure him some great pleasure.
+      shell: bash
+
+# Presence of trailing blank line and YAML end marker (...) are used in self-tests.
+
+...

@@ -1,0 +1,25 @@
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.autopep8]
+ignore = ["E203"]
+
+[tool.bandit]
+skips = ["B404", "B603"]
+
+[tool.isort]
+profile = "black"
+
+[tool.poetry]
+name = "reliabot"
+version = "0.1.0"
+description = "Maintain GitHub Dependabot configuration."
+authors = ["Alexander Dupuy <alex@dupuy.us>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"  # 3.8 end-of-life 2024-10
+"ruamel.yaml" = "^0.17.32"
+pyre2 = "^0.3.6"

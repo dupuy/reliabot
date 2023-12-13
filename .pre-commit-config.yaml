@@ -1,0 +1,345 @@
+---
+# See https://pre-commit.com/ - to use these pre-commit (and commit-msg) hooks:
+#   $ brew install pre-commit  OR  $ pip install pre-commit
+# Then, in this repository:
+#   $ pre-commit install && pre-commit install --hook-type commit-msg
+#
+# Hooks should be limited to formatters, static checkers, and auto-fixers.
+# Please do not add tests here as tests can be slow, pre-commit is not enforced
+# and tests should always be run before merging.
+#
+# reliabot: mapping=4 offset=2 sequence=4 width=75
+default_stages: [commit]
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      # - id: autopep8-wrapper
+      #  args: ['-i', '--ignore=E501']
+      - id: check-added-large-files
+        args: [--maxkb=50]
+      - id: check-builtin-literals
+      - id: check-case-conflict
+      - id: check-docstring-first
+      - id: check-executables-have-shebangs
+      - id: check-merge-conflict
+        args: [--assume-in-merge]
+      - id: check-shebang-scripts-are-executable
+      - id: check-symlinks
+      - id: check-toml
+      - id: check-vcs-permalinks
+      # - id: check-xml
+      - id: check-yaml
+      - id: debug-statements
+      - id: destroyed-symlinks
+      - id: detect-private-key
+      - id: end-of-file-fixer
+      - id: fix-byte-order-marker
+      - id: fix-encoding-pragma
+        args: [--remove]
+      - id: forbid-submodules
+      - id: mixed-line-ending
+      # - id: name-tests-test
+      - id: no-commit-to-branch
+        args:
+          # - --branch=main
+          - --branch=master
+          - --pattern=.*[^A-Za-z0-9_-].*
+      # - id: sort-simple-yaml
+      - id: requirements-txt-fixer
+        exclude: reliabot/requirements.txt
+      - id: trailing-whitespace
+
+  # Local
+  - repo: local
+    hooks:
+      # prettier-ignore
+      - files: >-
+            (?x)(^|/)(
+              gem(s[.]rb|file)|.*[.]gemspec|
+              cargo[.]toml|
+              composer[.]json|
+              .*(dockerfile.*|values[\w-]*[.]ya?ml)|
+              elm(-package)?[.]json|
+              action[.]yml|
+              [.]gitmodules|
+              go[.]mod|
+              build[.]gradle([.]kts)?|
+              mix[.]exs|
+              pom[.]xml|
+              package[.]json|
+              nuget[.]config|
+              requirements[.]txt|pyproject[.]toml|
+              pubspec[.]yaml|
+              .*[.](?:hcl|tf)|
+              [.]github/workflows/[^/]*[.]ya?ml|
+              [.]github/dependabot[.]yml
+              )$
+        id: reliabot
+        args: [--update]
+        entry: reliabot/reliabot.py
+        language: script
+        name: maintain dependabot configuration
+        pass_filenames: false
+      - id: reliabot-pre-commit-files
+        entry: reliabot/reliabot.py --update-pre-commit
+        files: ^(reliabot/reliabot[.]py|[.]pre-commit-(config|hooks)[.]py)$
+        language: script
+        name: maintain pre-commit files configuration
+        pass_filenames: false
+
+  # Global
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.0.0
+    hooks:
+      - id: prettier
+        args: [--single-quote]
+        exclude: 'testdir/github/action[.]yml'
+        exclude_types: [markdown]
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.2.5
+    hooks:
+      - id: codespell
+        args: [-L, 'pullrequest,pullrequests']
+
+  # YAML
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.32.0
+    hooks:
+      - id: yamllint
+        args:
+          - --format
+          - parsable
+          - -d
+          - >-
+            {
+              extends: default,
+              rules: {
+                comments: {min-spaces-from-content: 1},
+                indentation: {indent-sequences: consistent},
+                line-length: {max: 150},
+                truthy: { check-keys: false}
+              }
+            }
+        exclude: styles|testdir/github/action[.]yml
+
+  # - repo: https://github.com/jumanjihouse/pre-commit-hook-yamlfmt
+  #   rev: 0.1.0
+  #   hooks:
+  #     - id: yamlfmt
+  #       args: [--mapping=2, --sequence=4, --offset=2, --width=80]
+
+  # Shell
+  # - repo: https://github.com/jumanjihouse/pre-commit-hooks
+  #   rev: 3.0.0
+  #   hooks:
+  #     # - id: script-must-have-extension
+  #     - id: shfmt
+  #       args: [-i, '2', -ci]
+  # - repo: https://github.com/shellcheck-py/shellcheck-py
+  #   rev: v0.9.0.5
+  #   hooks:
+  #     - id: shellcheck
+
+  # Go
+  # - repo: https://github.com/syntaqx/git-hooks
+  #   rev: v0.0.18
+  #   hooks:
+  #     - id: go-fmt
+  #     - id: go-test
+  #     - id: go-mod-tidy
+  #     - id: go-generate
+  # - repo: https://github.com/golangci/golangci-lint
+  #   rev: v1.38.0
+  #   hooks:
+  #     - id: golangci-lint
+
+  # Python
+  - repo: https://github.com/pre-commit/mirrors-autopep8
+    rev: v2.0.2
+    hooks:
+      - id: autopep8
+  - repo: https://github.com/myint/autoflake
+    rev: v2.2.0
+    hooks:
+      - id: autoflake
+  - repo: https://github.com/myint/docformatter
+    rev: v1.7.5
+    hooks:
+      - id: docformatter
+        args: [--in-place, --wrap-descriptions=79]
+  - repo: https://github.com/asottile/reorder-python-imports
+    rev: v3.10.0
+    hooks:
+      - id: reorder-python-imports
+        args:
+          - --py37-plus
+          - --add-import=from __future__ import annotations
+          - --remove-import=from typing import Dict
+          - --remove-import=from typing import FrozenSet
+          - --remove-import=from typing import List
+          - --remove-import=from typing import Set
+          - --remove-import=from typing import Tuple
+        files: ^(?!setup.py$).*\.py$
+  - repo: https://github.com/DanielNoord/pydocstringformatter
+    rev: v0.7.3
+    hooks:
+      - id: pydocstringformatter
+  - repo: https://github.com/PyCQA/prospector
+    rev: 1.10.2
+    hooks:
+      - id: prospector
+        # Needed for pylint import checks.
+        # See https://stackoverflow.com/a/61238571/18829.
+        additional_dependencies:
+          - pyre2
+          - ruamel.yaml
+        args: [--messages-only]
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.5
+    hooks:
+      - id: bandit
+        args: [-c, pyproject.toml]
+        additional_dependencies: ['bandit[toml]']
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.4.1
+    hooks:
+      - id: mypy
+  - repo: https://github.com/pre-commit/pygrep-hooks
+    rev: v1.10.0
+    hooks:
+      - id: python-check-blanket-noqa
+      - id: python-check-blanket-type-ignore
+      # - id: python-check-mock-methods
+      - id: python-no-eval
+      - id: python-no-log-warn
+      - id: python-use-type-annotations
+      # - id: rst-backticks
+      # - id: rst-directive-colons
+      # - id: rst-inline-touching-normal
+      - id: text-unicode-replacement-char
+  - repo: https://github.com/asottile/dead
+    rev: v1.5.2
+    hooks:
+      - id: dead
+  - repo: https://github.com/psf/black
+    rev: 23.7.0
+    hooks:
+      - id: black
+        args: [--line-length=79]
+
+  - repo: https://github.com/python-poetry/poetry
+    # see https://python-poetry.org/docs/master/pre-commit-hooks/#faq
+    rev: 1.5.0
+    hooks:
+      - id: poetry-check
+      - id: poetry-lock
+      - id: poetry-export
+        args:
+          - --format=requirements.txt
+          - --output=reliabot/requirements.txt
+          - --without-hashes
+
+  - repo: https://github.com/regebro/pyroma
+    rev: 49b828f53d514eab1402cfd6d0ba3acdde3a0938 # 3.3 works better than 4.2
+    hooks:
+      - id: pyroma
+
+  # Markdown
+  - repo: https://github.com/executablebooks/mdformat
+    rev: 0.7.16
+    hooks:
+      - id: mdformat
+        args:
+          - --number
+          - --wrap
+          - '79'
+        additional_dependencies:
+          - mdformat-beautysh # shell
+          - mdformat-black # python
+          - mdformat-config # json, toml, yaml
+          - mdformat-frontmatter # for Markdown & YAML
+          - mdformat-gfm # GitHub-flavored Markdown
+          - mdformat-tables # GitHub-flavored Markdown tables
+          - mdformat-toc # generate table of contents
+
+  - repo: https://github.com/markdownlint/markdownlint
+    rev: v0.12.0
+    hooks:
+      - id: markdownlint
+        args: [--style=.mdl-style.rb]
+
+  - repo: https://github.com/mineiros-io/pre-commit-hooks
+    rev: v0.5.0
+    hooks:
+      - id: markdown-link-check
+
+  # Terraform
+  # - repo: https://github.com/antonbabenko/pre-commit-terraform
+  #   rev: v1.80.0
+  #   hooks:
+  #     - id: terraform_fmt
+  #       exclude: (scripts|snippets)
+  #     - id: terraform_tflint
+  #       args:
+  #         - --args=--config=__GIT_WORKING_DIR__/.tflint.hcl
+  #       exclude: snippets
+  #     - id: terraform_tfsec
+  #       args:
+  #         - --args=--concise-output
+  #         - --args=--exclude-downloaded-modules
+
+  # Cloudformation
+  # - repo: https://github.com/awslabs/cfn-python-lint
+  #   rev: v0.44.7
+  #   hooks:
+  #     - id: cfn-python-lint
+
+  # Docker
+  # - repo: https://github.com/hadolint/hadolint
+  #   rev: v1.22.1
+  #   hooks:
+  #     - id: hadolint
+
+  # Git commit messages
+  # - repo: https://github.com/milin/giticket
+  #   rev: v1.4
+  #   hooks:
+  #     - id: giticket
+  #       args: [--mode=regex_match, '--format=[{ticket}] {commit_msg}']
+  #       stages: [commit-msg]
+  # - repo: https://github.com/commitizen-tools/commitizen
+  #   rev: v2.14.2
+  #   hooks:
+  #     - id: commitizen
+  #       stages: [commit-msg]
+  - repo: https://github.com/jorisroovers/gitlint
+    rev: v0.19.1
+    hooks:
+      - id: gitlint
+        stages: [commit-msg]
+
+  # Pre-commit
+  - repo: meta
+    hooks:
+      - id: check-hooks-apply
+      - id: check-useless-excludes
+
+  # Local hooks
+  - repo: local
+    hooks:
+      # Use param, raises, returns and var; use PEP484 annotations for types.
+      - id: check-docstring-keywords
+        name: Check docstring keywords
+        language: pygrep
+        entry: ^\s+:((arg(ument)?|[ci]var|except(ion)?|raise)|(return|(r|var)?type):)\s
+        types: [python]
+      # No parameter for returns, exactly 1 for param, raises and var.
+      - id: check-docstring-keyword-usage
+        name: Check docstring keyword usage
+        language: pygrep
+        entry: ^\s+:(returns\s[^:]*|(param|raises|var)(\s+[^:\s]+\s[^:]*)?):\s
+        types: [python]
+ci:
+  autoupdate_schedule: monthly

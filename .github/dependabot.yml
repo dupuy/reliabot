@@ -1,0 +1,8 @@
+---
+# reliabot: mapping=4 offset=2 sequence=4
+# reliabot: ignore=testdir/
+# reliabot: ignore=reliabot
+version: 2
+updates:
+  - directory: /
+    package-ecosystem: pip

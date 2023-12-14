@@ -344,5 +344,6 @@ ci:
   autoupdate_schedule: monthly
   skip:
     - markdown-link-check
+    - poetry-lock
     - reliabot
     - reliabot-pre-commit-files

@@ -77,15 +77,22 @@ repos:
               [.]github/dependabot[.]yml
               )$
         id: reliabot
+        additional_dependencies:
+          - ruamel.yaml
+          - pyre2-updated # requires C++ RE2 library (`brew install re2`)
         args: [--update]
         entry: reliabot/reliabot.py
-        language: script
+        language: python
         name: maintain dependabot configuration
         pass_filenames: false
       - id: reliabot-pre-commit-files
-        entry: reliabot/reliabot.py --update-pre-commit
+        additional_dependencies:
+          - ruamel.yaml
+          - pyre2-updated # requires C++ RE2 library (`brew install re2`)
+        args: [--update-pre-commit]
+        entry: reliabot/reliabot.py
         files: ^(reliabot/reliabot[.]py|[.]pre-commit-(config|hooks)[.]py)$
-        language: script
+        language: python
         name: maintain pre-commit files configuration
         pass_filenames: false
 
@@ -95,7 +102,7 @@ repos:
     hooks:
       - id: prettier
         args: [--single-quote]
-        exclude: 'testdir/github/action[.]yml'
+        exclude: testdir/github/action[.]yml
         exclude_types: [markdown]
   - repo: https://github.com/codespell-project/codespell
     rev: v2.2.5
@@ -227,7 +234,6 @@ repos:
     hooks:
       - id: black
         args: [--line-length=79]
-
   - repo: https://github.com/python-poetry/poetry
     # see https://python-poetry.org/docs/master/pre-commit-hooks/#faq
     rev: 1.5.0
@@ -239,11 +245,6 @@ repos:
           - --format=requirements.txt
           - --output=reliabot/requirements.txt
           - --without-hashes
-
-  - repo: https://github.com/regebro/pyroma
-    rev: 49b828f53d514eab1402cfd6d0ba3acdde3a0938 # 3.3 works better than 4.2
-    hooks:
-      - id: pyroma
 
   # Markdown
   - repo: https://github.com/executablebooks/mdformat
@@ -345,5 +346,3 @@ ci:
   skip:
     - markdown-link-check
     - poetry-lock
-    - reliabot
-    - reliabot-pre-commit-files

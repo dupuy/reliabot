@@ -8,6 +8,10 @@
   args: [--update]
   pass_filenames: false
   language: python
+  additional_dependencies:
+    - ruamel.yaml
+    # If possible, add pyre2-updated or pyre2 as additional_dependencies
+    # in your .pre-commit-config.yaml to get RE2 support (libre2 required)
   stages: [manual, pre-commit, pre-merge-commit, pre-push]
   exclude_types: [binary, directory, symlink]
   # prettier-ignore

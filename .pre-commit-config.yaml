@@ -193,8 +193,10 @@ repos:
         # Needed for pylint import checks.
         # See https://stackoverflow.com/a/61238571/18829.
         additional_dependencies:
-          - pyre2-updated
           - ruamel.yaml
+          # If possible, uncomment or nstall one of these in system Python
+          # - pyre2-updated
+          # - pyre2
         args: [--messages-only]
   - repo: https://github.com/PyCQA/bandit
     rev: 1.7.5
@@ -343,3 +345,8 @@ repos:
         types: [python]
 ci:
   autoupdate_schedule: monthly
+  skip:
+    - markdown-link-check
+    - poetry-lock
+    - reliabot
+    - reliabot-pre-commit-files

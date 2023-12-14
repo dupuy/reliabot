@@ -23,6 +23,7 @@ from __future__ import annotations
 import os
 import subprocess
 import sys
+import warnings
 from collections import defaultdict
 from enum import IntEnum
 from io import SEEK_SET
@@ -39,11 +40,20 @@ from typing import Iterator
 from typing import TextIO
 from typing import Union
 
-import re2 as re  # Avoids terrible consequences for pathological RE matching.
 from ruamel.yaml import YAML  # ruamel.yaml preserves comments, PyYAML doesn't.
 from ruamel.yaml.comments import CommentedMap
 from ruamel.yaml.comments import CommentedSeq
 from ruamel.yaml.parser import ParserError
+
+try:
+    # Avoids terrible consequences for pathological RE matching.
+    import re2 as re
+except ImportError:
+    import re
+
+    warnings.warn("Cannot import re2, falling back to re", RuntimeWarning)
+else:
+    re.set_fallback_notification(re.FALLBACK_WARNING)
 
 
 class Err(IntEnum):

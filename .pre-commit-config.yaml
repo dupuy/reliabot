@@ -193,7 +193,6 @@ repos:
         # Needed for pylint import checks.
         # See https://stackoverflow.com/a/61238571/18829.
         additional_dependencies:
-          - pyre2
           - ruamel.yaml
         args: [--messages-only]
   - repo: https://github.com/PyCQA/bandit

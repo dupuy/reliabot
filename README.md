@@ -18,6 +18,10 @@ require version updates.
 - [Console script](#console-script)
 - [Pre-commit hook](#pre-commit-hook)
   - [Using with other pre-commit checks](#using-with-other-pre-commit-checks)
+- [FAQ](#faq)
+  - [Can I use Reliabot with Renovate?](#can-i-use-reliabot-with-renovate)
+  - [Can I install Reliabot with Homebrew?](#can-i-install-reliabot-with-homebrew)
+  - [Can Reliabot generate a PR to update Dependabot configuration?](#can-reliabot-generate-a-pr-to-update-dependabot-configuration)
 - [Configuring Reliabot behavior](#configuring-reliabot-behavior)
   - [Keeping Dependabot configuration](#keeping-dependabot-configuration)
   - [Ignoring directories for Reliabot](#ignoring-directories-for-reliabot)
@@ -121,6 +125,26 @@ configuration, and this order provides the best results:
 2. Reliabot
 3. YAML formatter
 
+## FAQ
+
+### Can I use Reliabot with [Renovate][8]?
+
+No. Renovate detects all supported dependency information in repositories and
+manages them unless `packageRules` configure it to ignore them, so Reliabot
+functionality is not needed. [Renovate's configuration][9] is also very
+complex, so it would be challenging to create a tool to manage it.
+
+### Can I install Reliabot with [Homebrew][10]?
+
+Not yet, but contributions for this would be welcome.
+
+### Can Reliabot generate a PR to update Dependabot configuration?
+
+Generally, it is better to update the Dependabot configuration in the same PR
+where dependency management changes are made, so Reliabot does not create PRs
+itself. If needed, this could be done with a GitHub Action, and contributions
+for such an action would also be welcome.
+
 ## Configuring Reliabot behavior
 
 Reliabot uses the `ruamel.yaml` parser to read and write `dependabot.yml`,
@@ -190,7 +214,7 @@ supports some other special cases:
 - Paths ending in `/*` match subdirectories only.
 - Paths ending in `/` match the directory and all subdirectories.
 
-Full details are in [the implementation][8].
+Full details are in [the implementation][11].
 
 ### Indentation
 
@@ -260,8 +284,8 @@ If any indentation setting appears more than once, Reliabot uses the last one.
 
 If you need more control of the formatting of your `.pre‑commit-config.yaml`
 configuration file, this is best done by configuring pre-commit to use a
-formatter like [prettier][9], the [Golang version of `yamlfmt`][10], or the
-[Python version of `yamlfmt`][11] (which also uses `ruamel.yaml` and its
+formatter like [prettier][12], the [Golang version of `yamlfmt`][13], or the
+[Python version of `yamlfmt`][14] (which also uses `ruamel.yaml` and its
 undocumented configuration settings for formatting).
 
 > ⛔️**Warning**: Some combinations of indentation values can generate invalid
@@ -277,7 +301,7 @@ undocumented configuration settings for formatting).
 
 ### Suppressing YAML start markers
 
-YAML files can have a [“document start” line][12] with three hyphens (`---`)
+YAML files can have a [“document start” line][15] with three hyphens (`---`)
 before the YAML content of the file. This marks the start of a YAML document.
 Although YAML checkers may complain if it's missing, it isn't required.
 Reliabot adds this line to `dependabot.yml` if you leave it out—if that's a
@@ -295,7 +319,7 @@ If the YAML start setting appears more than once, Reliabot uses the last one.
 
 ### YAML version
 
-The `ruamel.yaml` parser [follows the YAML 1.2 specification][13], but if you
+The `ruamel.yaml` parser [follows the YAML 1.2 specification][16], but if you
 need to use YAML 1.1 features you can do so by specifying the YAML version
 before the document start marker, like this:
 
@@ -323,9 +347,12 @@ before the document start marker, like this:
 [5]: https://pre-commit.com/
 [6]: https://pre-commit.ci/
 [7]: https://pre-commit.com/#quick-start
-[8]: https://github.com/search?q=repo%3Adupuy%2Freliabot%20%20Exclusions.add&type=code
-[9]: https://prettier.io/docs/en/precommit#option-3-pre-commithttpsgithubcompre-commitpre-commit
-[10]: https://github.com/google/yamlfmt
-[11]: https://github.com/jumanjihouse/pre-commit-hook-yamlfmt
-[12]: https://www.yaml.info/learn/document.html#start
-[13]: https://yaml.readthedocs.io/en/latest/pyyaml/#defaulting-to-yaml-12-support
+[8]: https://docs.renovatebot.com/
+[9]: https://docs.renovatebot.com/configuration-options/#
+[10]: https://brew.sh/
+[11]: https://github.com/search?q=repo%3Adupuy%2Freliabot%20%20Exclusions.add&type=code
+[12]: https://prettier.io/docs/en/precommit#option-3-pre-commithttpsgithubcompre-commitpre-commit
+[13]: https://github.com/google/yamlfmt
+[14]: https://github.com/jumanjihouse/pre-commit-hook-yamlfmt
+[15]: https://www.yaml.info/learn/document.html#start
+[16]: https://yaml.readthedocs.io/en/latest/pyyaml/#defaulting-to-yaml-12-support

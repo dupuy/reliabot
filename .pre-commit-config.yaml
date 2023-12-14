@@ -342,3 +342,7 @@ repos:
         types: [python]
 ci:
   autoupdate_schedule: monthly
+  skip:
+    - markdown-link-check
+    - reliabot
+    - reliabot-pre-commit-files

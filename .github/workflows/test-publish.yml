@@ -1,0 +1,13 @@
+# .github/workflows/test-publish.yml
+jobs:
+  testpypi-publish:
+    name: Upload release to TestPyPI
+    runs-on: ubuntu-latest
+    environment:
+      name: test-pypi
+      url: https://test.pypi.org/legacy/reliabot
+    permissions:
+      id-token: write # IMPORTANT: mandatory for trusted publishing
+    steps:
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@2f6f737ca5f74c637829c0f5c3acd0e29ea5e8bf # 1.8.11

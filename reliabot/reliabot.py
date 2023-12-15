@@ -236,9 +236,9 @@ def main(optargv: Optional[list[str]] = None) -> int:  # noqa: MC0001
     Traceback (most recent call last):
     ...
     SystemExit: 2
-    >>> main(["reliabot.py", OPT_UPDATE]) # Requires updated dependabot config,
+    >>> main(["reliabot.py", OPT_UPDATE]) # Updated dependabot config required,
     0
-    >>> main(["reliabot.py", OPT_UPDATE_PRE_COMMIT]) # ..and pre-commit config.
+    >>> main(["reliabot.py", OPT_UPDATE_PRE_COMMIT]) # also pre-commit config.
     0
     >>> test_dir = "testdir/github/"
     >>> test_conf = f"{test_dir}/.github/{fsdecode(DEPENDABOT_CONFIG)}"
@@ -541,7 +541,7 @@ def find_ecosystems(
     >>> config_dir = join(TESTDIR, b"configured")
     >>> dont_ignore = lambda dir_path: False
     >>> find_ecosystems(config_dir, dont_ignore)   # doctest: +ELLIPSIS
-    defaultdict(<class 'set'>, {'/': {'github-actions'}, '/bundler':...
+    defaultdict(<class 'set'>, {'/': {'github-actions'}, '/bundler':...)
     """
     ecosystems = defaultdict(set)
     workflows = GITHUB_WORKFLOWS.decode("utf-8")
@@ -859,7 +859,7 @@ def config_emitter(emitter: YAML, settings: dict[str, Any]) -> dict[str, int]:
     r"""Apply reliabot YAML format settings to a YAML parser/emitter.
 
     :param emitter: A ruamel.yaml parser/emitter.
-    :param settings: Emitter settings (indentation, etcetera.
+    :param settings: Emitter settings (indentation, etcetera.)
     :returns: dict with indentation settings (mapping, offset, sequence).
 
     >>> test_emitter = YAML(pure=PURE)

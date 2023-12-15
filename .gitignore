@@ -1,6 +1,7 @@
 *~
 *.swp
 .idea/
+/.run/
 ci/.bootstrap
 
 # Byte-compiled / optimized / DLL files

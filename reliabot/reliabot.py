@@ -37,6 +37,7 @@ from typing import Any
 from typing import Callable
 from typing import Iterable
 from typing import Iterator
+from typing import Optional
 from typing import TextIO
 from typing import Union
 
@@ -221,7 +222,7 @@ WARN_KEYS: set[str] = set()
 
 
 # pylint: disable=too-many-locals
-def main(argv: list[str]) -> int:  # noqa: MC0001
+def main(optargv: Optional[list[str]] = None) -> int:  # noqa: MC0001
     """Create or update Dependabot configuration in a Git repo.
 
     This function parses arguments and options and handles exceptions,
@@ -249,6 +250,7 @@ def main(argv: list[str]) -> int:  # noqa: MC0001
     conf: Union[CommentedMap, dict] = {}
 
     try:
+        argv = optargv or sys.argv
         if argv[1] == "--":  # "end of options"
             argv.pop(1)
         elif argv[1] == OPT_UPDATE:

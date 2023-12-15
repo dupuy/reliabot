@@ -16,10 +16,44 @@ profile = "black"
 name = "reliabot"
 version = "0.1.0"
 description = "Maintain GitHub Dependabot configuration."
+license = "MIT"
 authors = ["Alexander Dupuy <alex@dupuy.us>"]
 readme = "README.md"
+repository = "https://github.com/dupuy/reliabot"
+keywords = [
+    "dependabot",
+    "dependency-manager",
+    "github",
+    "pre-commit-hook",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Environment :: Plugins",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: Microsoft :: Windows :: Windows Vista",
+    "Operating System :: POSIX",
+    "Topic :: Software Development :: Version Control :: Git",
+    "Topic :: System :: Software Distribution",
+    "Topic :: Utilities",
+]
 
 [tool.poetry.dependencies]
 python = "^3.8"  # 3.8 end-of-life 2024-10
+
 "ruamel.yaml" = "^0.17.32"
-pyre2 = "^0.3.6"
+
+pyre2 = { version = "^0.3.6", optional = true }
+pyre2-updated = { version = "^0.3.7", optional = true }
+
+[tool.poetry.extras]
+re2 = ["pyre2"]
+re2-wheels = ["pyre2-updated"]
+
+[tool.poetry.scripts]
+reliabot = 'reliabot.reliabot:main'
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/dupuy/reliabot/issues"

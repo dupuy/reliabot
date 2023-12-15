@@ -13,7 +13,7 @@ default_stages: [commit]
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.5.0
     hooks:
       # - id: autopep8-wrapper
       #  args: ['-i', '--ignore=E501']
@@ -105,14 +105,14 @@ repos:
         exclude: testdir/github/action[.]yml
         exclude_types: [markdown]
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.2.5
+    rev: v2.2.6
     hooks:
       - id: codespell
         args: [-L, 'pullrequest,pullrequests']
 
   # YAML
   - repo: https://github.com/adrienverge/yamllint
-    rev: v1.32.0
+    rev: v1.33.0
     hooks:
       - id: yamllint
         args:
@@ -164,11 +164,11 @@ repos:
 
   # Python
   - repo: https://github.com/pre-commit/mirrors-autopep8
-    rev: v2.0.2
+    rev: v2.0.4
     hooks:
       - id: autopep8
   - repo: https://github.com/myint/autoflake
-    rev: v2.2.0
+    rev: v2.2.1
     hooks:
       - id: autoflake
   - repo: https://github.com/myint/docformatter
@@ -177,7 +177,7 @@ repos:
       - id: docformatter
         args: [--in-place, --wrap-descriptions=79]
   - repo: https://github.com/asottile/reorder-python-imports
-    rev: v3.10.0
+    rev: v3.12.0
     hooks:
       - id: reorder-python-imports
         args:
@@ -194,7 +194,7 @@ repos:
     hooks:
       - id: pydocstringformatter
   - repo: https://github.com/PyCQA/prospector
-    rev: 1.10.2
+    rev: v1.10.3
     hooks:
       - id: prospector
         # Needed for pylint import checks.
@@ -203,13 +203,13 @@ repos:
           - ruamel.yaml
         args: [--messages-only]
   - repo: https://github.com/PyCQA/bandit
-    rev: 1.7.5
+    rev: 1.7.6
     hooks:
       - id: bandit
         args: [-c, pyproject.toml]
         additional_dependencies: ['bandit[toml]']
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.4.1
+    rev: v1.7.1
     hooks:
       - id: mypy
   - repo: https://github.com/pre-commit/pygrep-hooks
@@ -230,13 +230,13 @@ repos:
     hooks:
       - id: dead
   - repo: https://github.com/psf/black
-    rev: 23.7.0
+    rev: 23.12.0
     hooks:
       - id: black
         args: [--line-length=79]
   - repo: https://github.com/python-poetry/poetry
     # see https://python-poetry.org/docs/master/pre-commit-hooks/#faq
-    rev: 1.5.0
+    rev: 1.7.0
     hooks:
       - id: poetry-check
       - id: poetry-lock
@@ -248,7 +248,7 @@ repos:
 
   # Markdown
   - repo: https://github.com/executablebooks/mdformat
-    rev: 0.7.16
+    rev: 0.7.17
     hooks:
       - id: mdformat
         args:

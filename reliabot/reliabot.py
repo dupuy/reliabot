@@ -231,6 +231,11 @@ def main(optargv: Optional[list[str]] = None) -> int:  # noqa: MC0001
     :param optargv: command name and arguments.
     :returns: exit code – 0 for success, 1–9 for different failures.
 
+    >>> sys.argv = ["--"]
+    >>> main()
+    Traceback (most recent call last):
+    ...
+    SystemExit: 2
     >>> main(["reliabot.py", OPT_UPDATE]) # Requires updated dependabot config,
     0
     >>> main(["reliabot.py", OPT_UPDATE_PRE_COMMIT]) # ..and pre-commit config.

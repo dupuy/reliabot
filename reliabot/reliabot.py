@@ -290,11 +290,11 @@ def main(optargv: Optional[list[str]] = None) -> int:  # noqa: MC0001
         # TODO(once 3.8 is EOL): EMITTER_SETTINGS | EXCLUSIONS
         settings = extract_settings(conf, {**EMITTER_SETTINGS, **EXCLUSIONS})
 
-        exclusions = configure_exclusions(settings)
+        exclude = configure_exclusions(settings)
 
-        ecosystems = find_ecosystems(repo_dir, exclusions.matcher("ignore"))
+        ecosystems = find_ecosystems(repo_dir, exclude.matcher("ignore"))
 
-        if update_dependabot_config(conf, ecosystems, exclusions["keep"]):
+        if update_dependabot_config(conf, ecosystems, exclude.matcher("keep")):
             modified = True
             action = "write"
             warn("", f"{update_status} '{fsdecode(dconf)}'...")
@@ -514,6 +514,8 @@ class Exclusions:
         :param dir_path: Directory path to check against the exclusion set.
         :returns: True if the path matches the exclusion set, otherwise False.
         """
+        if dir_path.startswith("/"):
+            dir_path = dir_path[1:]
         matched = dir_path in self.match[key]
         if not matched:
             for prefix in self.prefix[key]:
@@ -573,7 +575,7 @@ def find_ecosystems(
 
 
 def update_dependabot_config(
-    config: dict, ecosystems: dict[str, set[str]], keepers: set[str]
+    config: dict, ecosystems: dict[str, set[str]], kept: Callable[[str], bool]
 ) -> bool:
     """Update Dependabot configuration with discovered ecosystems.
 
@@ -582,31 +584,35 @@ def update_dependabot_config(
 
     :param config: YAML object, with parsed YAML, comments, etc. for updating.
     :param ecosystems: Mapping of folder paths to package ecosystem names.
-    :param keepers: Directories where all configuration should be kept.
+    :param kept: Matching function that returns whether dir path is kept.
     :returns: True if this function makes changes to the configuration.
     :raises ValueError: if configuration is invalid or is an unknown version.
 
     >>> test_conf = {}
     >>> ecos = {"/": {"npm"}}
-    >>> dont_ignore = set()  # TODO: use: lambda dir_path: False
-    >>> update_dependabot_config(test_conf, ecos, dont_ignore)
+    >>> dont_keep = lambda dir_path: False
+    >>> update_dependabot_config(test_conf, ecos, dont_keep)
     True
     >>> test_conf
     {'version': 2, 'updates': [{'directory': '/', 'package-ecosystem': 'npm'}]}
-    >>> update_dependabot_config(test_conf, ecos, dont_ignore)
+    >>> update_dependabot_config(test_conf, ecos, dont_keep)
     False
     >>> ecos2 = {"/": {"pip"}, "/test": {"npm"}}
-    >>> update_dependabot_config(test_conf, ecos2, dont_ignore)
+    >>> update_dependabot_config(test_conf, ecos2, dont_keep)
     True
     >>> test_conf["updates"][1]
     {'directory': '/test', 'package-ecosystem': 'npm'}
     >>> ecos3 = {"/": {"pub"}}
-    >>> update_dependabot_config(test_conf, ecos3, {"test/"})
+    >>> exclusions = Exclusions(keys=["kept"])
+    >>> exclusions.add("kept", "/tes*")
+    >>> update_dependabot_config(test_conf, ecos3, exclusions.matcher("kept"))
     True
     >>> test_conf["updates"][0]
+    {'directory': '/test', 'package-ecosystem': 'npm'}
+    >>> test_conf["updates"][1]
     {'directory': '/', 'package-ecosystem': 'pub'}
     >>> len(test_conf['updates'])
-    1
+    2
     """
     if config == {}:
         config["version"] = 2
@@ -629,14 +635,7 @@ def update_dependabot_config(
         obsolete = []
         for conf in confs:
             pkg_dir = conf["directory"]
-            kept = pkg_dir in keepers
-            for keep in keepers:
-                if keep and not keep.endswith("/"):  # preserve "" keep all
-                    keep += "/"
-                if kept or pkg_dir.startswith(keep):
-                    kept = True
-                    break
-            if kept:
+            if kept(pkg_dir):
                 continue
             pkg_eco = conf["package-ecosystem"]
             if pkg_dir not in ecosystems or pkg_eco not in ecosystems[pkg_dir]:
@@ -938,7 +937,7 @@ def self_test() -> int:
 
     (failed, tests) = doctest.testmod(optionflags=DOCTEST_OPTION_FLAGS)
     print(f"Passed {tests - failed} of {tests} doctests.")
-    if not failed:
+    if not failed:  # pragma: no cover
         doctest.testmod(verbose=True)
     return 1 if failed else 0
 

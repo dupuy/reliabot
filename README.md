@@ -106,10 +106,10 @@ add the following to the `repos` entry in `.pre‑commit‑config.yaml`
 
 ```yaml
   - repo: https://github.com/dupuy/reliabot
-    rev: v0.1.0 # Specify any revision you want
+    rev: v0.1.1 # Specify any revision you want
     hooks:
       - id: reliabot
-        additional_dependencies: [pyre2]  # or `pyre2-updated` or omit this line
+        additional_dependencies: [pyre2] # or `pyre2-updated` or omit this line
 ```
 
 After that, Reliabot runs automatically on any Git commit that involves

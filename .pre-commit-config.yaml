@@ -57,10 +57,10 @@ repos:
       # prettier-ignore
       - files: >-
             (?x)(^|/)(
-              gem(s[.]rb|file)|.*[.]gemspec|
+              gem(s[.]rb|file)|[\w.-]*[.]gemspec|
               cargo[.]toml|
               composer[.]json|
-              [^.].*(dockerfile.*|values[\w-]*[.]ya?ml)|
+              (?i:[\w.-]*dockerfile[\w.-]*|values[\w.-]*[.]ya?ml)|
               elm(-package)?[.]json|
               action[.]yml|
               [.]gitmodules|
@@ -72,7 +72,7 @@ repos:
               nuget[.]config|
               requirements[.]txt|pyproject[.]toml|
               pubspec[.]yaml|
-              [^.].*[.](?:hcl|tf)|
+              [\w.-]*[.](?:hcl|tf)|
               [.]github/workflows/[^/]*[.]ya?ml|
               [.]github/dependabot[.]yml
               )$

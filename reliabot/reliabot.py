@@ -134,10 +134,10 @@ DOT_YAML_REGEX = re.compile(rf"{DOT_YAML}$")  # used for search, not full match
 # https://github.com/search?q=org:dependabot+path:GIT_SUBMODULES+required_files_message&type=code
 
 ECOS = {  # This map is modified below to wrap each RE in a named group.
-    "bundler": r"gem(s[.]rb|file)|.*[.]gemspec",
+    "bundler": r"gem(s[.]rb|file)|[\w.-]*[.]gemspec",
     "cargo": r"cargo[.]toml",
     "composer": r"composer[.]json",
-    "docker": rf"[^.].*(dockerfile.*|values[\w-]*{DOT_YAML})",
+    "docker": rf"(?i:[\w.-]*dockerfile[\w.-]*|values[\w.-]*{DOT_YAML})",
     "elm": r"elm(-package)?[.]json",
     "github_actions": r"action[.]yml",  # hyphen (-) not allowed in group name.
     "gitsubmodule": r"[.]gitmodules",
@@ -149,7 +149,7 @@ ECOS = {  # This map is modified below to wrap each RE in a named group.
     "nuget": r"nuget[.]config",
     "pip": r"requirements[.]txt|pyproject[.]toml",
     "pub": r"pubspec[.]yaml",
-    "terraform": r"[^.].*[.](?:hcl|tf)",
+    "terraform": r"[\w.-]*[.](?:hcl|tf)",
 }
 # Combine regexes into pre-commit file pattern
 ECOSYSTEM_FILE_ACTIONS = f"[.]github/workflows/[^/]*{DOT_YAML}"

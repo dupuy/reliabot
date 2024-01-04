@@ -829,7 +829,8 @@ def update_pre_commit_file_patterns(config_file: TextIO) -> bool:
     :raises AttributeError: if file is empty.
     :raises KeyError: if list lacks 'id', map lacks 'repos', 'repo' or 'hooks'.
 
-    >>> _ = re.compile(ECOSYSTEM_RE_FILES)
+    >>> import re as pcre  # Python PCRE needed for (?x) in YAML configs.
+    >>> _ = pcre.compile(ECOSYSTEM_RE_FILES)
     >>> ECOSYSTEM_FILE_ACTIONS in ECOSYSTEM_RE_FILES
     True
     >>> "?P<" not in ECOSYSTEM_RE_FILES  # Ensure it doesn't have named groups.

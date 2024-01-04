@@ -228,7 +228,7 @@ def main(optargv: Optional[list[str]] = None) -> int:  # noqa: MC0001
     This function parses arguments and options and handles exceptions,
     calling other functions to do the real work.
 
-    :param argv: command name and arguments.
+    :param optargv: command name and arguments.
     :returns: exit code – 0 for success, 1–9 for different failures.
 
     >>> main(["reliabot.py", OPT_UPDATE]) # Requires updated dependabot config,
@@ -249,8 +249,8 @@ def main(optargv: Optional[list[str]] = None) -> int:  # noqa: MC0001
     update_status = "Updating"
     conf: Union[CommentedMap, dict] = {}
 
+    argv = optargv or sys.argv
     try:
-        argv = optargv or sys.argv
         if argv[1] == "--":  # "end of options"
             argv.pop(1)
         elif argv[1] == OPT_UPDATE:

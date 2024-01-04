@@ -603,8 +603,10 @@ def update_dependabot_config(
     >>> ecos3 = {"/": {"pub"}}
     >>> update_dependabot_config(test_conf, ecos3, {"test/"})
     True
-    >>> test_conf["updates"][1]
+    >>> test_conf["updates"][0]
     {'directory': '/', 'package-ecosystem': 'pub'}
+    >>> len(test_conf['updates'])
+    1
     """
     if config == {}:
         config["version"] = 2
@@ -624,6 +626,7 @@ def update_dependabot_config(
                 if not find_conf(confs, directory, ecosystem):
                     add_conf(config, directory, ecosystem)
                     changed = True
+        obsolete = []
         for conf in confs:
             pkg_dir = conf["directory"]
             kept = pkg_dir in keepers
@@ -637,9 +640,14 @@ def update_dependabot_config(
                 continue
             pkg_eco = conf["package-ecosystem"]
             if pkg_dir not in ecosystems or pkg_eco not in ecosystems[pkg_dir]:
-                warn("", f"Removed obsolete '{pkg_eco}' entry in '{pkg_dir}'")
-                confs.remove(conf)
-                changed = True
+                obsolete.append(conf)
+        # Separate removal loop necessary to avoid modifying live iterator.
+        for conf in obsolete:
+            folder = conf["directory"]
+            eco = conf["package-ecosystem"]
+            confs.remove(conf)
+            warn("", f"Removed obsolete '{eco}' entry in '{folder}'")
+            changed = True
 
     except (KeyError, TypeError) as config_err:
         raise ValueError("Invalid Dependabot configuration") from config_err
@@ -740,6 +748,7 @@ def safe_dump(
                 settings = EMITTER_SETTINGS
         else:
             emitter.dump(config, config_stream)
+            config_stream.truncate()
             break
         tries += 1
     else:

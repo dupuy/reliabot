@@ -149,7 +149,7 @@ ECOS = {  # This map is modified below to wrap each RE in a named group.
     "nuget": r"nuget[.]config",
     "pip": r"requirements[.]txt|pyproject[.]toml",
     "pub": r"pubspec[.]yaml",
-    "terraform": r"[\w.-]*[.](?:hcl|tf)",
+    "terraform": r"\w[\w.-]*[.](?:hcl|tf)",
 }
 # Combine regexes into pre-commit file pattern
 ECOSYSTEM_FILE_ACTIONS = f"[.]github/workflows/[^/]*{DOT_YAML}"

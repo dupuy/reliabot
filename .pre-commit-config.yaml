@@ -72,7 +72,7 @@ repos:
               nuget[.]config|
               requirements[.]txt|pyproject[.]toml|
               pubspec[.]yaml|
-              [\w.-]*[.](?:hcl|tf)|
+              \w[\w.-]*[.](?:hcl|tf)|
               [.]github/workflows/[^/]*[.]ya?ml|
               [.]github/dependabot[.]yml
               )$

@@ -46,16 +46,6 @@ from ruamel.yaml.comments import CommentedMap
 from ruamel.yaml.comments import CommentedSeq
 from ruamel.yaml.parser import ParserError
 
-try:
-    # Avoids terrible consequences for pathological RE matching.
-    import re2 as re
-except ImportError:
-    import re
-
-    warnings.warn("Cannot import re2, falling back to re")
-else:
-    re.set_fallback_notification(re.FALLBACK_WARNING)
-
 
 class Err(IntEnum):
     """Error exit codes for reliabot."""
@@ -76,7 +66,7 @@ def usage() -> None:
     SystemExit: 2
     """
     command = basename(sys.argv[0])
-    dedup_warn(f"Usage: {command} [--] [ --update | GIT_REPO ]")
+    dedup_warn(f"Usage: {command} [--re] --update | [--] GIT_REPO")
     dedup_warn("(use '--' if GIT_REPO starts with '-', or see script source)")
     # "Internal" options:
     # --self-test – run doctests in sources
@@ -115,6 +105,30 @@ def dedup_warn(message: str, key: Optional[str] = None) -> None:
         if key:
             WARN_KEYS.add(key)
 
+
+RE2 = False
+RE_OPTION = "--re"
+RE_WARNING = """
+
+  Reliabot works better with the 're2' regular expression package.
+  See https://github.com/dupuy/reliabot/#installation for install instructions,
+  or use initial '--re' option to use system 're' and suppress this warning."""
+
+if len(sys.argv) > 1 and sys.argv[1] == RE_OPTION:
+    sys.argv.pop(1)
+else:
+    try:
+        # Avoids terrible consequences for pathological RE matching.
+        import re2 as re
+
+        RE2 = True
+    except ImportError:
+        dedup_warn(f"Can't import 're2', falling back to 're'.{RE_WARNING}")
+    else:  # Generate fallback warning if re2 package can't handle regexp
+        re.set_fallback_notification(re.FALLBACK_WARNING)
+
+if not RE2:
+    import re
 
 COMMENT_PREFIX = "# reliabot:"
 COMMENT_PREFIX_MATCH = re.compile(rf"\s*{COMMENT_PREFIX}")

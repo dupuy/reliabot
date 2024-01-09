@@ -41,10 +41,20 @@ from typing import Optional
 from typing import TextIO
 from typing import Union
 
-from ruamel.yaml import YAML  # ruamel.yaml preserves comments, PyYAML doesn't.
-from ruamel.yaml.comments import CommentedMap
-from ruamel.yaml.comments import CommentedSeq
-from ruamel.yaml.parser import ParserError
+try:
+    from ruamel.yaml import YAML  # ruamel.yaml preserves comments, PyYAML doesn't.
+    from ruamel.yaml.comments import CommentedMap
+    from ruamel.yaml.comments import CommentedSeq
+    from ruamel.yaml.parser import ParserError
+except ModuleNotFoundError, ImportError as e:
+    error_message = ''.join([
+        f"{e}", 
+        "\n\n", 
+        "Reliabot requires the ruamel.yaml module to preserve comments in dependabot.yml files.", 
+        "\n", 
+        "See https://github.com/dupuy/reliabot/#installation for installation instructions."
+    ])
+    sys.exit(error_message)
 
 try:
     # Avoids terrible consequences for pathological RE matching.

@@ -6,3 +6,5 @@ version: 2
 updates:
   - directory: /
     package-ecosystem: pip
+  - directory: /
+    package-ecosystem: github-actions

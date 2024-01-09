@@ -19,8 +19,8 @@ require version updates.
 - [Pre-commit hook](#pre-commit-hook)
   - [Using with other pre-commit checks](#using-with-other-pre-commit-checks)
 - [FAQ](#faq)
-  - [Can I use Reliabot with Renovate?](#can-i-use-reliabot-with-renovate)
-  - [Can I install Reliabot with Homebrew?](#can-i-install-reliabot-with-homebrew)
+  - [Does Reliabot work with Renovate?](#does-reliabot-work-with-renovate)
+  - [Can you install Reliabot with Homebrew?](#can-you-install-reliabot-with-homebrew)
   - [Can Reliabot generate a PR to update Dependabot configuration?](#can-reliabot-generate-a-pr-to-update-dependabot-configuration)
 - [Configuring Reliabot behavior](#configuring-reliabot-behavior)
   - [Keeping Dependabot configuration](#keeping-dependabot-configuration)
@@ -63,7 +63,7 @@ pip install reliabot
 
 You can improve the reliability and performance of Reliabot with Python RE2
 regex support in its environment. This also requires the C++ RE2 library
-(`brew install re2` or use Linux/BSD package tools to install `re`).
+(`brew install re2` or use Linux/BSD package tools to install `re2`).
 
 ```shell
 pip install 'reliabot[pyre2]'
@@ -106,10 +106,10 @@ add the following to the `repos` entry in `.pre‑commit‑config.yaml`
 
 ```yaml
   - repo: https://github.com/dupuy/reliabot
-    rev: v0.1.0 # Specify any revision you want
+    rev: v0.1.1 # Specify any revision you want
     hooks:
       - id: reliabot
-        additional_dependencies: [pyre2]  # or `pyre2-updated` or omit this line
+        additional_dependencies: [pyre2-updated] # or just `pyre2` or omit this
 ```
 
 After that, Reliabot runs automatically on any Git commit that involves
@@ -147,24 +147,28 @@ configuration, and this order provides the best results:
 
 ## FAQ
 
-### Can I use Reliabot with Renovate?
+### Does Reliabot work with Renovate?
 
 No. [Renovate][9] detects all supported dependency information in repositories
 and manages them unless `packageRules` configure it to ignore them, so Reliabot
-functionality is not needed. [Renovate's configuration][10] is also very
-complex, so it would be challenging to create a tool to manage it.
+isn't needed. As [Renovate configuration][10] is quite complex, creating a tool
+to manage that would be challenging.
 
-### Can I install Reliabot with Homebrew?
+### Can you install Reliabot with Homebrew?
 
 There is no [Homebrew][11] formula for Reliabot yet, but any contributions for
-one are welcome.
+one are welcome. To install it for the command line, use `pip`, `poetry` or any
+other Python package manager. If you only use it for `pre-commit` checks, you
+don't need to install anything, just add it to `.pre-commit-config.yaml`.
 
 ### Can Reliabot generate a PR to update Dependabot configuration?
 
-Generally, it is better to update the Dependabot configuration in the same PR
-where dependency management changes are made, so Reliabot does not create PRs
-itself. A GitHub Action could create a separate PR, and any contributions for
-such an action are also welcome.
+Generally, it's better to update the Dependabot configuration in the same PR
+that makes dependency management changes, so Reliabot just makes changes that
+you can add to the current PR. The pre-commit.ci continuous integration service
+does that if you configure Reliabot in `.pre-commit-config.yaml`. A GitHub
+Action could create a separate PR, and any contributions for such an action are
+also welcome.
 
 ## Configuring Reliabot behavior
 
@@ -220,8 +224,8 @@ This prevents Reliabot from modifying any Dependabot configuration for
 directories in or under the `archive` directory.
 
 > ⭐️**Note**: You can put Reliabot settings on separate lines or together.
-> Multiple `ignore` and `keep` settings are combined, ignoring or keeping all
-> matched directories.
+> Reliabot combines multiple `ignore` and `keep` settings, ignoring or keeping
+> all matched directories.
 
 ### Reliabot directory matching
 

@@ -47,9 +47,9 @@ try:
     from ruamel.yaml.comments import CommentedMap
     from ruamel.yaml.comments import CommentedSeq
     from ruamel.yaml.parser import ParserError
-except ModuleNotFoundError, ImportError as e:
+except ModuleNotFoundError as module_not_found:
     error_message = ''.join([
-        f"{e}",
+        f"{module_not_found}",
         "\n\n",
         "Reliabot requires the ruamel.yaml module to preserve comments in dependabot.yml files.",
         "\n",

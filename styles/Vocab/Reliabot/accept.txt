@@ -1,0 +1,6 @@
+[Dd]ependabot
+[Rr]eliabot
+Quis
+renovatores
+ipsos
+formatters

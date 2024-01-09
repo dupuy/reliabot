@@ -342,6 +342,12 @@ repos:
         entry: ^\s+:(returns\s[^:]*|(param|raises|var)(\s+[^:\s]+\s[^:]*)?):\s
         types: [python]
 ci:
+  autofix_commit_msg: |
+    fix: auto-fixes from pre-commit.ci
+
+    Configured by .pre-commit-config.yaml
+    Checks run by https://pre-commit.ci
+  autoupdate_commit_msg: 'chore: pre-commit.ci autoupdate'
   autoupdate_schedule: monthly
   skip:
     - markdown-link-check

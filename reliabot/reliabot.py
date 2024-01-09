@@ -52,7 +52,7 @@ try:
 except ImportError:
     import re
 
-    warnings.warn("Cannot import re2, falling back to re", RuntimeWarning)
+    warnings.warn("Cannot import re2, falling back to re")
 else:
     re.set_fallback_notification(re.FALLBACK_WARNING)
 
@@ -76,8 +76,8 @@ def usage() -> None:
     SystemExit: 2
     """
     command = basename(sys.argv[0])
-    warn("", f"Usage: {command} [--] [ --update | GIT_REPO ]")
-    warn("", "(use '--' if GIT_REPO may start with '-', or see script source)")
+    dedup_warn(f"Usage: {command} [--] [ --update | GIT_REPO ]")
+    dedup_warn("(use '--' if GIT_REPO starts with '-', or see script source)")
     # "Internal" options:
     # --self-test – run doctests in sources
     # --update-pre-commit-files – update pre-commit-* reliabot* files: entries.
@@ -95,21 +95,24 @@ def error(message: str) -> None:
     SystemExit: 9
     >>> del os.environ[DOCTEST_OPT]
     """
-    warn("", f"Internal error - {message}")
+    dedup_warn(f"Internal error - {message}")
     if DOCTEST_OPT in os.environ or sys.argv[len(sys.argv) - 1] != DOCTEST_OPT:
         print(f"  Diagnose with {sys.argv[0]} {DOCTEST_OPT}", file=sys.stderr)
         sys.exit(int(Err.INTERNAL))
 
 
-def warn(key: str, message: str) -> None:
+def dedup_warn(message: str, key: Optional[str] = None) -> None:
     """Print warning to stderr if non-empty key has not been warned before.
 
-    :param key: de-duplication key: only warns first instance of key value.
+    These stderr messages for end-users do not use Python Warnings, which are
+    intended for developers.
+
     :param message: message to print to stderr.
+    :param key: de-duplication key: only warns first instance of key value.
     """
-    if key == "" or key not in WARN_KEYS:
+    if key is None or key not in WARN_KEYS:
         print(message, file=sys.stderr)
-        if key != "":
+        if key:
             WARN_KEYS.add(key)
 
 
@@ -264,7 +267,7 @@ def main(optargv: Optional[list[str]] = None) -> int:  # noqa: MC0001
         elif argv[1] in OPT_USES_MAP:
             return OPT_USES_MAP[argv[1]]()
         elif argv[1].startswith("-"):
-            warn(argv[1], f"Unknown option '{argv[1]}'")
+            dedup_warn(f"Unknown option '{argv[1]}'", argv[1])
             usage()
 
         if len(argv) != 2:
@@ -297,7 +300,7 @@ def main(optargv: Optional[list[str]] = None) -> int:  # noqa: MC0001
         if update_dependabot_config(conf, ecosystems, exclude.matcher("keep")):
             modified = True
             action = "write"
-            warn("", f"{update_status} '{fsdecode(dconf)}'...")
+            dedup_warn(f"{update_status} '{fsdecode(dconf)}'...")
             with open(dconf, "w+" if new else "r+", encoding="utf-8") as dfile:
                 safe_dump(conf, settings, dfile)
     except OSError as os_err:
@@ -306,13 +309,13 @@ def main(optargv: Optional[list[str]] = None) -> int:  # noqa: MC0001
         if not filename.startswith(os.pathsep):
             cwd = f" in '{os.getcwd()}'"
         err = f"{os_err.strerror}: '{filename}'{cwd}"
-        warn("", f"Failed to {action} configuration file:\n  {err}")
+        dedup_warn(f"Failed to {action} configuration file:\n  {err}")
         return Err.RUNTIME
     except RuntimeError as rt_err:
-        warn("", str(rt_err))
+        dedup_warn(str(rt_err))
         return Err.RUNTIME
     except ValueError as value_err:
-        warn("", value_err.args[0])
+        dedup_warn(value_err.args[0])
         return Err.CONFIG
 
     return int(Err.UPDATED) if check and modified else 0
@@ -390,11 +393,13 @@ def extract_settings(
         offset = COMMENT_PREFIX_MATCH.match(comment)
         if offset is None:
             continue
+        setting = f"'{COMMENT_PREFIX}' setting"
+        bad_setting = f"Bad {setting}"
         for word in comment[offset.end() :].split():
             if word.startswith("#"):
                 break
             if "=" not in word:
-                warn("=", f"Bad '{COMMENT_PREFIX}' word must be X=Y: '{word}'")
+                dedup_warn(f"{bad_setting}: must be X=Y: '{word}'", "=")
                 continue
             key, value = word.split("=", 1)
             if key in settings:
@@ -403,19 +408,19 @@ def extract_settings(
                     if value in TRUTHY:
                         settings[key] = bool(TRUTHY[value])
                     else:
-                        warn(key, f"Bad '{COMMENT_PREFIX}' setting: '{word}'")
+                        dedup_warn(f"{bad_setting}: '{word}'", key)
                 elif isinstance(settings[key], set):
                     settings[key].add(value)
                 elif isinstance(settings[key], int):
                     try:
                         settings[key] = int(value)
                     except ValueError:
-                        warn(key, f"Bad '{COMMENT_PREFIX}' setting: '{word}'")
+                        dedup_warn(f"{bad_setting}: '{word}'", key)
                 else:
                     vtyp = str(type(settings[key]))
-                    warn(vtyp, f"Bad '{COMMENT_PREFIX}' setting type: {vtyp}")
+                    dedup_warn(f"{bad_setting} type: {vtyp}", vtyp)
             else:
-                warn(key, f"Unknown '{COMMENT_PREFIX}' setting: '{word}'")
+                dedup_warn(f"Unknown {setting}: '{word}'", key)
     return settings
 
 
@@ -619,7 +624,7 @@ def update_dependabot_config(
         config["updates"] = create_dependabot_config(ecosystems)
         empty = len(config["updates"]) == 0
         if empty:
-            warn("", "New Dependabot config would be empty; not creating it.")
+            dedup_warn("Not creating Dependabot config that would be empty.")
         return not empty
 
     validate_dependabot_config(config)
@@ -645,7 +650,7 @@ def update_dependabot_config(
             folder = conf["directory"]
             eco = conf["package-ecosystem"]
             confs.remove(conf)
-            warn("", f"Removed obsolete '{eco}' entry in '{folder}'")
+            dedup_warn(f"Removed obsolete '{eco}' entry in '{folder}'")
             changed = True
 
     except (KeyError, TypeError) as config_err:
@@ -716,7 +721,7 @@ def safe_dump(
 
     Dump file to string, and parse it again to ensure that settings are OK.
 
-    If parse fails, warn and try again with default emitter settings.
+    If parse fails, dedup_warn and try again with default emitter settings.
 
     If parse with default settings fails, report an internal error.
 
@@ -743,7 +748,8 @@ def safe_dump(
             if settings == EMITTER_SETTINGS:
                 error(f"Can't re-parse YAML with default settings ({indent})")
             else:
-                warn("", f"YAML (indent?) error: {indent}:\n{str(parser_err)}")
+                err = "YAML (indent?) error:"
+                dedup_warn(f"{err} {indent}:\n{str(parser_err)}")
                 settings = EMITTER_SETTINGS
         else:
             emitter.dump(config, config_stream)
@@ -810,7 +816,7 @@ def update_pre_commit_files(folder: str = ".") -> int:
         try:
             with open(config_file, "r+", encoding="utf-8") as pre_commit:
                 if update_pre_commit_file_patterns(pre_commit):
-                    warn("", f"Updated '{config_file}'")  # TODO: test to raise
+                    dedup_warn(f"Updated '{config_file}'")  # TODO: test for it
                     modified = 1
         except (KeyError, TypeError) as config_err:
             raise ValueError(f"Invalid pre-commit: '{file}'") from config_err
@@ -923,7 +929,7 @@ def fsdecode(path: bytes) -> str:
             return path.decode("utf-8", errors="surrogateescape")
         return os.fsdecode(path)
     except UnicodeDecodeError:  # pragma: no cover
-        warn("", f"Bad encoding for '{path.decode(errors='replace')}'")
+        dedup_warn(f"Bad encoding for '{path.decode(errors='replace')}'")
         return U_FFFC
 
 
@@ -932,6 +938,9 @@ def self_test() -> int:
 
     :returns: Zero (0) if all tests passed, otherwise one (1).
     """
+    if not sys.warnoptions:
+        warnings.simplefilter("default")  # Generate all warnings.
+
     # pylint: disable=import-outside-toplevel,redefined-outer-name
     import doctest
 
@@ -1044,7 +1053,7 @@ True
 """,
     MAIN: """
 >>> stderr = sys.stderr
->>> sys.stderr = sys.stdout  # also capture warn() stderr messages
+>>> sys.stderr = sys.stdout  # also capture dedup_warn() stderr messages
 >>> main(["reliabot"])
 Traceback (most recent call last):
 ...
@@ -1086,7 +1095,7 @@ Failed to write configuration file:
 """,
     SAFE_DUMP: r"""
 >>> stderr = sys.stderr
->>> sys.stderr = sys.stdout  # also capture warn() stderr messages
+>>> sys.stderr = sys.stdout  # also capture dedup_warn() stderr messages
 >>> io_string = StringIO()
 >>> test_config = load_dependabot_config(b".pre-commit-config.yaml")
 >>> test_config = { "a": [{"b": 1, "c": {"d": 2}}], "e": 4}

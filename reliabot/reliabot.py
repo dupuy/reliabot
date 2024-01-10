@@ -143,14 +143,12 @@ try:
     # ruamel.yaml preserves comments, PyYAML doesn't.
     from ruamel.yaml import YAML
 
-    RUAMEL_YAML_NOT_FOUND = False
 except ModuleNotFoundError as module_not_found:
     error(f"{module_not_found} {RUAMEL_YAML_NOT_FOUND_ERROR_MESSAGE}")
 
-if not RUAMEL_YAML_NOT_FOUND:
-    from ruamel.yaml.comments import CommentedMap
-    from ruamel.yaml.comments import CommentedSeq
-    from ruamel.yaml.parser import ParserError
+from ruamel.yaml.comments import CommentedMap
+from ruamel.yaml.comments import CommentedSeq
+from ruamel.yaml.parser import ParserError
 
 DOT_YAML = r"[.]ya?ml"
 DOT_YAML_REGEX = re.compile(rf"{DOT_YAML}$")  # used for search, not full match

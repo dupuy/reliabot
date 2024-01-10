@@ -60,6 +60,7 @@ from ruamel.yaml.comments import CommentedMap
 from ruamel.yaml.comments import CommentedSeq
 from ruamel.yaml.parser import ParserError
 
+
 class Err(IntEnum):
     """Error exit codes for reliabot."""
 

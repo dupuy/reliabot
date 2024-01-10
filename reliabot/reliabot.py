@@ -142,7 +142,7 @@ RUAMEL_YAML_NOT_FOUND_ERROR_MESSAGE = """
 try:
     # ruamel.yaml preserves comments, PyYAML doesn't.
     from ruamel.yaml import YAML
-    
+
     RUAMEL_YAML_NOT_FOUND = False
 except ModuleNotFoundError as module_not_found:
     error(f"{module_not_found} {RUAMEL_YAML_NOT_FOUND_ERROR_MESSAGE}")

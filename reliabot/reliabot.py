@@ -23,6 +23,7 @@ from __future__ import annotations
 import os
 import subprocess
 import sys
+import traceback
 import warnings
 from collections import defaultdict
 from enum import IntEnum
@@ -302,6 +303,9 @@ def main(optargv: Optional[list[str]] = None) -> int:  # noqa: MC0001
     except IndexError:
         usage()
 
+    if not sys.warnoptions:
+        warnings.simplefilter("ignore")
+
     repo_dir = argv[1].encode(FS_ENCODING, "surrogatepass")
     dconf = join(repo_dir, GITHUB_DEPENDABOT)
 
@@ -413,7 +417,12 @@ def extract_settings(
 
     try:
         comments = [comment.value for comment in config.ca.comment[1]]
-    except (AttributeError, IndexError):
+    except (AttributeError, IndexError, TypeError):
+        nlsp = "\n "
+        warnings.warn(
+            f"{nlsp} extract_settings() couldn't get comments"
+            f"{nlsp}{traceback.format_exc()}"
+        )
         return settings
 
     for comment in comments:
@@ -711,6 +720,7 @@ def validate_dependabot_config(config: Union[CommentedMap, dict]) -> None:
                 if not isinstance(conf["directory"], str):
                     msg = "Invalid Dependabot config: 'directory' not a string"
     except TypeError:
+        warnings.warn(f"{traceback.format_exc()}")
         msg = "Invalid Dependabot config"
     except KeyError as k:
         msg = f"Dependabot configuration is missing '{k.args[0]}'"
@@ -846,6 +856,7 @@ def update_pre_commit_files(folder: str = ".") -> int:
                     dedup_warn(f"Updated '{config_file}'")  # TODO: test for it
                     modified = 1
         except (KeyError, TypeError) as config_err:
+            warnings.warn(f"{traceback.format_exc()}")
             raise ValueError(f"Invalid pre-commit: '{file}'") from config_err
     return Err.UPDATED if modified else 0
 
@@ -967,6 +978,7 @@ def self_test() -> int:
     """
     if not sys.warnoptions:
         warnings.simplefilter("default")  # Generate all warnings.
+        os.environ["PYTHONWARNINGS"] = "default"  # Also affect subprocesses
 
     # pylint: disable=import-outside-toplevel,redefined-outer-name
     import doctest
@@ -1108,6 +1120,10 @@ SystemExit: 2
 >>> main(["reliabot", "--", "testdir/git"])
 'testdir/git' has no files tracked by Git.
 <Err.RUNTIME: 1>
+>>> if not sys.warnoptions:
+...     sys.warnoptions = ["default"]
+>>> sys.warnoptions
+['default']
 >>> badlink = "testdir/badlink/.github/dependabot.yml"
 >>> if os.path.exists(badlink):
 ...     os.unlink(badlink)

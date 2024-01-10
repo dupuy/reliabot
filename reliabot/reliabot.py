@@ -42,25 +42,6 @@ from typing import Optional
 from typing import TextIO
 from typing import Union
 
-try:
-    # ruamel.yaml preserves comments, PyYAML doesn't.
-    from ruamel.yaml import YAML
-except ModuleNotFoundError as module_not_found:
-    error_message = "".join(
-        [
-            f"{module_not_found}",
-            "\n\n",
-            "Reliabot requires the ruamel.yaml module to preserve comments in dependabot.yml files.",
-            "\n",
-            "See https://github.com/dupuy/reliabot/#installation for installation instructions.",
-        ]
-    )
-    sys.exit(error_message)
-from ruamel.yaml.comments import CommentedMap
-from ruamel.yaml.comments import CommentedSeq
-from ruamel.yaml.parser import ParserError
-
-
 class Err(IntEnum):
     """Error exit codes for reliabot."""
 
@@ -143,6 +124,24 @@ else:
 
 if not RE2:
     import re
+
+try:
+    # ruamel.yaml preserves comments, PyYAML doesn't.
+    from ruamel.yaml import YAML
+except ModuleNotFoundError as module_not_found:
+    error_message = "".join(
+        [
+            f"{module_not_found}",
+            "\n\n",
+            "Reliabot requires the ruamel.yaml module to preserve comments in dependabot.yml files.",
+            "\n",
+            "See https://github.com/dupuy/reliabot/#installation for installation instructions.",
+        ]
+    )
+    sys.exit(error_message)
+from ruamel.yaml.comments import CommentedMap
+from ruamel.yaml.comments import CommentedSeq
+from ruamel.yaml.parser import ParserError
 
 COMMENT_PREFIX = "# reliabot:"
 COMMENT_PREFIX_MATCH = re.compile(rf"\s*{COMMENT_PREFIX}")

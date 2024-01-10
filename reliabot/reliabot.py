@@ -42,6 +42,11 @@ from typing import Optional
 from typing import TextIO
 from typing import Union
 
+from ruamel.yaml.comments import CommentedMap
+from ruamel.yaml.comments import CommentedSeq
+from ruamel.yaml.parser import ParserError
+
+
 class Err(IntEnum):
     """Error exit codes for reliabot."""
 
@@ -139,9 +144,6 @@ except ModuleNotFoundError as module_not_found:
         ]
     )
     sys.exit(error_message)
-from ruamel.yaml.comments import CommentedMap
-from ruamel.yaml.comments import CommentedSeq
-from ruamel.yaml.parser import ParserError
 
 COMMENT_PREFIX = "# reliabot:"
 COMMENT_PREFIX_MATCH = re.compile(rf"\s*{COMMENT_PREFIX}")

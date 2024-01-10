@@ -263,6 +263,7 @@ repos:
           - mdformat-gfm # GitHub-flavored Markdown
           - mdformat-tables # GitHub-flavored Markdown tables
           - mdformat-toc # generate table of contents
+          - setuptools
 
   - repo: https://github.com/markdownlint/markdownlint
     rev: v0.12.0

@@ -134,6 +134,8 @@ if not RE2:
 COMMENT_PREFIX = "# reliabot:"
 COMMENT_PREFIX_MATCH = re.compile(rf"\s*{COMMENT_PREFIX}")
 
+DEFAULT_INTERVAL = "monthly"
+
 DEPENDABOT_CONFIG = b"dependabot.yml"
 
 DOCTEST_OPT = "--self-test"  # Command line option for running doctests.
@@ -621,24 +623,28 @@ def update_dependabot_config(
     >>> dont_keep = lambda dir_path: False
     >>> update_dependabot_config(test_conf, ecos, dont_keep)
     True
-    >>> test_conf
-    {'version': 2, 'updates': [{'directory': '/', 'package-ecosystem': 'npm'}]}
+    >>> test_conf["version"]
+    2
+    >>> len(test_conf["updates"])
+    1
+    >>> list(test_conf["updates"][0].keys())
+    ['directory', 'package-ecosystem', 'schedule']
     >>> update_dependabot_config(test_conf, ecos, dont_keep)
     False
-    >>> ecos2 = {"/": {"pip"}, "/test": {"npm"}}
+    >>> ecos2 = {"/": {"pip"}, "/test": {"npm"}, 'schedule': {'interval': 'monthly'}}
     >>> update_dependabot_config(test_conf, ecos2, dont_keep)
     True
     >>> test_conf["updates"][1]
-    {'directory': '/test', 'package-ecosystem': 'npm'}
+    {'directory': '/test', 'package-ecosystem': 'npm', 'schedule': {'interval': 'monthly'}}
     >>> ecos3 = {"/": {"pub"}}
     >>> exclusions = Exclusions(keys=["kept"])
     >>> exclusions.add("kept", "/tes*")
     >>> update_dependabot_config(test_conf, ecos3, exclusions.matcher("kept"))
     True
     >>> test_conf["updates"][0]
-    {'directory': '/test', 'package-ecosystem': 'npm'}
+    {'directory': '/test', 'package-ecosystem': 'npm', 'schedule': {'interval': 'monthly'}}
     >>> test_conf["updates"][1]
-    {'directory': '/', 'package-ecosystem': 'pub'}
+    {'directory': '/', 'package-ecosystem': 'pub', 'schedule': {'interval': 'monthly'}}
     >>> len(test_conf['updates'])
     2
     """
@@ -684,15 +690,23 @@ def update_dependabot_config(
 def validate_dependabot_config(config: Union[CommentedMap, dict]) -> None:
     """Sanity check parsed Dependabot configuration.
 
+    This does not attempt to fully validate the dependabot.yml schema
+    (you can use jsonschema and the schemastore dependabot JSON schema)
+    but merely checks that required structure is present with correct types.
+
     :param config: Parsed Dependabot configuration.
     :raises ValueError: if the configuration fails basic sanity checks
 
-    >>> test_conf = {"version": 3}
-    >>> validate_dependabot_config(test_conf)  # doctest: +ELLIPSIS
+    >>> minimal_conf = {"version": 3, "updates": [{
+    ...     "directory": "D", "package-ecosystem": "P",
+    ...     "schedule": {"interval": "I"}}
+    ... ]}
+    >>> validate_dependabot_config(minimal_conf)  # doctest: +ELLIPSIS
     Traceback (most recent call last):
     ...
     ValueError: ...Dependabot config... version ...
-    >>> test_conf["updates"] = [{"directory": "example"}]
+    >>> minimal_conf["version"] = 2
+    >>> validate_dependabot_config(minimal_conf)
     """
     msg = None
     try:
@@ -701,18 +715,27 @@ def validate_dependabot_config(config: Union[CommentedMap, dict]) -> None:
             raise ValueError(f"Dependabot config version '{vers}' – must be 2")
         confs = config["updates"]
         if not isinstance(confs, (CommentedSeq, list)):
-            msg = "Invalid Dependabot config: 'updates' not a list"
+            msg = ": 'updates' isn't a list"
         else:
             for conf in confs:
-                if not isinstance(conf["directory"], str):
-                    msg = "Invalid Dependabot config: 'directory' not a string"
+                for str_prop in ["directory", "package-ecosystem"]:
+                    if not isinstance(conf[str_prop], str):
+                        msg = f": update '{str_prop}' isn't a string"
+                        break
+                if not isinstance(conf["schedule"], (CommentedMap, dict)):
+                    msg = ": update 'schedule' isn't a dict"
+                    break
+                if not isinstance(conf["schedule"]["interval"], str):
+                    msg = ": update 'schedule.interval' isn't a string"
+                    break
     except TypeError:
         warnings.warn(f"{traceback.format_exc()}")
-        msg = "Invalid Dependabot config"
-    except KeyError as k:
-        msg = f"Dependabot configuration is missing '{k.args[0]}'"
-    if msg:
-        raise ValueError(msg)
+        msg = "uration"
+    except KeyError as key:
+        # pylint: disable=raise-missing-from
+        raise ValueError(f"Dependabot configuration missing '{key.args[0]}'")
+    if msg is not None:
+        raise ValueError(f"Invalid Dependabot config{msg}")
 
 
 def create_dependabot_config(ecosystems: dict[str, set]) -> list[dict]:
@@ -725,9 +748,9 @@ def create_dependabot_config(ecosystems: dict[str, set]) -> list[dict]:
 
     >>> updates = create_dependabot_config({"/test": {"npm", "docker"}})
     >>> updates[0]
-    {'directory': '/test', 'package-ecosystem': 'docker'}
+    {'directory': '/test', 'package-ecosystem': 'docker', 'schedule': {'interval': 'monthly'}}
     >>> updates[1]
-    {'directory': '/test', 'package-ecosystem': 'npm'}
+    {'directory': '/test', 'package-ecosystem': 'npm', 'schedule': {'interval': 'monthly'}}
     """
     config: dict[str, list[dict]] = {"updates": []}
     for directory, ecosystem_list in sorted(list(ecosystems.items())):
@@ -822,9 +845,15 @@ def add_conf(config: dict, folder: str, eco: str) -> None:
     >>> conf = {"updates": []}
     >>> add_conf(conf, "/", "pub")
     >>> conf["updates"]
-    [{'directory': '/', 'package-ecosystem': 'pub'}]
+    [{'directory': '/', 'package-ecosystem': 'pub', 'schedule': {'interval': 'monthly'}}]
     """
-    config["updates"].append({"directory": folder, "package-ecosystem": eco})
+    config["updates"].append(
+        {
+            "directory": folder,
+            "package-ecosystem": eco,
+            "schedule": {"interval": DEFAULT_INTERVAL},
+        }
+    )
 
 
 def update_pre_commit_files(folder: str = ".") -> int:

@@ -1,28 +1,31 @@
-# Contributing to reliabot
+# Contributing to Reliabot
 
-First off, thanks for taking the time to contribute! ❤️
+🙏Thanks in advance for your contributions ❤️
 
-All types of contributions are encouraged and valued. See the
-[Table of Contents][1] for different ways to help and details about how this
-project handles them. Please make sure to read the relevant section before
-making your contribution. It will make it a lot easier for us maintainers and
-smooth out the experience for all involved. The community looks forward to your
-contributions. 🎉
+There are _many_ ways to contribute – one of the best is just using Reliabot
+for your projects. [Open an issue][4] if you have a problem, or if you think of
+a way to improve Reliabot. Fix a typo or broken URL in the docs, or add support
+for a software distribution packager – no contribution is too small or large.
 
-> And if you like the project, but just don't have time to contribute, that's
-> fine. There are other easy ways to support the project and show your
-> appreciation, which we would also be very happy about:
+See the [Table of contents][1] for different ways to help and details about how
+this project handles them. _Please read the relevant section before
+contributing_. This makes it easier for the team and improves the experience
+for everyone.
+
+👀 Looking forward to your contributions 🎉
+
+> If you use or like the project, but don't have time to contribute, that's OK.
+> Here are some easy ways to support Reliabot and show your appreciation.
 >
-> - Star the project
-> - Tweet about it
-> - Refer this project in your project's readme
-> - Mention the project at local meetups and tell your friends/colleagues
+> - Star the Reliabot GitHub project
+> - Refer to Reliabot in your project's README
+> - Mention Reliabot in social media
 
-## Table of Contents
+## Table of contents
 
 <!-- mdformat-toc start --slug=github --no-anchors --maxlevel=3 --minlevel=2 -->
 
-- [Table of Contents](#table-of-contents)
+- [Table of contents](#table-of-contents)
 - [I Have a Question](#i-have-a-question)
 - [I Want To Contribute](#i-want-to-contribute)
   - [Legal Notice](#legal-notice)

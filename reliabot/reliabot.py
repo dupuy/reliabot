@@ -19,6 +19,9 @@ in the `testdir` hierarchy that cannot be added to the Git repository:
 ...     _ = isdir(".git") or os.mkdir(".git")
 """
 from __future__ import annotations
+from ruamel.yaml.parser import ParserError  # noreorder
+from ruamel.yaml.comments import CommentedSeq  # noreorder
+from ruamel.yaml.comments import CommentedMap  # noreorder
 
 import os
 import subprocess
@@ -41,6 +44,7 @@ from typing import Iterator
 from typing import Optional
 from typing import TextIO
 from typing import Union
+
 
 class Err(IntEnum):
     """Error exit codes for reliabot."""
@@ -144,9 +148,6 @@ except ModuleNotFoundError as module_not_found:
     error(f"{module_not_found} {RUAMEL_YAML_NOT_FOUND_ERROR_MESSAGE}")
 
 # pylint: disable=ungrouped-imports
-from ruamel.yaml.comments import CommentedMap # noreorder
-from ruamel.yaml.comments import CommentedSeq # noreorder
-from ruamel.yaml.parser import ParserError # noreorder
 
 DOT_YAML = r"[.]ya?ml"
 DOT_YAML_REGEX = re.compile(rf"{DOT_YAML}$")  # used for search, not full match

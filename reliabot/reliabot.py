@@ -19,9 +19,6 @@ in the `testdir` hierarchy that cannot be added to the Git repository:
 ...     _ = isdir(".git") or os.mkdir(".git")
 """
 from __future__ import annotations
-from ruamel.yaml.parser import ParserError  # noreorder
-from ruamel.yaml.comments import CommentedSeq  # noreorder
-from ruamel.yaml.comments import CommentedMap  # noreorder
 
 import os
 import subprocess
@@ -147,7 +144,10 @@ try:
     from ruamel.yaml import YAML
 except ModuleNotFoundError as module_not_found:
     error(f"{module_not_found} {RUAMEL_YAML_NOT_FOUND_ERROR_MESSAGE}")
-
+# noreorder
+from ruamel.yaml.parser import ParserError
+from ruamel.yaml.comments import CommentedSeq
+from ruamel.yaml.comments import CommentedMap
 
 DOT_YAML = r"[.]ya?ml"
 DOT_YAML_REGEX = re.compile(rf"{DOT_YAML}$")  # used for search, not full match

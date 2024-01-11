@@ -141,7 +141,6 @@ RUAMEL_YAML_NOT_FOUND_ERROR_MESSAGE = """
     See https://github.com/dupuy/reliabot/#installation for installation instructions."""
 try:
     # ruamel.yaml preserves comments, PyYAML doesn't.
-    # pylint: disable=ungrouped-imports
     from ruamel.yaml import YAML
 
     RUAMEL_YAML_NOT_FOUND = False

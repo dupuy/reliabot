@@ -42,11 +42,6 @@ from typing import Optional
 from typing import TextIO
 from typing import Union
 
-from ruamel.yaml.comments import CommentedMap
-from ruamel.yaml.comments import CommentedSeq
-from ruamel.yaml.parser import ParserError
-
-
 class Err(IntEnum):
     """Error exit codes for reliabot."""
 
@@ -148,9 +143,10 @@ try:
     from ruamel.yaml import YAML
 except ModuleNotFoundError as module_not_found:
     error(f"{module_not_found} {RUAMEL_YAML_NOT_FOUND_ERROR_MESSAGE}")
-# no-reorder
-# noreorder
 
+from ruamel.yaml.comments import CommentedMap # noreorder
+from ruamel.yaml.comments import CommentedSeq # noreorder
+from ruamel.yaml.parser import ParserError # noreorder
 
 DOT_YAML = r"[.]ya?ml"
 DOT_YAML_REGEX = re.compile(rf"{DOT_YAML}$")  # used for search, not full match

@@ -42,6 +42,7 @@ from typing import Optional
 from typing import TextIO
 from typing import Union
 
+
 class Err(IntEnum):
     """Error exit codes for reliabot."""
 
@@ -142,6 +143,7 @@ try:
     # ruamel.yaml preserves comments, PyYAML doesn't.
     # pylint: disable=ungrouped-imports
     from ruamel.yaml import YAML
+
     RUAMEL_YAML_NOT_FOUND = False
 except ModuleNotFoundError as module_not_found:
     error(f"{module_not_found} {RUAMEL_YAML_NOT_FOUND_ERROR_MESSAGE}")

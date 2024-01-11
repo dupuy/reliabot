@@ -1,5 +1,3 @@
-[Dd]ependabot
-[Rr]eliabot
 BSD
 CFG
 INI
@@ -8,11 +6,13 @@ Makefile
 PEP
 Quis
 TOML
+[Dd]ependabot
+[Rr]eliabot
 commitizen
 formatters
+ipsos
 markdownlint
 mdformat
-ipsos
 renovatores
 virtualenv
 wontfix

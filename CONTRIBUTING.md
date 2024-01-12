@@ -24,11 +24,10 @@ everyone.
 > - Refer to Reliabot in your project's README
 > - Link to Reliabot in social media
 
-## Table of contents
+#### Table of contents
 
 <!-- mdformat-toc start --slug=github --no-anchors --maxlevel=3 --minlevel=2 -->
 
-- [Table of contents](#table-of-contents)
 - [Asking a question](#asking-a-question)
 - [Reporting bugs](#reporting-bugs)
   - [Before submitting a bug report](#before-submitting-a-bug-report)

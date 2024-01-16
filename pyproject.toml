@@ -43,7 +43,7 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.8"  # 3.8 end-of-life 2024-10
 
-"ruamel.yaml" = "^0.17.32"
+"ruamel.yaml" = "^0.18.5"
 
 pyre2 = { version = "^0.3.6", optional = true }
 pyre2-updated = { version = "^0.3.7", optional = true }

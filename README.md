@@ -16,6 +16,7 @@ require version updates.
   - [From PyPI for direct use](#from-pypi-for-direct-use)
   - [As a `pre-commit` hook](#as-a-pre-commit-hook)
 - [Console script](#console-script)
+  - [Examples](#examples)
 - [Pre-commit hook](#pre-commit-hook)
   - [Using with other pre-commit checks](#using-with-other-pre-commit-checks)
 - [FAQ](#faq)
@@ -53,10 +54,11 @@ continuous integration service.
 
 ### From PyPI for direct use
 
-Use `pip` to install the `reliabot` Python script on your system
+Use `pip3` to install the `reliabot` Python script on your system or
+virtualenv.
 
 ```shell
-pip install reliabot
+pip3 install reliabot
 ```
 
 #### Installing with RE2
@@ -66,14 +68,14 @@ regex support in its environment. This also requires the C++ RE2 library
 (`brew install re2` or use Linux/BSD package tools to install `re2`).
 
 ```shell
-pip install 'reliabot[pyre2]'
+pip3 install 'reliabot[pyre2-wheels]'
 ```
 
-Alternately, the `pyre2-wheels` extra, which depends on [pyre2-updated][7], may
-work better, as it has pre-built wheels for many current platforms:
+If the `pyre2-wheels` extra (which depends on [pyre2-updated][7]) doesn't work,
+try the original `pyre2` to build from source. This requires a C++ compiler.
 
 ```shell
-pip install 'reliabot[pyre2-wheels]'
+pip3 install 'reliabot[pyre2]'
 ```
 
 Once installed, you can add the Python binary directory to your `PATH`.
@@ -121,10 +123,45 @@ The `reliabot` script takes a single argument: a Git repository path, and
 creates or updates the `dependabot.yml` configuration file for the repository
 based on the files tracked in Git, including both committed and staged files.
 
+### Examples
+
+Here is the console output from running Reliabot on its own source sub-folder
+to create a new configuration:
+
 ```console
-$ reliabot .
-Creating new configuration: './.github/dependabot.yml'
-Updated './.github/dependabot.yml'
+reliabot$ rm -f reliabot/.github && mkdir -p reliabot/.github
+reliabot$ ./reliabot/reliabot.py reliabot
+Creating 'reliabot/.github/dependabot.yml'...
+reliabot$ cat reliabot/.github/dependabot.yml
+---
+version: 2
+updates:
+  - directory: /
+    package-ecosystem: pip
+    schedule:
+        interval: monthly
+```
+
+Here is the console output from running Reliabot to update an existing
+configuration in its own source sub-folder (copied from the root folder):
+
+```console
+reliabot$ rm -f reliabot/.github && mkdir -p reliabot/.github
+reliabot$ grep -v keep= .github/dependabot.yml >reliabot/.github/dependabot.yml
+reliabot$ ./reliabot/reliabot.py reliabot
+Removed obsolete 'github-actions' entry in '/'
+Updating 'reliabot/.github/dependabot.yml'...
+reliabot$ cat reliabot/.github/dependabot.yml
+---
+# reliabot: mapping=4 offset=2 sequence=4
+# reliabot: ignore=./reliabot # already tracked in repository root
+# reliabot: ignore=testdir/
+version: 2
+updates:
+  - directory: /
+    package-ecosystem: pip
+    schedule:
+        interval: daily
 ```
 
 ## Pre-commit hook

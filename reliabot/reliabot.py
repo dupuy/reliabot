@@ -134,7 +134,6 @@ DEPENDABOT_CONFIG = b"dependabot.yml"
 DOCTEST_OPT = "--self-test"  # Command line option for running doctests.
 DOCTEST_OPTION_FLAGS = 0  # This is modified in the re.error exception handler.
 
-RUAMEL_YAML_NOT_FOUND = True
 RUAMEL_YAML_NOT_FOUND_ERROR_MESSAGE = """
 
     Reliabot requires the ruamel.yaml module to preserve comments in dependabot.yml files.
@@ -142,12 +141,9 @@ RUAMEL_YAML_NOT_FOUND_ERROR_MESSAGE = """
 try:
     # ruamel.yaml preserves comments, PyYAML doesn't.
     from ruamel.yaml import YAML
-
-    RUAMEL_YAML_NOT_FOUND = False
 except ModuleNotFoundError as module_not_found:
     error(f"{module_not_found} {RUAMEL_YAML_NOT_FOUND_ERROR_MESSAGE}")
-
-if not RUAMEL_YAML_NOT_FOUND:
+else:
     from ruamel.yaml.comments import CommentedMap
     from ruamel.yaml.comments import CommentedSeq
     from ruamel.yaml.parser import ParserError

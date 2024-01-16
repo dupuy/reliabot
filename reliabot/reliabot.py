@@ -42,11 +42,6 @@ from typing import Optional
 from typing import TextIO
 from typing import Union
 
-from ruamel.yaml import YAML  # ruamel.yaml preserves comments, PyYAML doesn't.
-from ruamel.yaml.comments import CommentedMap
-from ruamel.yaml.comments import CommentedSeq
-from ruamel.yaml.parser import ParserError
-
 
 class Err(IntEnum):
     """Error exit codes for reliabot."""
@@ -138,6 +133,20 @@ DEPENDABOT_CONFIG = b"dependabot.yml"
 
 DOCTEST_OPT = "--self-test"  # Command line option for running doctests.
 DOCTEST_OPTION_FLAGS = 0  # This is modified in the re.error exception handler.
+
+RUAMEL_YAML_NOT_FOUND_ERROR_MESSAGE = """
+
+    Reliabot requires the ruamel.yaml module to preserve comments in dependabot.yml files.
+    See https://github.com/dupuy/reliabot/#installation for installation instructions."""
+try:
+    # ruamel.yaml preserves comments, PyYAML doesn't.
+    from ruamel.yaml import YAML
+except ModuleNotFoundError as module_not_found:
+    error(f"{module_not_found} {RUAMEL_YAML_NOT_FOUND_ERROR_MESSAGE}")
+else:
+    from ruamel.yaml.comments import CommentedMap
+    from ruamel.yaml.comments import CommentedSeq
+    from ruamel.yaml.parser import ParserError
 
 DOT_YAML = r"[.]ya?ml"
 DOT_YAML_REGEX = re.compile(rf"{DOT_YAML}$")  # used for search, not full match

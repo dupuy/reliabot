@@ -43,9 +43,9 @@ repos:
       # - id: name-tests-test
       - id: no-commit-to-branch
         args:
-          # - --branch=main
+          - --branch=main
           - --branch=master
-          - --pattern=.*[^A-Za-z0-9_-].*
+          - --pattern=.*[^A-Za-z0-9/.-].*
       # - id: sort-simple-yaml
       - id: requirements-txt-fixer
         exclude: reliabot/requirements.txt

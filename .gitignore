@@ -14,6 +14,7 @@ dist/
 .coverage
 .mypy.cache/
 .tox/
+*.md.sh
 
 # MacOS
 .DS_Store

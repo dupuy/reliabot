@@ -430,37 +430,49 @@ def extract_settings(
 
     for comment in comments:
         offset = COMMENT_PREFIX_MATCH.match(comment)
-        if offset is None:
-            continue
-        setting = f"'{COMMENT_PREFIX}' setting"
-        bad_setting = f"Bad {setting}"
-        for word in comment[offset.end() :].split():
-            if word.startswith("#"):
-                break
-            if "=" not in word:
-                dedup_warn(f"{bad_setting}: must be X=Y: '{word}'", "=")
-                continue
-            key, value = word.split("=", 1)
-            if key in settings:
-                if isinstance(settings[key], bool):
-                    value = value.lower()
-                    if value in TRUTHY:
-                        settings[key] = bool(TRUTHY[value])
-                    else:
-                        dedup_warn(f"{bad_setting}: '{word}'", key)
-                elif isinstance(settings[key], set):
-                    settings[key].add(value)
-                elif isinstance(settings[key], int):
-                    try:
-                        settings[key] = int(value)
-                    except ValueError:
-                        dedup_warn(f"{bad_setting}: '{word}'", key)
-                else:
-                    vtyp = str(type(settings[key]))
-                    dedup_warn(f"{bad_setting} type: {vtyp}", vtyp)
-            else:
-                dedup_warn(f"Unknown {setting}: '{word}'", key)
+        if offset:
+            get_comment_settings(settings, comment[offset.end() :])
     return settings
+
+
+def get_comment_settings(settings: dict, comment: str) -> None:
+    """Extract settings from one Reliabot YAML comment.
+
+    Reliabot comments end with a newline or a '#' following a space. Settings
+    are space-separated "key=value" without punctuation, escapes, or quotation.
+    So "foo=bar, baz=quux" sets foo to "bar," (including the comma).
+
+    :param settings: Reliabot configuration settings.
+    :param comment: Reliabot comment (without prefix).
+    """
+    setting = f"'{COMMENT_PREFIX}' setting"
+    bad_setting = f"Bad {setting}"
+    for word in comment.split():
+        if word.startswith("#"):
+            break
+        if "=" not in word:
+            dedup_warn(f"{bad_setting}: must be X=Y: '{word}'", "=")
+            continue
+        key, value = word.split("=", 1)
+        if key in settings:
+            if isinstance(settings[key], bool):
+                value = value.lower()
+                if value in TRUTHY:
+                    settings[key] = bool(TRUTHY[value])
+                else:
+                    dedup_warn(f"{bad_setting}: '{word}'", key)
+            elif isinstance(settings[key], set):
+                settings[key].add(value)
+            elif isinstance(settings[key], int):
+                try:
+                    settings[key] = int(value)
+                except ValueError:
+                    dedup_warn(f"{bad_setting}: '{word}'", key)
+            else:
+                vtyp = str(type(settings[key]))
+                dedup_warn(f"{bad_setting} type: {vtyp}", vtyp)
+        else:
+            dedup_warn(f"Unknown {setting}: '{word}'", key)
 
 
 def configure_exclusions(settings: dict[str, Any]) -> Exclusions:

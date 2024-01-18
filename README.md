@@ -19,6 +19,8 @@ require version updates.
   - [As a `pre-commit` hook](#as-a-pre-commit-hook)
 - [Pre-commit hook](#pre-commit-hook)
   - [Using with other pre-commit checks](#using-with-other-pre-commit-checks)
+- [Reliabot script](#reliabot-script)
+  - [Options](#options)
 - [FAQ](#faq)
   - [Does Reliabot work with Renovate?](#does-reliabot-work-with-renovate)
   - [Can you install Reliabot with Homebrew?](#can-you-install-reliabot-with-homebrew)
@@ -117,12 +119,17 @@ You can improve the reliability and performance of Reliabot with Python RE2
 regex support in its environment. This also requires the C++ RE2 library
 (`brew install re2` or use Linux/BSD package tools to install `re2`).
 
+> ⚠ The `pyre2-wheels` extra (which depends on [pyre2-updated][7]) doesn't work
+> for Python 3.12 – it only supports Python 3.6 to 3.11. If you need Python
+> 3.12 you can use the `--re` option to disable warnings about failure to load
+> `re2`.
+
 ```shell
 pip3 install 'reliabot[pyre2-wheels]'
 ```
 
-If the `pyre2-wheels` extra (which depends on [pyre2-updated][7]) doesn't work,
-try the original `pyre2` to build from source. This requires a C++ compiler.
+Alternately, you can try the original `pyre2` to build from source. This
+requires a C++ compiler and libraries installed on your system.
 
 ```shell
 pip3 install 'reliabot[pyre2]'
@@ -184,6 +191,18 @@ configuration, and this order provides the best results:
 1. YAML checker
 2. Reliabot
 3. YAML formatter
+
+## Reliabot script
+
+### Options
+
+- `--re` – As the first argument, this option disables any attempt to use RE2,
+  along with error or warning messages when those attempts fail.
+
+- `--self-test`– As the only argument this runs the `doctest` unit tests.
+
+- `--update` – As the only argument, this runs `reliabot` on the current
+  directory, returning exit code 4 if it made any changes to the file.
 
 ## FAQ
 

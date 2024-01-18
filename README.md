@@ -129,8 +129,9 @@ Here is the console output from running Reliabot on its own source sub-folder
 to create a new configuration:
 
 ```console
-reliabot$ rm -f reliabot/.github && mkdir -p reliabot/.github
-reliabot$ ./reliabot/reliabot.py reliabot
+reliabot$ rm -fr reliabot/.github && mkdir -p reliabot/.github reliabot/.git
+
+reliabot$ ./reliabot/reliabot.py reliabot 2>&1
 Creating 'reliabot/.github/dependabot.yml'...
 reliabot$ cat reliabot/.github/dependabot.yml
 ---
@@ -146,22 +147,24 @@ Here is the console output from running Reliabot to update an existing
 configuration in its own source sub-folder (copied from the root folder):
 
 ```console
-reliabot$ rm -f reliabot/.github && mkdir -p reliabot/.github
+reliabot$ rm -fr reliabot/.github && mkdir -p reliabot/.github reliabot/.git
+
 reliabot$ grep -v keep= .github/dependabot.yml >reliabot/.github/dependabot.yml
-reliabot$ ./reliabot/reliabot.py reliabot
+
+reliabot$ ./reliabot/reliabot.py reliabot 2>&1
 Removed obsolete 'github-actions' entry in '/'
 Updating 'reliabot/.github/dependabot.yml'...
-reliabot$ cat reliabot/.github/dependabot.yml
----
-# reliabot: mapping=4 offset=2 sequence=4
-# reliabot: ignore=./reliabot # already tracked in repository root
-# reliabot: ignore=testdir/
-version: 2
-updates:
-  - directory: /
-    package-ecosystem: pip
-    schedule:
-        interval: daily
+reliabot$ cat -n reliabot/.github/dependabot.yml
+ 1	---
+ 2	# reliabot: mapping=4 offset=2 sequence=4
+ 3	# reliabot: ignore=./reliabot # already tracked in repository root
+ 4	# reliabot: ignore=testdir/
+ 5	version: 2
+ 6	updates:
+ 7	  - directory: /
+ 8	    package-ecosystem: pip
+ 9	    schedule:
+ 10	        interval: daily
 ```
 
 ## Pre-commit hook

@@ -70,20 +70,21 @@ def usage() -> None:
     sys.exit(int(Err.USAGE))
 
 
-def error(message: str) -> None:
+def error(message: str, debug_msg: bool = True) -> None:
     """Report a bug (internal error) in reliabot and exit with status 9.
 
     :param message: Information about the internal error.
+    :param debug_msg: Whether to suggest --self-test for debugging.
     >>> os.environ[DOCTEST_OPT] = ""
     >>> error("testing error reporting")
     Traceback (most recent call last):
     ...
     SystemExit: 9
-    >>> del os.environ[DOCTEST_OPT]
     """
     dedup_warn(f"Internal error - {message}")
     if DOCTEST_OPT in os.environ or sys.argv[len(sys.argv) - 1] != DOCTEST_OPT:
-        print(f"  Diagnose with {sys.argv[0]} {DOCTEST_OPT}", file=sys.stderr)
+        if debug_msg:
+            print(f"Debug with {sys.argv[0]} {DOCTEST_OPT}", file=sys.stderr)
         sys.exit(int(Err.INTERNAL))
 
 
@@ -104,11 +105,12 @@ def dedup_warn(message: str, key: Optional[str] = None) -> None:
 
 RE2 = False
 RE_OPTION = "--re"
-RE_WARNING = """
+RE_WARNING = f"""
 
   Reliabot works better with the 're2' regular expression package.
   See https://github.com/dupuy/reliabot/#installation for install instructions,
-  or use initial '--re' option to use system 're' and suppress this warning."""
+  or use initial '{RE_OPTION}' option to force system 're' and suppress this.
+"""
 
 if len(sys.argv) > 1 and sys.argv[1] == RE_OPTION:
     sys.argv.pop(1)
@@ -138,13 +140,14 @@ DOCTEST_OPTION_FLAGS = 0  # This is modified in the re.error exception handler.
 
 RUAMEL_YAML_NOT_FOUND_ERROR_MESSAGE = """
 
-    Reliabot requires the ruamel.yaml module to preserve comments in dependabot.yml files.
-    See https://github.com/dupuy/reliabot/#installation for installation instructions."""
+  Reliabot requires ruamel.yaml to preserve comments in dependabot.yml files.
+  See https://github.com/dupuy/reliabot/#installation for install instructions.
+"""
 try:
     # ruamel.yaml preserves comments, PyYAML doesn't.
     from ruamel.yaml import YAML
 except ModuleNotFoundError as module_not_found:
-    error(f"{module_not_found} {RUAMEL_YAML_NOT_FOUND_ERROR_MESSAGE}")
+    error(f"{module_not_found} {RUAMEL_YAML_NOT_FOUND_ERROR_MESSAGE}", False)
 else:
     from ruamel.yaml.comments import CommentedMap
     from ruamel.yaml.comments import CommentedSeq
@@ -225,6 +228,8 @@ GITHUB_WORKFLOWS = join(GITHUB, b"workflows")
 GIT_CMD = "/usr/bin/git"
 GIT_DIR = b".git"
 GIT_LS = [GIT_CMD, "ls-files"]
+
+NLSP = "\n "
 
 OPT_UPDATE = "--update"  # For pre-commit, returning Err.UPDATE on changes.
 OPT_UPDATE_PRE_COMMIT = "--update-pre-commit"  # To update pre-commit configs.
@@ -338,7 +343,7 @@ def main(optargv: Optional[list[str]] = None) -> int:  # noqa: MC0001
         if not filename.startswith(os.pathsep):
             cwd = f" in '{os.getcwd()}'"
         err = f"{os_err.strerror}: '{filename}'{cwd}"
-        dedup_warn(f"Failed to {action} configuration file:\n  {err}")
+        dedup_warn(f"Failed to {action} configuration file:{NLSP}{err}")
         return Err.RUNTIME
     except RuntimeError as rt_err:
         dedup_warn(str(rt_err))
@@ -416,11 +421,11 @@ def extract_settings(
     try:
         comments = [comment.value for comment in config.ca.comment[1]]
     except (AttributeError, IndexError, TypeError):
-        nlsp = "\n "
-        warnings.warn(
-            f"{nlsp} extract_settings() couldn't get comments"
-            f"{nlsp}{traceback.format_exc()}"
-        )
+        if config:
+            warnings.warn(
+                f"{NLSP} extract_settings() couldn't get comments"
+                f"{NLSP}{traceback.format_exc()}"
+            )
         return settings
 
     for comment in comments:
@@ -739,12 +744,12 @@ def validate_dependabot_config(config: Union[CommentedMap, dict]) -> None:
                     break
     except TypeError:
         warnings.warn(f"{traceback.format_exc()}")
-        msg = "uration"
+        msg = ""
     except KeyError as key:
         # pylint: disable=raise-missing-from
         raise ValueError(f"Dependabot configuration missing '{key.args[0]}'")
     if msg is not None:
-        raise ValueError(f"Invalid Dependabot config{msg}")
+        raise ValueError(f"Invalid Dependabot configuration{msg}")
 
 
 def create_dependabot_config(ecosystems: dict[str, set]) -> list[dict]:
@@ -805,7 +810,7 @@ def safe_dump(
                 error(f"Can't re-parse YAML with default settings ({indent})")
             else:
                 err = "YAML (indent?) error:"
-                dedup_warn(f"{err} {indent}:\n{str(parser_err)}")
+                dedup_warn(f"{err} {indent}:{NLSP}{str(parser_err)}")
                 settings = EMITTER_SETTINGS
         else:
             emitter.dump(config, config_stream)
@@ -1156,7 +1161,7 @@ SystemExit: 2
 >>> main(["reliabot", "testdir/badlink"])  # doctest: +ELLIPSIS
 Creating 'testdir/badlink/.github/dependabot.yml'...
 Failed to write configuration file:
-  No such file or directory: 'testdir/badlink/.github/dependabot.yml' in ...
+ No such file or directory: 'testdir/badlink/.github/dependabot.yml' in ...
 <Err.RUNTIME: 1>
 >>> sys.stderr = stderr
 >>> os.unlink(badlink)
@@ -1173,7 +1178,7 @@ Failed to write configuration file:
 ... }
 >>> safe_dump(test_config, bad_defaults, io_string)
 YAML (indent?) error: mapping=2 offset=2 sequence=2:
-while parsing a block collection
+ while parsing a block collection
   in "<file>", line 2, column 3
 expected <block end>, but found '?'
   in "<file>", line 3, column 3

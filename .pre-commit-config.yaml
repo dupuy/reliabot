@@ -201,7 +201,11 @@ repos:
         # See https://stackoverflow.com/a/61238571/18829.
         additional_dependencies:
           - ruamel.yaml
-        args: [--messages-only]
+          - setuptools # ModuleNotFoundError: No module named 'pkg_resources'
+        args:
+          - --messages-only
+          - --doc-warnings
+          #- --without-tool=pylint # If you get "pylint: astroid-error ..."
   - repo: https://github.com/PyCQA/bandit
     rev: 1.7.6
     hooks:

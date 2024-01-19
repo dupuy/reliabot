@@ -204,7 +204,7 @@ repos:
         args:
           - --messages-only
           - --doc-warnings
-          #- --without-tool=pylint # If you get "pylint: astroid-error ..."
+          - --without-tool=pylint # If you get "pylint: astroid-error ..."
   - repo: https://github.com/PyCQA/bandit
     rev: 1.7.6
     hooks:
@@ -356,3 +356,4 @@ ci:
   skip:
     - markdown-link-check
     - poetry-lock
+    - shfmt

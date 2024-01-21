@@ -1,5 +1,13 @@
 [general]
 ignore=body-is-missing
+# compatibility with future default
+regex-style-search=true
+
+[body-max-line-length]
+line-length=140
+
+[body-min-length]
+min-length=10
 
 [title-max-length]
 line-length=72

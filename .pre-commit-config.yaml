@@ -312,6 +312,15 @@ repos:
   #   hooks:
   #     - id: commitizen
   #       stages: [commit-msg]
+  - repo: local
+    hooks:
+      # Deepen shallow clones so that gitlint can see branch commits from trunk.
+      - id: gitlint-deepen
+        name: gitlint deepening
+        language: script
+        entry: gitlint-deepen.sh
+        always_run: true
+        pass_filenames: false
   - repo: https://github.com/jorisroovers/gitlint
     rev: v0.19.1
     hooks:
@@ -320,6 +329,7 @@ repos:
         stages: [commit-msg]
       - id: gitlint-ci
         name: gitlint-ci (pre-commit)
+        args: [--commits=main..HEAD]
         stages: [manual, pre-commit]
 
   # Pre-commit

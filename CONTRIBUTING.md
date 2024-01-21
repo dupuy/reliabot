@@ -29,24 +29,30 @@ everyone.
 <!-- mdformat-toc start --slug=github --no-anchors --maxlevel=3 --minlevel=2 -->
 
 - [Asking a question](#asking-a-question)
-- [Reporting bugs](#reporting-bugs)
-  - [Before submitting a bug report](#before-submitting-a-bug-report)
-  - [How to submit a good bug report](#how-to-submit-a-good-bug-report)
+- [Reporting problems](#reporting-problems)
+  - [Before submitting a problem report](#before-submitting-a-problem-report)
+  - [How to submit a good problem report](#how-to-submit-a-good-problem-report)
 - [Suggesting enhancements](#suggesting-enhancements)
   - [Before suggesting an enhancement](#before-suggesting-an-enhancement)
-  - [Writing a good enhancement issue](#writing-a-good-enhancement-issue)
+  - [Writing a good enhancement suggestion](#writing-a-good-enhancement-suggestion)
 - [Becoming a contributor](#becoming-a-contributor)
+  - [First contributions](#first-contributions)
+  - [Pre-commit setup](#pre-commit-setup)
   - [Contributing code and bug fixes](#contributing-code-and-bug-fixes)
   - [Improving the documentation](#improving-the-documentation)
 - [Style guides](#style-guides)
   - [Commit messages](#commit-messages)
+  - [Python code](#python-code)
+  - [Shell code](#shell-code)
+  - [Markdown documentation](#markdown-documentation)
+  - [Configuration files](#configuration-files)
 - [Attribution](#attribution)
 
 <!-- mdformat-toc end -->
 
 ## Asking a question
 
-> ℹ️ If you have a Reliabot question, take a look at the [README][6] and its
+> 💡 If you have a Reliabot question, take a look at the [README][6] and its
 > [FAQ][7] to see if it's answered there.
 
 Before asking a question, search for [existing issues][8] that are similar. If
@@ -56,66 +62,69 @@ that issue. A few internet search queries may also turn up an answer quickly.
 If you don't find an answer or an existing issue, follow these steps to ask
 your question:
 
-- [Create a new issue][2], labeling it as a 🟣 **question**.
+- [Create a new issue][9], labeling it as a 🟣 **question**.
 - Provide as much context as you can for your question.
   - Reliabot version
   - Whether you're running Reliabot with pre-commit or on the command line
-  - OS type and CPU architecture, and versions for the OS and Python runtime
+  - Operating System (distribution) and Python versions
 - Explain what you're trying to do, and what you don't understand.
 
 Someone should respond to the issue as soon as possible. Be patient. 🕗😊
 
-## Reporting bugs
+## Reporting problems
 
-### Before submitting a bug report
+### Before submitting a problem report
 
-A good bug report shouldn't force others to contact you for critical missing
-information. Please investigate carefully, find examples and counter-examples,
-and describe the problem in detail. Completing the following steps in advance
-helps to fix any potential bug as fast as possible.
+A good problem report shouldn't force others to contact you for critical
+missing information. Please investigate carefully, find examples and
+counter-examples, and describe the problem in detail. Completing the following
+steps in advance helps to fix any potential bug as fast as possible.
 
-- Make sure you are using the latest Reliabot version.
-- Confirm that your problem is really a bug and not an error on your part, such
-  as using Reliabot with unsupported environments or versions. Reading the
-  [documentation][6] can help. If you need support, consider just
-  [asking a question][1] first.
-- To see if other users have experienced (and perhaps already solved) the same
-  problem as you, search the [bug tracker][9] for similar issues or error
-  messages.
+- To see if other users have experienced (and perhaps already solved) your
+  problem, search the [bug tracker][10] for similar issues or error messages.
 - Searching the internet (especially Stack Overflow) can help you find any
   users of other tools, or in other forums, who have run into a similar
   problem.
-- Collect information about the bug:
+- Make sure you are using the latest Reliabot version.
+- Confirm that your problem is really a bug and not an error on your part, such
+  as using Reliabot with unsupported environments or versions. Reading the
+  [documentation][6] can help. If you need help, consider just
+  [asking a question][1] first.
+- Collect information about the problem:
   - Specific Reliabot command line and context.
-  - All error messages and warnings, including stack traces. Setting
-    `PYTHONWARNINGS=default` in the environment can show extra diagnostics.
-  - OS type and CPU architecture, and versions for the OS and Python runtime
-  - Possibly your input and the output
+  - Reliabot output, including error messages, warnings, and stack traces.
+    Setting `PYTHONWARNINGS=default` in the environment can show extra
+    diagnostics.
+  - Your `.pre-commit-config.yml`, `dependabot.yml`, and `.gitignore` files.
+  - If your GitHub repository is private, output from `tree` or `ls -R`.
+  - Versions of Reliabot, Python, and your Operating System (distribution).
+  - Output from `reliabot.py --self-test` (if relevant).
   - Can you reliably reproduce the problem? And can you also reproduce it with
     older Reliabot versions?
 
-### How to submit a good bug report
+### How to submit a good problem report
 
-> Don't report security related issues or vulnerabilities, or include sensitive
-> information in reports on the issue tracker, or elsewhere in public. Instead,
-> [contact the author by email][10]. If you can encrypt the email using
-> [their public key][11], or chat using Keybase, that's even better.
+> ⚠️Don't report security related issues or vulnerabilities, or include
+> sensitive information in reports on the issue tracker, or elsewhere in
+> public. Instead, [open a draft security advisory][11] and provide the
+> vulnerability information there. See the [Reliabot security policy][12] for
+> more details.
 
 The Reliabot project uses [GitHub issues][8] for tracking bugs. If you found a
 problem using Reliabot:
 
-- [Create an issue][2]. At first, it may not be clear whether it's a bug, so
-  please don't label the issue.
+- [Create an issue using the problem template][13]. It may not be clear yet
+  whether it's a bug, so please don't label the issue.
 - Describe the behavior you expect and the differences in the actual behavior.
 - Please provide as much context as possible and describe the *reproduction
   steps* that others can follow to recreate the issue. This may include your
   GitHub repository, probably its `pre-commit-config.yaml`, and definitely your
   `dependabot.yml` file.
-- For the best bug reports and fastest fixes, try to isolate the problem and
-  create a reduced test case.
+- For the best problem reports and fastest fixes, try to isolate the problem
+  and create a reduced test case.
 - Provide the information you collected in the previous section.
-- If would like to develop a fix for the bug, or already have a proposed
-  change, please mention this in the bug report.
+- If you would like to develop a fix for the problem, or already have a
+  proposed change, please mention this in the problem report.
 
 Once you have created the issue:
 
@@ -132,10 +141,8 @@ Once you have created the issue:
   mark the issue as **help wanted** or **invalid**. Until someone can reproduce
   the problem, they won't try to fix it.
 - Once they can reproduce the problem, they'll assign it to someone to
-  [implement a fix][12]. If you indicated interest in working on a fix, or that
+  [implement a fix][14]. If you indicated interest in working on a fix, or that
   you already have a proposed fix, they may assign it to you.
-
-<!--  TODO: create an issue template for bugs to provide the necessary information -->
 
 ## Suggesting enhancements
 
@@ -147,43 +154,68 @@ suggestion and how it relates to other approaches.
 ### Before suggesting an enhancement
 
 - Make sure you are using the latest Reliabot version.
-- Read the [documentation][6] carefully and see if the feature is already
-  provided
+- Read the [documentation][6] to see if Reliabot can already do what you want.
 - [Search the issues][8] to see if somebody already suggested this enhancement.
   If so, add a comment to that existing issue instead of opening a new one.
 - Find out whether your idea fits with the scope and aims of the project. It's
   up to you to make a strong case for the merits of this feature. Keep in mind
-  that features should be useful to the majority of users and not just a small
-  subset.
+  that features should be useful to many users and not just a few of them.
 
-### Writing a good enhancement issue
+### Writing a good enhancement suggestion
 
-The Reliabot project tracks [enhancement suggestions][13] with GitHub issues.
+The Reliabot project tracks [enhancement suggestions][15] with GitHub issues.
 To suggest an enhancement for Reliabot:
 
-- [Create an issue][2], labeling it as an 🔵 **enhancement**.
+- [Create an issue using the enhancement template][16], labeling it as an 🔵
+  **enhancement**.
 - Use a **clear and descriptive title** to identify the enhancement.
-- Provide a **step-by-step description of the suggested enhancement** with as
-  many details as possible.
-- **Describe the current behavior** and **explain which behavior you expected
-  to see instead** and why. You can also describe alternatives that don't work
-  for you.
-- You may want to **include screenshots** to demonstrate the steps or show
-  details of the enhancement.
-- **Explain why this enhancement would be useful** to most reliabot users. You
-  may also want to point out other projects that solved it better and which
-  could serve as inspiration.
-
-<!-- TODO: create an issue template for enhancement suggestions -->
+- Describe any problem the enhancement would solve, and explain how.
+- Provide a clear and concise **description of the suggested enhancement**.
+- **Describe the current behavior** and **explain the behavior you'd like to
+  see instead.** You can also describe alternative solutions that aren't as
+  good, and explain why.
+- **Explain why this enhancement would be useful** to many reliabot users.
 
 ## Becoming a contributor
 
 > #### Legal Notice
 >
-> By contributing code or documentation to this project, you certify, per the
-> [Developer Certificate of Origin][14] version 1.1 or later, that you have the
-> necessary rights to the content you contribute, and that they allow
-> distribution under the [Reliabot project license][15],
+> By contributing code or documentation to this project, you are certifying,
+> per the [Developer Certificate of Origin][17] version 1.1 or later, that you
+> have the necessary rights to the content you contribute, and that they allow
+> distribution under the [Reliabot project license][18],
+>
+> You do this by ["signing off" your commits][19]. "Signing off" isn't
+> cryptographic, it's just a line like "Signed-off-by: your name
+> <your.email@example.org>" at the end of a commit message. You can add it
+> manually when squash merging a PR, or by giving the `-s` or `--signoff`
+> option to `git commit`.
+
+### First contributions
+
+Unsure where to start contributing? Start by looking at Reliabot issues labeled
+[**good first issue**][20] or [**help wanted**][21].
+
+- **good first issue** – should only require a few lines of code and a test.
+- **help wanted** – more complex, requiring code design and Python experience.
+
+### Pre-commit setup
+
+Reliabot uses [pre-commit][22] to perform style checks and fixes. Whether you
+are contributing code or documentation, you should [install pre-commit][23] on
+your system, and then enable it for your local copy of the Reliabot repository:
+
+```console
+$ cd reliabot && pre-commit install
+pre-commit installed at .git/hooks/pre-commit
+```
+
+If you don't (or can't) install pre-commit on your system (say, if you're using
+the GitHub file editor in the web UI to fix a small typo), once you create a
+PR, the [pre-commit.ci][24] service runs the pre-commit checks for you and
+pushes fixes to your PRs for many style / formatting issues. Run `git pull` on
+your PR branch after the **pre-commit.ci - pr** checks are no longer pending,
+and show either success or failure.
 
 ### Contributing code and bug fixes
 
@@ -191,23 +223,82 @@ To suggest an enhancement for Reliabot:
 
 ### Improving the documentation
 
-<!-- TODO
-Updating, improving and correcting the documentation
+The documentation for Reliabot currently consists of a number of Markdown files
+in standard locations (README.md, CONTRIBUTING.md, SECURITY.md).
 
--->
+There is configuration and a Makefile for using [Vale][25] for checking prose
+style and suggest improvements to the documentation, as well as text in the
+GitHub issue templates. There is no CI integration for Vale, you have to
+install it yourself:
+
+- `brew install vale` on macOS
+
+Once you have installed Vale, you can run it with `make`.
+
+<!-- TODO: Integrate Vale into a CI pipeline -->
 
 ## Style guides
 
+[Pre-commit checks][26] cover most of the style guides below, and often
+auto-fix style issues, either as local changes in your copy of the Reliabot
+repository, or as commits that pre-commit.ci adds to your PR.
+
 ### Commit messages
 
-<!-- TODO
+- Limit the first line to 72 or fewer characters.
+- Start the first line with a [conventional commit type][27], like these
+  examples: `feat:` or `ci(pre-commit):`.
+  - _You can use [commitizen][28] or similar tools to help manage this._
+- Use the present tense ("Add feature" not "Added feature").
+- Use the imperative mood ("Move cursor to…" not "Moves cursor to…").
+- Reference issues and pull requests liberally after the first line.
 
--->
+### Python code
+
+Reliabot code uses [Black][28] style formatting. Pre-commit checks enforce this
+and some PEP code styles.
+
+### Shell code
+
+Reliabot pre-commit hooks format shell scripts with `shfmt -i 2 -ci`, and lint
+them with [`shellcheck`][22].
+
+### Markdown documentation
+
+Reliabot documentation uses GitHub Flavored Markdown, following the
+[Markdown style guide][29] implemented by [Executable Books mdformat][30], with
+some non-default `mdformat` style settings:
+
+- "Consecutive" numbering for [ordered lists][31] for compatibility with the
+  [markdownlint][32] checker, like this:
+  ```markdown
+  1. first
+  2. second
+  3. etcetera
+  ```
+- Word wrapping at 79 columns.
+- A pre-commit hook based on a Python script from a [decade-old blog post][33]
+  rewrites all [reference links][34] with numeric tags ordered by appearance in
+  the text.
+
+While these settings don't minimize Git diffs in line-by-line diff mode, they
+do maximize readability of the Markdown source files, and the
+`--word-diff=color` option for `git diff` generates usable diffs in most cases.
+
+Reliabot uses several `mdformat` plugins to auto-generate tables of contents,
+format Markdown tables, and to format code blocks with shell, Python, and
+configuration language tags.
+
+### Configuration files
+
+Reliabot uses [Prettier][35] to automatically format CFG, INI, JSON, TOML, and
+YAML configuration files. The only non-standard setting is to use single quotes
+in preference to double quotes for formats that allow this.
 
 ## Attribution
 
 The **contributing-gen** generator created the initial version of this file.
-[Make your own CONTRIBUTING.md][16] 📝
+[Make your own CONTRIBUTING.md][36] 📝
 
 [1]: #asking-a-question
 [2]: https://github.com/dupuy/reliabot/issues/new
@@ -216,12 +307,32 @@ The **contributing-gen** generator created the initial version of this file.
 [5]: #table-of-contents
 [6]: https://github.com/dupuy/reliabot#reliabot--maintain-github-dependabot-configuration
 [7]: https://github.com/dupuy/reliabot#faq
-[8]: https://github.com/dupuy/reliabot/issues?q=is%3Aissue
-[9]: https://github.com/dupuy/reliabot/issues?q=label%3Abug
-[10]: mailto:alex@dupuy.us
-[11]: https://keybase.io/dupuy
-[12]: #becoming-a-contributor
-[13]: https://github.com/dupuy/reliabot/issues?q=label%3Aenhancement
-[14]: https://developercertificate.org/
-[15]: https://github.com/dupuy/reliabot/blob/main/LICENSE
-[16]: https://github.com/bttger/contributing-gen
+[8]: https://github.com/dupuy/reliabot/issues?q=is%3Aissue+sort%3Aupdated-desc
+[9]: https://github.com/dupuy/reliabot/issues/new?assignees=&labels=question&projects=&template=question.md&title=Question+about+...
+[10]: https://github.com/dupuy/reliabot/issues?q=label%3Abug
+[11]: https://github.com/dupuy/reliabot/security/advisories/new
+[12]: https://github.com/dupuy/reliabot/security/policy
+[13]: https://github.com/dupuy/reliabot/issues/new?template=problem.md&title=Problem+with+%E2%80%A6
+[14]: #becoming-a-contributor
+[15]: https://github.com/dupuy/reliabot/issues?q=label%3Aenhancement
+[16]: https://github.com/dupuy/reliabot/issues/new?template=enhancement.md&title=Enhancement+to+https://github.com/dupuy/reliabot/issues/new?template=problem.md&title=Problem+with+%E2%80%A6
+[17]: https://developercertificate.org/
+[18]: https://github.com/dupuy/reliabot/blob/main/LICENSE
+[19]: https://stackoverflow.com/a/14044024
+[20]: https://github.com/dupuy/reliabot/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22+sort%3Acomments-desc
+[21]: https://github.com/dupuy/reliabot/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22+sort%3Acomments-desc
+[22]: https://pre-commit.com/
+[23]: https://pre-commit.com/#install
+[24]: https://pre-commit.ci
+[25]: https://vale.sh/
+[26]: #pre-commit-setup
+[27]: https://www.conventionalcommits.org/en/v1.0.0/#summary
+[28]: https://commitizen-tools.github.io/commitizen/
+[29]: https://mdformat.readthedocs.io/en/stable/users/style.html
+[30]: https://github.com/executablebooks/mdformat
+[31]: https://mdformat.readthedocs.io/en/stable/users/style.html#ordered-lists
+[32]: https://github.com/markdownlint/markdownlint
+[33]: https://leancrew.com/all-this/2012/09/tidying-markdown-reference-links/
+[34]: https://mdformat.readthedocs.io/en/stable/users/style.html#reference-links
+[35]: https://prettier.io/docs/en/
+[36]: https://github.com/bttger/contributing-gen

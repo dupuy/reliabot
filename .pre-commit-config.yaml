@@ -307,12 +307,6 @@ repos:
   #     - id: hadolint
 
   # Git commit messages
-  # - repo: https://github.com/milin/giticket
-  #   rev: v1.4
-  #   hooks:
-  #     - id: giticket
-  #       args: [--mode=regex_match, '--format=[{ticket}] {commit_msg}']
-  #       stages: [commit-msg]
   # - repo: https://github.com/commitizen-tools/commitizen
   #   rev: v2.14.2
   #   hooks:
@@ -323,6 +317,10 @@ repos:
     hooks:
       - id: gitlint
         stages: [commit-msg]
+      - id: gitlint-ci
+        args:
+          - --debug
+          - --commits=main..HEAD
 
   # Pre-commit
   - repo: meta

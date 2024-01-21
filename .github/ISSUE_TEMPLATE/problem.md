@@ -4,7 +4,6 @@ about: Report a problem you have with Reliabot
 title: Problem with ...
 labels: ''
 assignees: ''
-
 ---
 
 **Describe the problem**

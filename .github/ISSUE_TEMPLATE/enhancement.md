@@ -4,7 +4,6 @@ about: Suggest an enhancement to Reliabot
 title: Enhancement to ...
 labels: enhancement
 assignees: ''
-
 ---
 
 > 💡 _**Before creating new issues, please
@@ -14,7 +13,7 @@ assignees: ''
 **Is this enhancement related to a problem? Please describe.**
 
 _Explain the problem you're having, such as "it's frustrating when …" and how
-the enhancement would help._
+this enhancement would help._
 
 **Describe the solution you want to see.**
 
@@ -27,3 +26,5 @@ _Summarize any alternatives, and explain why they aren't as good._
 **Provide a rationale.**
 
 _Explain why this enhancement would be useful to many reliabot users._
+
+[1]: https://github.com/dupuy/reliabot/issues?q=is%3Aissue+sort%3Aupdated-desc

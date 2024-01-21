@@ -4,6 +4,7 @@ about: Suggest an enhancement to Reliabot
 title: Enhancement to ...
 labels: enhancement
 assignees: ''
+
 ---
 
 > 💡 _**Before creating new issues, please

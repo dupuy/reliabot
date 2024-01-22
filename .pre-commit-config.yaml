@@ -316,11 +316,11 @@ repos:
     rev: v0.19.1
     hooks:
       - id: gitlint
+        name: gitlint (commit-msg)
         stages: [commit-msg]
       - id: gitlint-ci
-        args:
-          - --debug
-          - --commits=main..HEAD
+        name: gitlint-ci (pre-commit)
+        stages: [manual, pre-commit]
 
   # Pre-commit
   - repo: meta

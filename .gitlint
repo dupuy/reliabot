@@ -1,5 +1,28 @@
 [general]
+
 ignore=body-is-missing
+
+# compatibility with future default
+regex-style-search=true
+
+# Adding contrib rules to [general] enables them, contrib config is not enough.
+contrib = contrib-title-conventional-commits
+# TODO: add contrib-body-requires-signed-off-by
+
+[contrib-title-conventional-commits]
+# Same as default list but specified in alphabetical order
+types = build,chore,ci,docs,feat,fix,perf,refactor,revert,style,test
+
+[ignore-by-title]
+# Ignore pre-commit.ci merge commits
+regex=^Merge [0-9a-f]{40} into [0-9a-f]{40}$
+ignore=body-is-missing,title-max-length,contrib-title-conventional-commits
+
+[body-max-line-length]
+line-length=140
+
+[body-min-length]
+min-length=10
 
 [title-max-length]
 line-length=72

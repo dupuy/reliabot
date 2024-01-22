@@ -1,14 +1,16 @@
 ---
 name: Enhancement
 about: Suggest an enhancement to Reliabot
-title: Enhancement to ...
+title: Enhancement to …
 labels: enhancement
 assignees: ''
 ---
 
-> 💡 _**Before creating new issues, please
-> [see if one already covers your suggestion][1].**_ If so, add a comment to
-> that issue instead.
+> Before suggesting an enhancement, search for similar issues:
+> https://github.com/dupuy/reliabot/issues?q=is%3Aissue+sort%3Acomments-desc
+
+> If you find one, please add a comment in that issue. For more help, see
+> https://github.com/dupuy/reliabot/blob/main/CONTRIBUTING.md##suggesting-enhancements.
 
 **Is this enhancement related to a problem? Please describe.**
 
@@ -26,5 +28,3 @@ _Summarize any alternatives, and explain why they aren't as good._
 **Provide a rationale.**
 
 _Explain why this enhancement would be useful to many reliabot users._
-
-[1]: https://github.com/dupuy/reliabot/issues?q=is%3Aissue+sort%3Aupdated-desc

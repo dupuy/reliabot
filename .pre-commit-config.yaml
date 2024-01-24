@@ -258,6 +258,14 @@ repos:
           - --without-hashes
 
   # Markdown
+  - repo: local
+    hooks:
+      # Use param, raises, returns and var; use PEP484 annotations for types.
+      - id: tidy-md-refs
+        name: Tidy numbering of Markdown reference links
+        language: script
+        entry: ./tidy-md-refs.py
+        types: [markdown]
   - repo: https://github.com/executablebooks/mdformat
     rev: 0.7.17
     hooks:

@@ -131,22 +131,19 @@ repos:
             }
         exclude: styles|testdir/github/action[.]yml
 
-  # - repo: https://github.com/jumanjihouse/pre-commit-hook-yamlfmt
-  #   rev: 0.1.0
-  #   hooks:
-  #     - id: yamlfmt
-  #       args: [--mapping=2, --sequence=4, --offset=2, --width=80]
-
-  - repo: https://github.com/jumanjihouse/pre-commit-hooks
-    rev: 3.0.0
-    hooks:
-      # - id: script-must-have-extension
-      - id: shfmt
-        args: [-i, '2', -ci]
+  # Shell
   - repo: https://github.com/shellcheck-py/shellcheck-py
     rev: v0.9.0.6
     hooks:
       - id: shellcheck
+  - repo: https://github.com/scop/pre-commit-shfmt
+    rev: v3.7.0-4
+    hooks:
+      # Choose one of:
+      #- id: shfmt-docker # Docker image (requires Docker to run)
+      #- id: shfmt-src # build from source (requires/installs Go to build)
+      - id: shfmt # prebuilt upstream executable
+        args: [-i, '2', -ci]
 
   # Go
   # - repo: https://github.com/syntaqx/git-hooks
@@ -354,4 +351,3 @@ ci:
   skip:
     - markdown-link-check
     - poetry-lock
-    - shfmt

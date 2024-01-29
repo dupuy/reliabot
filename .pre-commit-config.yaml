@@ -276,6 +276,21 @@ repos:
     hooks:
       - id: markdown-link-check
 
+  - repo: https://github.com/errata-ai/vale
+    rev: v3.0.5
+    hooks:
+      - id: vale
+        exclude: LICENSE|humans\.txt|requirements.*|vocabularies/
+        types_or:
+          - asciidoc
+          - html
+          - markdown
+          - ngdoc
+          - plain-text
+          - rst
+          - tex
+          - xhtml
+
   # Terraform
   # - repo: https://github.com/antonbabenko/pre-commit-terraform
   #   rev: v1.80.0

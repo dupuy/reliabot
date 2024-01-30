@@ -259,7 +259,7 @@ WARN_KEYS: set[str] = set()
 
 
 # pylint: disable=too-many-locals,too-many-branches,too-many-statements
-def main(optargv: Optional[list[str]] = None) -> int:  # noqa: MC0001
+def main(optargv: Optional[list[str]] = None) -> int:
     """Create or update Dependabot configuration in a Git repo.
 
     This function parses arguments and options and handles exceptions,

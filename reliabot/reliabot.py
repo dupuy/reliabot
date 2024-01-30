@@ -70,11 +70,11 @@ def usage() -> None:
     sys.exit(int(Err.USAGE))
 
 
-def error(message: str, debug_msg: bool = True) -> None:
+def error(message: str, *, debug_hint: bool = True) -> None:
     """Report a bug (internal error) in reliabot and exit with status 9.
 
     :param message: Information about the internal error.
-    :param debug_msg: Whether to suggest --self-test for debugging.
+    :param debug_hint: Whether to suggest --self-test for debugging.
     >>> os.environ[DOCTEST_OPT] = ""
     >>> error("testing error reporting")
     Traceback (most recent call last):
@@ -83,7 +83,7 @@ def error(message: str, debug_msg: bool = True) -> None:
     """
     dedup_warn(f"Internal error - {message}")
     if DOCTEST_OPT in os.environ or sys.argv[len(sys.argv) - 1] != DOCTEST_OPT:
-        if debug_msg:
+        if debug_hint:
             print(f"Debug with {sys.argv[0]} {DOCTEST_OPT}", file=sys.stderr)
         sys.exit(int(Err.INTERNAL))
 
@@ -147,7 +147,10 @@ try:
     # ruamel.yaml preserves comments, PyYAML doesn't.
     from ruamel.yaml import YAML
 except ModuleNotFoundError as module_not_found:
-    error(f"{module_not_found} {RUAMEL_YAML_NOT_FOUND_ERROR_MESSAGE}", False)
+    error(
+        f"{module_not_found} {RUAMEL_YAML_NOT_FOUND_ERROR_MESSAGE}",
+        debug_hint=False,
+    )
 else:
     from ruamel.yaml.comments import CommentedMap
     from ruamel.yaml.comments import CommentedSeq
@@ -214,7 +217,7 @@ except re.error:  # pragma: no cover
     DOCTEST_OPTION_FLAGS = doctest.FAIL_FAST  # Reduce noise from broken tests.
 
 EMITTER_INDENTS = {"mapping": 4, "offset": 2, "sequence": 4}
-EMITTER_SETTINGS = {**EMITTER_INDENTS, **{"width": 76, "yaml-start": True}}
+EMITTER_SETTINGS = {**EMITTER_INDENTS, "width": 76, "yaml-start": True}
 # TODO(Once 3.8 is EOL): EMITTER_INDENTS | {"width": 76, "yaml-start": True}
 EXCLUSIONS: dict[str, set[str]] = {"ignore": set(), "keep": set()}
 
@@ -255,7 +258,7 @@ U_FFFC = "\ufffc"  # Unicode object replacement character
 WARN_KEYS: set[str] = set()
 
 
-# pylint: disable=too-many-locals
+# pylint: disable=too-many-locals,too-many-branches,too-many-statements
 def main(optargv: Optional[list[str]] = None) -> int:  # noqa: MC0001
     """Create or update Dependabot configuration in a Git repo.
 
@@ -270,9 +273,11 @@ def main(optargv: Optional[list[str]] = None) -> int:  # noqa: MC0001
     Traceback (most recent call last):
     ...
     SystemExit: 2
-    >>> main(["reliabot.py", OPT_UPDATE]) # Updated dependabot config required,
+    >>> main(
+    ...     ["reliabot.py", OPT_UPDATE]
+    ... )  # Updated dependabot config required,
     0
-    >>> main(["reliabot.py", OPT_UPDATE_PRE_COMMIT]) # also pre-commit config.
+    >>> main(["reliabot.py", OPT_UPDATE_PRE_COMMIT])  # also pre-commit config.
     0
     >>> test_dir = "testdir/github/"
     >>> test_conf = f"{test_dir}/.github/{fsdecode(DEPENDABOT_CONFIG)}"
@@ -366,18 +371,21 @@ def check_git_repository(path: bytes) -> None:
     >>> check_git_repository(join(TESTDIR, b"git/"))
     """
     path_str = fsdecode(path)
+    msg = f"'{path_str}' "
     if not exists(path):
-        raise RuntimeError(f"'{path_str}' does not exist.")
+        msg += "does not exist."
+        raise RuntimeError(msg)
     if not isdir(path):
-        raise RuntimeError(f"'{path_str}' is not a directory.")
+        msg += "is not a directory."
+        raise RuntimeError(msg)
     git_dir = join(path, GIT_DIR)
     if not exists(git_dir):
-        raise RuntimeError(f"'{path_str}' is not a Git repository.")
+        msg += "is not a Git repository.."
+        raise RuntimeError(msg)
     if not isdir(git_dir):
         git_str = fsdecode(git_dir)
-        raise RuntimeError(
-            f"Bad Git repo '{path_str}': '{git_str}' is not a directory."
-        )
+        msg = f"Bad Git repo '{path_str}': '{git_str}' is not a directory."
+        raise RuntimeError(msg)
 
 
 def load_dependabot_config(config_yml: bytes) -> CommentedMap:
@@ -395,10 +403,11 @@ def load_dependabot_config(config_yml: bytes) -> CommentedMap:
     >>> load_dependabot_config(dependabot_yml)  # doctest: +ELLIPSIS
     {'version': 2, 'updates': [{'package-ecosystem': ...
     """
-    with open(config_yml, "r", encoding="utf-8") as dependabot_file:
+    with open(config_yml, encoding="utf-8") as dependabot_file:
         config = YAML(pure=PURE).load(dependabot_file)
     if not isinstance(config, (CommentedMap, dict)):
-        raise ValueError(f"'{dependabot_file}' is a {type(config)}, not a map")
+        msg = f"'{dependabot_file}' is a {type(config)}, not a map"
+        raise ValueError(msg)
     return config
 
 
@@ -424,7 +433,8 @@ def extract_settings(
         if config:
             warnings.warn(
                 f"{NLSP} extract_settings() couldn't get comments"
-                f"{NLSP}{traceback.format_exc()}"
+                f"{NLSP}{traceback.format_exc()}",
+                stacklevel=1,
             )
         return settings
 
@@ -435,6 +445,7 @@ def extract_settings(
     return settings
 
 
+# pylint: disable=too-many-branches
 def get_comment_settings(settings: dict, comment: str) -> None:
     """Extract settings from one Reliabot YAML comment.
 
@@ -517,14 +528,14 @@ class Exclusions:
         return iter(self.specs)
 
     def __repr__(self) -> str:
-        return f"({repr(self.specs)}, {repr(self.match)}, {repr(self.prefix)}"
+        return f"({self.specs!r}, {self.match!r}, {self.prefix!r}"
 
     def __str__(self) -> str:
-        """Generates dict repr with sorted keys and set values for doctests."""
+        """Generate dict repr with sorted keys and set values for doctests."""
         set_vals = []
         for key in sorted(self.specs.keys()):
             vals = ", ".join([repr(val) for val in sorted(self.specs[key])])
-            set_vals.append(f"{repr(key)}: {{{vals}}}")
+            set_vals.append(f"{key!r}: {{{vals}}}")
         return f"{{{', '.join(set_vals)}}}"
 
     def add(self, key: str, path_spec: str) -> None:
@@ -598,7 +609,7 @@ def find_ecosystems(
     True
     >>> config_dir = join(TESTDIR, b"configured")
     >>> dont_ignore = lambda dir_path: False
-    >>> find_ecosystems(config_dir, dont_ignore)   # doctest: +ELLIPSIS
+    >>> find_ecosystems(config_dir, dont_ignore)  # doctest: +ELLIPSIS
     defaultdict(<class 'set'>, {'/': {'github-actions'}, '/bundler':...)
     """
     ecosystems = defaultdict(set)
@@ -626,7 +637,8 @@ def find_ecosystems(
         if dirname == workflows and DOT_YAML_REGEX.search(filename.lower()):
             ecosystems["/"].add(fsdecode(GITHUB_ACTIONS))
     if not any_files:
-        raise RuntimeError(f"'{fsdecode(path)}' has no files tracked by Git.")
+        msg = f"'{fsdecode(path)}' has no files tracked by Git."
+        raise RuntimeError(msg)
     return ecosystems
 
 
@@ -657,7 +669,11 @@ def update_dependabot_config(
     ['directory', 'package-ecosystem', 'schedule']
     >>> update_dependabot_config(test_conf, ecos, dont_keep)
     False
-    >>> ecos2 = {"/": {"pip"}, "/test": {"npm"}, 'schedule': {'interval': 'monthly'}}
+    >>> ecos2 = {
+    ...     "/": {"pip"},
+    ...     "/test": {"npm"},
+    ...     "schedule": {"interval": "monthly"},
+    ... }
     >>> update_dependabot_config(test_conf, ecos2, dont_keep)
     True
     >>> test_conf["updates"][1]
@@ -671,7 +687,7 @@ def update_dependabot_config(
     {'directory': '/test', 'package-ecosystem': 'npm', 'schedule': {'interval': 'monthly'}}
     >>> test_conf["updates"][1]
     {'directory': '/', 'package-ecosystem': 'pub', 'schedule': {'interval': 'monthly'}}
-    >>> len(test_conf['updates'])
+    >>> len(test_conf["updates"])
     2
     """
     if config == {}:
@@ -687,7 +703,7 @@ def update_dependabot_config(
 
     try:
         changed = False
-        for directory, ecosystem_list in sorted(list(ecosystems.items())):
+        for directory, ecosystem_list in sorted(ecosystems.items()):
             for ecosystem in ecosystem_list:
                 if not find_conf(confs, directory, ecosystem):
                     add_conf(config, directory, ecosystem)
@@ -709,7 +725,8 @@ def update_dependabot_config(
             changed = True
 
     except (KeyError, TypeError) as config_err:
-        raise ValueError("Invalid Dependabot configuration") from config_err
+        msg = "Invalid Dependabot configuration"
+        raise ValueError(msg) from config_err
     return changed
 
 
@@ -723,10 +740,16 @@ def validate_dependabot_config(config: Union[CommentedMap, dict]) -> None:
     :param config: Parsed Dependabot configuration.
     :raises ValueError: if the configuration fails basic sanity checks
 
-    >>> minimal_conf = {"version": 3, "updates": [{
-    ...     "directory": "D", "package-ecosystem": "P",
-    ...     "schedule": {"interval": "I"}}
-    ... ]}
+    >>> minimal_conf = {
+    ...     "version": 3,
+    ...     "updates": [
+    ...         {
+    ...             "directory": "D",
+    ...             "package-ecosystem": "P",
+    ...             "schedule": {"interval": "I"},
+    ...         }
+    ...     ],
+    ... }
     >>> validate_dependabot_config(minimal_conf)  # doctest: +ELLIPSIS
     Traceback (most recent call last):
     ...
@@ -738,7 +761,8 @@ def validate_dependabot_config(config: Union[CommentedMap, dict]) -> None:
     try:
         vers = config["version"]
         if vers != 2:
-            raise ValueError(f"Dependabot config version '{vers}' – must be 2")
+            msg = f"Dependabot config version '{vers}' – must be 2"
+            raise ValueError(msg)
         confs = config["updates"]
         if not isinstance(confs, (CommentedSeq, list)):
             msg = ": 'updates' isn't a list"
@@ -755,13 +779,14 @@ def validate_dependabot_config(config: Union[CommentedMap, dict]) -> None:
                     msg = ": update 'schedule.interval' isn't a string"
                     break
     except TypeError:
-        warnings.warn(f"{traceback.format_exc()}")
+        warnings.warn(f"{traceback.format_exc()}", stacklevel=1)
         msg = ""
     except KeyError as key:
-        # pylint: disable=raise-missing-from
-        raise ValueError(f"Dependabot configuration missing '{key.args[0]}'")
+        msg = f"Dependabot configuration lacks '{key.args[0]}'"
+        raise ValueError(msg) from None
     if msg is not None:
-        raise ValueError(f"Invalid Dependabot configuration{msg}")
+        msg = f"Invalid Dependabot configuration{msg}"
+        raise ValueError(msg)
 
 
 def create_dependabot_config(ecosystems: dict[str, set]) -> list[dict]:
@@ -779,8 +804,8 @@ def create_dependabot_config(ecosystems: dict[str, set]) -> list[dict]:
     {'directory': '/test', 'package-ecosystem': 'npm', 'schedule': {'interval': 'monthly'}}
     """
     config: dict[str, list[dict]] = {"updates": []}
-    for directory, ecosystem_list in sorted(list(ecosystems.items())):
-        for ecosystem in sorted(list(ecosystem_list)):
+    for directory, ecosystem_list in sorted(ecosystems.items()):
+        for ecosystem in sorted(ecosystem_list):
             add_conf(config, directory, ecosystem)
     return config["updates"]
 
@@ -822,7 +847,7 @@ def safe_dump(
                 error(f"Can't re-parse YAML with default settings ({indent})")
             else:
                 err = "YAML (indent?) error:"
-                dedup_warn(f"{err} {indent}:{NLSP}{str(parser_err)}")
+                dedup_warn(f"{err} {indent}:{NLSP}{parser_err!s}")
                 settings = EMITTER_SETTINGS
         else:
             emitter.dump(config, config_stream)
@@ -898,8 +923,9 @@ def update_pre_commit_files(folder: str = ".") -> int:
                     dedup_warn(f"Updated '{config_file}'")  # TODO: test for it
                     modified = 1
         except (KeyError, TypeError) as config_err:
-            warnings.warn(f"{traceback.format_exc()}")
-            raise ValueError(f"Invalid pre-commit: '{file}'") from config_err
+            warnings.warn(f"{traceback.format_exc()}", stacklevel=1)
+            msg = f"Invalid pre-commit: '{file}'"
+            raise ValueError(msg) from config_err
     return Err.UPDATED if modified else 0
 
 

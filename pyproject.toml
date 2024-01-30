@@ -3,14 +3,11 @@
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.autopep8]
-ignore = ["E203"]
+#[tool.autopep8]
+#ignore = ["E203"]
 
 [tool.bandit]
 skips = ["B404", "B603"]
-
-[tool.isort]
-profile = "black"
 
 [tool.poetry]
 name = "reliabot"
@@ -57,3 +54,6 @@ reliabot = 'reliabot.reliabot:main'
 
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/dupuy/reliabot/issues"
+
+[tool.ruff]
+line-length = 79

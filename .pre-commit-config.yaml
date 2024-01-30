@@ -160,14 +160,21 @@ repos:
   #     - id: golangci-lint
 
   # Python
-  - repo: https://github.com/hhatto/autopep8
-    rev: v2.0.4
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.1.15
     hooks:
-      - id: autopep8
-  - repo: https://github.com/PyCQA/autoflake
-    rev: v2.2.1
-    hooks:
-      - id: autoflake
+      # Run the linter.
+      - id: ruff
+        args: [--fix]
+        name: 'ruff --fix'
+  #  - repo: https://github.com/hhatto/autopep8
+  #    rev: v2.0.4 #### Replaced by ruff --fix ####
+  #    hooks:
+  #      - id: autopep8
+  #  - repo: https://github.com/PyCQA/autoflake
+  #    rev: v2.2.1 #### Replaced by ruff --fix ####
+  #    hooks:
+  #      - id: autoflake
   - repo: https://github.com/PyCQA/docformatter
     rev: v1.7.5
     hooks:
@@ -186,10 +193,6 @@ repos:
           - --remove-import=from typing import Set
           - --remove-import=from typing import Tuple
         files: ^(?!setup.py$).*\.py$
-  - repo: https://github.com/DanielNoord/pydocstringformatter
-    rev: v0.7.3
-    hooks:
-      - id: pydocstringformatter
   - repo: https://github.com/PyCQA/prospector
     rev: v1.10.3
     hooks:
@@ -202,7 +205,10 @@ repos:
         args:
           - --messages-only
           - --doc-warnings
-          - --without-tool=pylint # If you get "pylint: astroid-error ..."
+          # All other prospector tools are replaced by ruff --fix
+          - --tool=pylint # comment out if you get "pylint: astroid-error ..."
+          - --tool=dodgy
+          - --tool=mccabe
   - repo: https://github.com/PyCQA/bandit
     rev: 1.7.7
     hooks:
@@ -230,11 +236,11 @@ repos:
     rev: v1.5.2
     hooks:
       - id: dead
-  - repo: https://github.com/psf/black
-    rev: 24.1.1
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.1.15
     hooks:
-      - id: black
-        args: [--line-length=79]
+      # Run the formatter.
+      - id: ruff-format
   - repo: https://github.com/python-poetry/poetry
     # see https://python-poetry.org/docs/master/pre-commit-hooks/#faq
     rev: 1.7.0

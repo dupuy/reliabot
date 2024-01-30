@@ -965,10 +965,12 @@ def update_pre_commit_file_patterns(config_file: TextIO) -> bool:
             continue
 
         for hook in repo["hooks"]:
-            if hook["id"] == "reliabot":
-                if hook["files"] != ECOSYSTEM_RE_FILES:
-                    modified = True
-                    hook["files"] = ECOSYSTEM_RE_FILES
+            if (
+                hook["id"] == "reliabot"
+                and hook["files"] != ECOSYSTEM_RE_FILES
+            ):
+                modified = True
+                hook["files"] = ECOSYSTEM_RE_FILES
     if modified:
         reset(config_file)
         settings = extract_settings(config, EMITTER_SETTINGS)

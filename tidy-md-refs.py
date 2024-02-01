@@ -2,9 +2,27 @@
 """Tidy numbering and ordering of all Markdown reference links in FILEs.
 
 Number _all_ reference links in the order they appear in the text and place
-them at the end of the file.
+them at the end of the file. _Remove_ any unused reference link definitions.
 
 If no files are given, read stdin and print tidied Markdown to stdout.
+
+Titles in reference definitions must be on the same line as the link, if not,
+this script may move the link and leave the title behind. Examples:
+
+> OK:
+> [21]: https://spec.commonmark.org/0.31.2/ CommonMark
+
+> OK:
+>  [21]:
+>  https://spec.commonmark.org/0.31.2/ CommonMark
+
+> NOT OK:
+> [21]: https://spec.commonmark.org/0.31.2/
+> CommonMark
+
+> NOT OK:
+> [21]: https://spec.commonmark.org/0.31.2/ (
+> CommonMark )
 
 Original script by Dr. Drang – https://github.com/drdrang/
 Posted at:
@@ -17,16 +35,22 @@ from __future__ import annotations
 import argparse
 import re
 import sys
+import warnings
 from typing import Optional
 from typing import TextIO
 
 # The regex for finding reference links in the text. Don't find
 # footnotes by mistake.
-link = re.compile(r"\[([^\]]+)\]\[([^^\]]+)\]")
+link = re.compile(r"\[([^]]+)]\[([^]^]+)]")
 
 # The regex for finding the label. Again, don't find footnotes
-# by mistake.
-label = re.compile(r"^\[([^^\]]+)\]:\s+(.+)$", re.MULTILINE)
+# by mistake. Allow up to three spaces of indentation, per CommonMark spec.
+# Avoid eating a reference label on a line following an invalid one.
+# TODO: Properly handle link titles (hard, probably requires markdown parser)
+label = re.compile(r"^ {0,3}\[([^]]+)]:\s+(?!\[)(.+)$", re.MULTILINE)
+
+# The regex for label-like things that might create confusion with our labels.
+badlabel = re.compile(r"^ {0,3}\[\d+]:(?:[ \t].*)?$", re.MULTILINE)
 
 
 def tidy(text: str) -> str:
@@ -50,12 +74,28 @@ def tidy(text: str) -> str:
             order.append(i[1])
 
     # Make a list of the references in order of appearance.
-    newlabels = [
-        "[%d]: %s" % (i + 1, labels[j]) for (i, j) in enumerate(order)
-    ]
+    newlabels = []
+    for i, j in enumerate(order):
+        try:
+            newlabels.append(f"[{i + 1}]: {labels[j]}")
+        except KeyError:
+            missing_ref = (
+                f"Missing/empty reference [{i + 1}] (originally [{j}])"
+            )
+            warnings.warn(missing_ref)
 
-    # Remove the old references and put the new ones at the end of the text.
-    text = label.sub("", text).rstrip() + "\n" * 2 + "\n".join(newlabels)
+    # Remove the old reference labels.
+    text = label.sub("", text).rstrip()
+
+    # Remove any leftover invalid numeric labels that may conflict or confuse.
+    badlabels = [lab.replace("\n", "␤") for lab in badlabel.findall(text)]
+    if badlabels:
+        bad_labels = "\n  • ".join(["Removed invalid references:"] + badlabels)
+        warnings.warn(bad_labels)
+        text = badlabel.sub("", text).rstrip()
+
+    # Append the new labels at the end of the text.
+    text += "\n" * 2 + "\n".join(newlabels)
 
     # Rewrite the links with the new reference numbers.
     text = link.sub(refrepl, text) + "\n"
@@ -83,12 +123,18 @@ def main() -> int:
     docstring = sys.modules[__name__].__doc__ or ""
     description = docstring.split("\n", 1)[0]
     epilog = """
+    Number all reference links in the order they appear in the text and place
+    them at the end of the file. Remove any unused reference link definitions.
+
+    Reference titles must be on the same link as links.See the script source
+    for details and other limitations of this script.
+
     Returns exit code 1 if any files were modified, 2 for bad arguments, and
     zero (success) if all files were already tidy.
 
-    If no FILE arguments are present, reads stdin and writes stdout, always
-    returning success, even if input was not tidy. To get exit code 1 for untidy
-    stdin, provide '-' as the filename."""
+    If no FILE arguments are present, read stdin and writes stdout, always
+    returning success, even if input was not tidy. To get exit code == 1 for
+    untidy stdin, provide '-' as the filename."""
     parser = argparse.ArgumentParser(
         description=description, epilog=epilog, allow_abbrev=False
     )

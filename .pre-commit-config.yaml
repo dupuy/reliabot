@@ -266,6 +266,7 @@ repos:
         language: script
         entry: ./tidy-md-refs.py
         types: [markdown]
+        exclude: tests/
   - repo: https://github.com/executablebooks/mdformat
     rev: 0.7.17
     hooks:
@@ -282,19 +283,21 @@ repos:
           - mdformat-gfm # GitHub-flavored Markdown
           - mdformat-tables # GitHub-flavored Markdown tables
           - mdformat-toc # generate table of contents
-          - setuptools
-        exclude: styles/
+          - setuptools # ModuleNotFoundError: No module named 'pkg_resources'
+        exclude: styles/|tests/
 
   - repo: https://github.com/markdownlint/markdownlint
     rev: v0.12.0
     hooks:
       - id: markdownlint
         args: [--style=.mdl-style.rb]
+        exclude: tests/
 
   - repo: https://github.com/mineiros-io/pre-commit-hooks
     rev: v0.5.1
     hooks:
       - id: markdown-link-check
+        exclude: tests/
 
   - repo: https://github.com/errata-ai/vale
     rev: v3.1.0

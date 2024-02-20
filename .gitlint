@@ -13,6 +13,11 @@ contrib = contrib-title-conventional-commits
 # Same as default list but specified in alphabetical order
 types = build,chore,ci,docs,feat,fix,perf,refactor,revert,style,test
 
+[ignore-by-author-name]
+# Ignore extra-long pre-commit.ci autoupdates
+regex=^pre-commit-ci
+ignore=body-max-line-length
+
 [ignore-by-title]
 # Ignore pre-commit.ci merge commits
 regex=^Merge [0-9a-f]{40} into [0-9a-f]{40}$

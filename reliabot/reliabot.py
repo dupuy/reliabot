@@ -258,8 +258,8 @@ U_FFFC = "\ufffc"  # Unicode object replacement character
 WARN_KEYS: set[str] = set()
 
 
-# pylint: disable=too-many-locals,too-many-branches,too-many-statements
-def main(optargv: Optional[list[str]] = None) -> int:  # noqa: MC0001
+# pylint: disable=too-many-locals
+def main(optargv: Optional[list[str]] = None) -> int:
     """Create or update Dependabot configuration in a Git repo.
 
     This function parses arguments and options and handles exceptions,
@@ -445,7 +445,6 @@ def extract_settings(
     return settings
 
 
-# pylint: disable=too-many-branches
 def get_comment_settings(settings: dict, comment: str) -> None:
     """Extract settings from one Reliabot YAML comment.
 

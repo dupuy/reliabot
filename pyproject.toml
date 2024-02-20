@@ -3,14 +3,11 @@
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.autopep8]
-ignore = ["E203"]
+#[tool.autopep8]
+#ignore = ["E203"]
 
 [tool.bandit]
 skips = ["B404", "B603"]
-
-[tool.isort]
-profile = "black"
 
 [tool.poetry]
 name = "reliabot"
@@ -57,3 +54,61 @@ reliabot = 'reliabot.reliabot:main'
 
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/dupuy/reliabot/issues"
+
+[tool.ruff]
+# Enabling flake8 -builtins (A), -annotations (ANN), -bugbear (B),
+# -comprehensions (C4), -pydocstyle (D), -errmsg (EM), -executable (EXE),
+# -future-annotations (FA), -boolean-trap (FBT), -implicit-str-concat (ISC),
+# -import-conventions (ICN), -pie (PIE), -quotes (Q), -return (RET),
+# -bandit (S), -simplify (SIM), -type-checking (TCH), and -2020 (YTT) in
+# addition to flynt (FLY) pep8-naming (N), perflint (PERF), pylint (PL*),
+# pyupgrade (UP), and the defaults (E4, E7, E9, F).
+# Pycodestyle warnings (W) aren't selected since other pre-commits catch them
+# (except for too-noisy W505).
+# TODO: "ASYNC", "DTZ", "ERA", "G", "INP", "INT", "LOG", "PTH", "SLOT", & "TRIO"
+# (if they become relevant). Also maybe "FURB"
+select = [
+    "E4", "E7", "E9", "F", "A", "ANN", "B", "C4", "D", "EM", "EXE", "FA", "FBT",
+    "ISC", "ICN", "PIE", "Q", "RET", "S", "SIM", "TCH", "YTT",
+    "FLY", "N", "PERF", "PL", "UP",
+    "RUF",
+]
+ignore = [
+    "ANN101",  # missing-type-self
+    "D105",  # undocumented-magic-method
+    "ISC001",  # single-line-implicit-string-concatenation  # formatter conflict
+    "PLR091", # too-manu-*  # TODO: reduce complexity or disable with comments
+    "PLR2004", # magic-value-comparison
+    "S404",  # suspicious-subprocess-import
+    "S603",  # subprocess call: check for execution of untrusted input
+    "UP007",  # non-pep604-annotation – Use X | Y for type annotations
+]
+
+# Allow en-dash (U+2013), which could be confused for "-".
+allowed-confusables = ["–"]
+
+line-length = 79
+
+# Preview formatting conflicts with python-reorder-imports about blank line
+# after initial docstring.
+#preview = true
+
+# Enumerate all fixed violations.
+show-fixes = true
+# By default, always show source code snippets.
+show-source = true
+
+[tool.ruff.format]
+docstring-code-format = true
+
+
+[tool.ruff.lint.flake8-type-checking]
+# Add quotes around type annotations, if doing so would allow
+# an import to be moved into a type-checking block.
+quote-annotations = true
+
+[tool.ruff.lint.pycodestyle]
+max-doc-length = 79
+
+[tool.ruff.lint.pydocstyle]
+convention = "pep257"

@@ -1052,10 +1052,16 @@ def self_test() -> int:
     # pylint: disable=import-outside-toplevel,redefined-outer-name
     import doctest
 
-    (failed, tests) = doctest.testmod(optionflags=DOCTEST_OPTION_FLAGS)
+    flags = DOCTEST_OPTION_FLAGS
+    mod = None
+    (failed, tests) = doctest.testmod(mod, optionflags=flags)
+    if tests == 0:  # pragma: no cover
+        # self_test from module wrapper __main__
+        mod = sys.modules["reliabot"].reliabot
+        (failed, tests) = doctest.testmod(mod, optionflags=flags)
     print(f"Passed {tests - failed} of {tests} doctests.")
     if not failed:  # pragma: no cover
-        doctest.testmod(verbose=True)
+        doctest.testmod(mod, verbose=True)
     return 1 if failed else 0
 
 

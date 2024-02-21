@@ -56,6 +56,26 @@ reliabot = 'reliabot.reliabot:main'
 "Bug Tracker" = "https://github.com/dupuy/reliabot/issues"
 
 [tool.ruff]
+line-length = 79
+
+# By default, always show source code snippets.
+output-format = "full"
+
+# Preview formatting conflicts with python-reorder-imports about blank line
+# after initial docstring. Hopefully when it is no longer in preview there
+# will be some way to disable it.
+#preview = true
+
+# Enumerate all fixed violations.
+show-fixes = true
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.ruff.lint]
+# Allow en-dash (U+2013), which could be confused for "-".
+allowed-confusables = ["–"]
+
 # Enabling flake8 -builtins (A), -annotations (ANN), -bugbear (B),
 # -comprehensions (C4), -pydocstyle (D), -errmsg (EM), -executable (EXE),
 # -future-annotations (FA), -boolean-trap (FBT), -implicit-str-concat (ISC),
@@ -83,24 +103,6 @@ ignore = [
     "S603",  # subprocess call: check for execution of untrusted input
     "UP007",  # non-pep604-annotation – Use X | Y for type annotations
 ]
-
-# Allow en-dash (U+2013), which could be confused for "-".
-allowed-confusables = ["–"]
-
-line-length = 79
-
-# Preview formatting conflicts with python-reorder-imports about blank line
-# after initial docstring.
-#preview = true
-
-# Enumerate all fixed violations.
-show-fixes = true
-# By default, always show source code snippets.
-show-source = true
-
-[tool.ruff.format]
-docstring-code-format = true
-
 
 [tool.ruff.lint.flake8-type-checking]
 # Add quotes around type annotations, if doing so would allow

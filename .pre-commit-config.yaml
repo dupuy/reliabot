@@ -114,7 +114,7 @@ repos:
 
   # YAML
   - repo: https://github.com/adrienverge/yamllint
-    rev: v1.33.0
+    rev: v1.35.1
     hooks:
       - id: yamllint
         args:
@@ -139,7 +139,7 @@ repos:
     hooks:
       - id: shellcheck
   - repo: https://github.com/scop/pre-commit-shfmt
-    rev: v3.7.0-4
+    rev: v3.8.0-1
     hooks:
       # Choose one of:
       #- id: shfmt-docker # Docker image (requires Docker to run)
@@ -162,7 +162,7 @@ repos:
 
   # Python
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.1.15
+    rev: v0.2.2
     hooks:
       # Run the linter.
       - id: ruff
@@ -237,7 +237,7 @@ repos:
     hooks:
       - id: dead
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.1.15
+    rev: v0.2.2
     hooks:
       # Run the formatter.
       - id: ruff-format
@@ -245,8 +245,8 @@ repos:
     # see https://python-poetry.org/docs/master/pre-commit-hooks/#faq
     rev: 1.7.0
     hooks:
-      - id: poetry-check
       - id: poetry-lock
+      - id: poetry-check
       - id: poetry-export
         args:
           - --format=requirements.txt
@@ -280,12 +280,12 @@ repos:
         args: [--style=.mdl-style.rb]
 
   - repo: https://github.com/mineiros-io/pre-commit-hooks
-    rev: v0.5.0
+    rev: v0.5.1
     hooks:
       - id: markdown-link-check
 
   - repo: https://github.com/errata-ai/vale
-    rev: v3.0.7
+    rev: v3.1.0
     hooks:
       - id: vale
         exclude: LICENSE|humans\.txt|requirements.*|styles/

@@ -1,4 +1,5 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
+# pylint: disable=invalid-name
 """Tidy numbering and ordering of all Markdown reference links in FILEs.
 
 Number _all_ reference links in the order they appear in the text and place
@@ -58,7 +59,7 @@ def tidy(text: str) -> str:
 
     def refrepl(m: re.Match) -> str:
         """Rewrite reference links with the reordered link numbers."""
-        return "[%s][%d]" % (m.group(1), order.index(m.group(2)) + 1)
+        return f"[{m.group(1)}][{order.index(m.group(2)) + 1}]"
 
     links = link.findall(text)
     if not links:
@@ -78,7 +79,8 @@ def tidy(text: str) -> str:
     for i, j in enumerate(order):
         try:
             newlabels.append(f"[{i + 1}]: {labels[j]}")
-        except KeyError:
+        except KeyError:  # noqa: PERF203
+            # Warn about missing label, but continue processing others.
             missing_ref = (
                 f"Missing/empty reference [{i + 1}] (originally [{j}])"
             )
@@ -90,7 +92,7 @@ def tidy(text: str) -> str:
     # Remove any leftover invalid numeric labels that may conflict or confuse.
     badlabels = [lab.replace("\n", "␤") for lab in badlabel.findall(text)]
     if badlabels:
-        bad_labels = "\n  • ".join(["Removed invalid references:"] + badlabels)
+        bad_labels = "\n  • ".join(["Removed invalid references:", *badlabels])
         warnings.warn(bad_labels)
         text = badlabel.sub("", text).rstrip()
 
@@ -98,9 +100,7 @@ def tidy(text: str) -> str:
     text += "\n" * 2 + "\n".join(newlabels)
 
     # Rewrite the links with the new reference numbers.
-    text = link.sub(refrepl, text) + "\n"
-
-    return text
+    return link.sub(refrepl, text) + "\n"
 
 
 def tidy_file(input_file: TextIO, output_file: Optional[TextIO]) -> bool:

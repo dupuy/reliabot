@@ -204,8 +204,8 @@ Unsure where to start contributing? Start by looking at Reliabot issues labeled
 
 ### Pre-commit setup
 
-Reliabot uses [pre-commit][17] to perform style checks and fixes. Whether you
-are contributing code or documentation, you should [install pre-commit][18] on
+Reliabot uses [pre-commit][17] to perform lint and style checks and fixes.
+Whether you are contributing code or documentation, [install pre-commit][18] on
 your system, and then enable it for your local copy of the Reliabot repository:
 
 ```console
@@ -222,23 +222,89 @@ and show either success or failure.
 
 ### Contributing code and bug fixes
 
-<!-- TODO include env setup, IDE and typical getting started instructions? -->
+When contributing new code or fixes for existing code, please add or enhance
+the Reliabot code tests to cover the proposed changes. For a bug fix, add a
+test that checks for the bug and only passes with the fix. For new features,
+add new or extend existing tests to provide coverage and prevent regressions
+from future code changes. Tests should fail with existing code, and pass with
+your proposed changes.
+
+#### Testing
+
+The `reliabot.py` script integrates tests within itself as [doctests][20] in
+module and function [docstrings][21], and the `__test__` map at the end of the
+script. Put tests of bug fixes or corner cases for more thorough coverage in
+the `__test__` map, keeping the function docstrings focused on explaining
+typical use cases.
+
+You can run these doctests with any Reliabot installation by running it with
+the `--self-test` argument:
+
+```console
+reliabot$ reliabot/reliabot.py --self-test 2>/dev/null | tail -5
+   1 tests in __main__.usage
+   4 tests in __main__.validate_dependabot_config
+147 tests in 41 items.
+147 passed and 0 failed.
+Test passed.
+```
+
+The complete Reliabot test suite of Reliabot runs with `tox`. You can run them
+with `make tests`, and install `tox` with `make tox` if you can't or don't want
+to use your system's package manager to install it.
+
+#### Linting and pre-commit checks
+
+Reliabot uses an extensive set of linters and checkers to identify potential
+problems with Python code. While developing code, you can run these at any time
+with `pre-commit`. You can also run just one specific tool with a command like
+`pre-commit run ruff` or `pre-commit run prospector`. The fast
+[Ruff linter][22] runs most of the checks, but Reliabot also uses the much
+slower Prospector to run Pylint checks, since many of those still aren't
+implemented by Ruff.
+
+Checks aren't always 100% accurate; there are cases where code needs to do
+possibly questionable things. Most of the checkers allow you to suppress checks
+for specific lines of code with comments like `# noqa: B123` (for Ruff) or
+`# pylint: disable=some-code-smell` (for Pylint), and sometimes both may be
+necessary for a single line.
 
 ### Improving the documentation
 
 The documentation for Reliabot currently consists of a number of Markdown files
 in standard locations (README.md, CONTRIBUTING.md, SECURITY.md).
 
-There is configuration and a Makefile for using [Vale][20] for checking prose
-style and suggest improvements to the documentation, as well as text in the
-GitHub issue templates. There is no CI integration for Vale, you have to
-install it yourself:
+Reliabot's pre-commit configuration includes Markdown linters and formatters,
+as well as a hook for [Vale][23] to review prose style and recommend changes.
+Vale generates style errors, warnings, and suggestions. Only errors cause
+pre-commit failures, but if there are errors, pre-commit also shows warnings
+and suggestions.
 
-- `brew install vale` on macOS
+To run it directly, use `make checks`, which always shows warnings and
+suggestions. The Makefile rule for `checks` expects you to have already
+installed Vale with `brew`, `choco`, or a Linux package manager. Alternately,
+you can use `make vale` to install Vale with `pipx` and add its directory to
+your PATH. You may need to run `rehash` or start a new shell or login to run
+Vale after doing that the first time.
 
-Once you have installed Vale, you can run it with `make`.
+When contributing changes to the documentation, you must address any Vale
+errors, and it's strongly recommended to address warnings as well. You don't
+need to address suggestions, and any changes you make to do so shouldn't
+sacrifice clarity or conciseness.
 
-<!-- TODO: Integrate Vale into a CI pipeline -->
+If Vale doesn't recognize a correctly spelled word, just add it to
+`styles/config/vocabularies/Reliabot/accept.txt`. That file uses case-sensitive
+regular expressions to accept words.
+
+#### Code tests in Markdown documentation
+
+A script wrapper for `doctest-cli` tests fenced code blocks with a `console`
+language tag in Markdown files. It executes command lines following a prompt
+(lines starting with non-whitespace followed by `$` and whitespace) and if
+their output doesn't match the following lines in the code block, it fails.
+When that happens, fix either the code or the documentation to match the other.
+If you make changes to console fenced code blocks in the documentation, you
+should run these tests using `tox -e doctest-cli`.
 
 ## Style guides
 
@@ -249,17 +315,18 @@ Reliabot repository, or as commits that pre-commit.ci adds to your PR.
 ### Commit messages
 
 - Limit the first line to 72 or fewer characters.
-- Start the first line with a [conventional commit type][21], like these
+- Start the first line with a [conventional commit type][24], like these
   examples: `feat:` or `ci(pre-commit):`.
-  - _You can use [commitizen][22] or similar tools to help manage this._
+  - _You can use [commitizen][25] or similar tools to help manage this._
 - Use the present tense ("Add feature" not "Added feature").
 - Use the imperative mood ("Move cursor to…" not "Moves cursor to…").
 - Reference issues and pull requests liberally after the first line.
 
 ### Python code
 
-Reliabot code uses [Black][22] style formatting. Pre-commit checks enforce this
-and some PEP code styles.
+Reliabot code follows [Black][25] style formatting. Pre-commit checks enforce
+this, along with various PEP code styles, using the much faster
+[Ruff formatter][26].
 
 ### Shell code
 
@@ -269,19 +336,19 @@ them with [`shellcheck`][17].
 ### Markdown documentation
 
 Reliabot documentation uses GitHub Flavored Markdown, following the
-[Markdown style guide][23] implemented by [Executable Books mdformat][24], with
+[Markdown style guide][27] implemented by [Executable Books mdformat][28], with
 some non-default `mdformat` style settings:
 
-- "Consecutive" numbering for [ordered lists][25] for compatibility with the
-  [markdownlint][26] checker, like this:
+- "Consecutive" numbering for [ordered lists][29] for compatibility with the
+  [markdownlint][30] checker, like this:
   ```markdown
   1. first
   2. second
   3. etcetera
   ```
 - Word wrapping at 79 columns.
-- A pre-commit hook based on a Python script from a [decade-old blog post][27]
-  rewrites all [reference links][28] with numeric tags ordered by appearance in
+- A pre-commit hook based on a Python script from a [decade-old blog post][31]
+  rewrites all [reference links][32] with numeric tags ordered by appearance in
   the text. This doesn't affect inline links like `[shell](#shell-code)`, used
   for any references to anchors in the same file but not anything else.
 
@@ -295,14 +362,14 @@ configuration language tags.
 
 ### Configuration files
 
-Reliabot uses [Prettier][29] to automatically format CFG, INI, JSON, TOML, and
+Reliabot uses [Prettier][33] to automatically format CFG, INI, JSON, TOML, and
 YAML configuration files. The only non-standard setting is to use single quotes
 in preference to double quotes for formats that allow this.
 
 ## Attribution
 
 The **contributing-gen** generator created the initial version of this file.
-[Make your own CONTRIBUTING.md][30] 📝
+[Make your own CONTRIBUTING.md][34] 📝
 
 [1]: https://github.com/dupuy/reliabot/issues/new
 [2]: https://github.com/dupuy/reliabot#reliabot--maintain-github-dependabot-configuration
@@ -323,14 +390,18 @@ The **contributing-gen** generator created the initial version of this file.
 [17]: https://pre-commit.com/
 [18]: https://pre-commit.com/#install
 [19]: https://pre-commit.ci
-[20]: https://vale.sh/
-[21]: https://www.conventionalcommits.org/en/v1.0.0/#summary
-[22]: https://commitizen-tools.github.io/commitizen/
-[23]: https://mdformat.readthedocs.io/en/stable/users/style.html
-[24]: https://github.com/executablebooks/mdformat
-[25]: https://mdformat.readthedocs.io/en/stable/users/style.html#ordered-lists
-[26]: https://github.com/markdownlint/markdownlint
-[27]: https://leancrew.com/all-this/2012/09/tidying-markdown-reference-links/
-[28]: https://mdformat.readthedocs.io/en/stable/users/style.html#reference-links
-[29]: https://prettier.io/docs/en/
-[30]: https://github.com/bttger/contributing-gen
+[20]: https://docs.python.org/3/library/doctest.html
+[21]: https://en.wikipedia.org/wiki/Docstring#:~:text=The%20docstring,statement
+[22]: https://docs.astral.sh/ruff/linter/
+[23]: https://vale.sh/
+[24]: https://www.conventionalcommits.org/en/v1.0.0/#summary
+[25]: https://commitizen-tools.github.io/commitizen/
+[26]: https://docs.astral.sh/ruff/formatter/
+[27]: https://mdformat.readthedocs.io/en/stable/users/style.html
+[28]: https://github.com/executablebooks/mdformat
+[29]: https://mdformat.readthedocs.io/en/stable/users/style.html#ordered-lists
+[30]: https://github.com/markdownlint/markdownlint
+[31]: https://leancrew.com/all-this/2012/09/tidying-markdown-reference-links/
+[32]: https://mdformat.readthedocs.io/en/stable/users/style.html#reference-links
+[33]: https://prettier.io/docs/en/
+[34]: https://github.com/bttger/contributing-gen

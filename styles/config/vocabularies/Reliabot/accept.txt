@@ -4,11 +4,14 @@ INI
 Keybase
 Makefile
 PEP
+Pylint
 Quis
 TOML
 [Dd]ependabot
 [Rr]eliabot
 commitizen
+docstring
+doctest
 formatters
 ipsos
 markdownlint

@@ -1,7 +1,7 @@
 [![pre-commit enabled](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/dupuy/reliabot/main.svg)](https://results.pre-commit.ci/latest/github/dupuy/reliabot/main)
 
-# Reliabot – Maintain GitHub Dependabot configuration
+# Reliabot – Maintain Dependabot configuration
 
 Reliabot is a tool that helps maintain Dependabot configurations in your GitHub
 repository. This is especially helpful for [Terraform][1] “Infrastructure as
@@ -123,9 +123,10 @@ pip3 install reliabot
 
 #### Installing with RE2
 
-You can improve the reliability and performance of Reliabot with Python RE2
-regex support in its environment. This also requires the C++ RE2 library (run
-`brew install re2` or use Linux/BSD package tools to install `re2`).
+You can improve the reliability and performance of Reliabot, and prevent
+warning messages, by installing a Python RE2 regular expression package. These
+require installation of the C++ RE2 library (run `brew install re2`, or use
+Linux/BSD tools to install the `re2` package).
 
 > ⚠️The `pyre2-wheels` extra (which depends on [pyre2-updated][7]) doesn't work
 > for Python 3.12 – it only supports Python 3.6 to 3.11. If you need Python

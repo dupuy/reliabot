@@ -53,8 +53,10 @@ STYLES = $(addprefix styles/,${PACKAGES})
 
 $(TOOLS): ${TOOL_DIR}/pipx
 	${TOOL_DIR}/pipx install --force $@
+	${TOOL_DIR}/pipx ensurepath
 	@# vale self-downloads on first install
-	@case $@ in vale) vale sync || pipx uninstall $@;; esac
+	@PATH=$(TOOL_DIR):$$PATH; \
+	 case $@ in vale) vale sync || pipx uninstall $@;; esac
 
 ${TOOL_DIR}/pipx:
 	python3 -m pip install --upgrade --user pip

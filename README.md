@@ -1,5 +1,9 @@
 [![pre-commit enabled](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/dupuy/reliabot/main.svg)](https://results.pre-commit.ci/latest/github/dupuy/reliabot/main)
+[![CodeQL status](https://github.com/dupuy/reliabot/workflows/CodeQL/badge.svg)](https://github.com/dupuy/reliabot/security/)
+
+[![OpenSSF scorecard](https://api.securityscorecards.dev/projects/github.com/dupuy/reliabot/badge)](https://securityscorecards.dev/viewer/?uri=github.com/dupuy/reliabot)
+[![OpenSSF best practices](https://www.bestpractices.dev/projects/8459/badge)](https://www.bestpractices.dev/projects/8459)
 
 # Reliabot – Maintain Dependabot configuration
 

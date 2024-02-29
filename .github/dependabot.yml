@@ -13,3 +13,43 @@ updates:
     package-ecosystem: github-actions
     schedule:
       interval: daily
+
+  - package-ecosystem: pip
+    directory: /reliabot
+    schedule:
+      interval: daily
+
+  - package-ecosystem: bundler
+    directory: /testdir/configured/bundler
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /testdir/configured/docker
+    schedule:
+      interval: daily
+
+  - package-ecosystem: gomod
+    directory: /testdir/configured/gomod
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /testdir/configured/npm
+    schedule:
+      interval: daily
+
+  - package-ecosystem: nuget
+    directory: /testdir/configured/nuget
+    schedule:
+      interval: daily
+
+  - package-ecosystem: pip
+    directory: /testdir/configured/pip
+    schedule:
+      interval: daily
+
+  - package-ecosystem: maven
+    directory: /testdir/configured/maven
+    schedule:
+      interval: daily

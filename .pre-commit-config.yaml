@@ -374,3 +374,7 @@ ci:
   skip:
     - markdown-link-check
     - poetry-lock
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.16.3
+    hooks:
+        - id: gitleaks

@@ -378,3 +378,4 @@ ci:
   skip:
     - markdown-link-check
     - poetry-lock
+    - prettier

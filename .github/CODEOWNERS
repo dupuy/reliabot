@@ -1,0 +1,5 @@
+# CODEOWNERS currently only enabled for metadata and checks configuration
+/.github/ @dupuy
+/.pre-commit-config.yaml @dupuy
+pyproject.toml @dupuy
+setup.cfg @dupuy

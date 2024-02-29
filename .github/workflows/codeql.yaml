@@ -14,6 +14,7 @@ on:
   schedule:
     - cron: 47 2 * * 1'
 
+# Declare default permissions as read only.
 permissions:
   contents: read
 
@@ -32,7 +33,7 @@ jobs:
         language: ['python']
 
     steps:
-      - name: 'Harden Runner'
+      - name: 'Harden runner'
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
           egress-policy: audit
@@ -64,7 +65,7 @@ jobs:
       #   echo "Run, Build Application using script"
       #   ./location_of_script_within_repo/buildscript.sh
 
-      - name: 'Perform CodeQL Analysis'
+      - name: 'Perform CodeQL analysis'
         uses: github/codeql-action/analyze@a56a03b370b87b26fde6d680755f818cfda0372b # v2.24.5
         with:
           category: '/language:${{matrix.language}}'

@@ -3,3 +3,5 @@
 /.pre-commit-config.yaml @dupuy
 pyproject.toml @dupuy
 setup.cfg @dupuy
+# Pending original author's gree light to use.
+tidy-md-refs.py @drdrang

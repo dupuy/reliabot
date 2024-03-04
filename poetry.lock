@@ -32,28 +32,29 @@ test = ["pytest"]
 
 [[package]]
 name = "pyre2-updated"
-version = "0.3.7"
-description = "Python wrapper for Google\\'s RE2 using Cython"
+version = "0.3.8"
+description = "Python wrapper for Google's RE2 using Cython"
 optional = true
-python-versions = ">=3.6"
+python-versions = ">=3.7"
 files = [
-    {file = "pyre2-updated-0.3.7.tar.gz", hash = "sha256:145e561ac4fb9e055e1080b0141343c317cb1440bdd39d48495891dcfad4578d"},
-    {file = "pyre2_updated-0.3.7-cp310-cp310-macosx_10_15_universal2.whl", hash = "sha256:e1c148b295f16e1b78d56b6ee30e5ed11904a01f217ad02a3b6bc5a08a0f4679"},
-    {file = "pyre2_updated-0.3.7-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:a9b4ad77cac5dea088a4fcd06827bdd12a6805d57dffa85bbf8c59f0d9093968"},
-    {file = "pyre2_updated-0.3.7-cp310-cp310-win_amd64.whl", hash = "sha256:f81084ff5d2d8156305df3d57786e69e414b60a9f056615938ff5bc838b32b87"},
-    {file = "pyre2_updated-0.3.7-cp311-cp311-macosx_10_15_universal2.whl", hash = "sha256:10754b5444fd834afd428d799fd7085199617598d914a5dccd5fec62df1a0239"},
-    {file = "pyre2_updated-0.3.7-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:f5f3b09830d75ce80d6d0ef5549a66ab38f035b27c491adb1d28858215a60e5f"},
-    {file = "pyre2_updated-0.3.7-cp311-cp311-win_amd64.whl", hash = "sha256:8bbbf9711b16bd86c5d01e1479975842c3ec259a8559b73ed131817d8584f7e7"},
-    {file = "pyre2_updated-0.3.7-cp36-cp36m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:0613aa31b6339806d38b3ad62d3d80937979b0b063237cf21f34d3891d3dbc3c"},
-    {file = "pyre2_updated-0.3.7-cp36-cp36m-win_amd64.whl", hash = "sha256:07d617f35e08080f291c5384cf2dfb16956c41fefd345090d71d3abe33f05590"},
-    {file = "pyre2_updated-0.3.7-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:c6f311abd2803eebacb035f4f2ec877f21454a710bba7fa31e2549d3ccc51f3b"},
-    {file = "pyre2_updated-0.3.7-cp37-cp37m-win_amd64.whl", hash = "sha256:643e41b47025414f68081cfe90fa65fbf15248c6b7ccd1a4d541d22f12dac9b3"},
-    {file = "pyre2_updated-0.3.7-cp38-cp38-macosx_10_15_universal2.whl", hash = "sha256:88f117c0b91374067c2a4bfa5518d800a830ecef86117f29309509e680ff883a"},
-    {file = "pyre2_updated-0.3.7-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:419feea1a823bfdd9e51ecbd2c10dcdac4a8cb496934ef08a34c46cfeb83327b"},
-    {file = "pyre2_updated-0.3.7-cp38-cp38-win_amd64.whl", hash = "sha256:e9a5d4a447cb093043957b052d3a5a465948a5404527a78e4ac24c9ccbbbed83"},
-    {file = "pyre2_updated-0.3.7-cp39-cp39-macosx_10_15_universal2.whl", hash = "sha256:613bf766f20513fe39a0adf0aa8fcde3d484425515d7fed97bd3a018041b1424"},
-    {file = "pyre2_updated-0.3.7-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:3acda20b60cf2b2c319a7114b7528c0cbe11ec37c41989c640975e097faae50e"},
-    {file = "pyre2_updated-0.3.7-cp39-cp39-win_amd64.whl", hash = "sha256:47a2d860df00504808131a6915face3436ea938072ac7149362a57211f24b26b"},
+    {file = "pyre2-updated-0.3.8.tar.gz", hash = "sha256:6d6aaa2f41a085095993b2d09562511cf40d4aedfc5bd00d78f53112be051e19"},
+    {file = "pyre2_updated-0.3.8-cp310-cp310-macosx_10_15_universal2.whl", hash = "sha256:65e67527eb472cd5045966df42414205cbfc187633a844ba7d9f59480f46e748"},
+    {file = "pyre2_updated-0.3.8-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:ab79cd5c663d20eca146361f2b2b7cf23c631109e43064d4bb35a43cb0607ffd"},
+    {file = "pyre2_updated-0.3.8-cp310-cp310-win_amd64.whl", hash = "sha256:b0820d8420caca762184f5eebe57631be5b985e405c53e807aac24897daa892a"},
+    {file = "pyre2_updated-0.3.8-cp311-cp311-macosx_10_15_universal2.whl", hash = "sha256:2bda9bf4d59568152e085450ffc1c08fcf659000d06766861f7ff340ba601c3e"},
+    {file = "pyre2_updated-0.3.8-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:54de291bb8b3aa2223f864293e0a9e62ea2877fea72a632fe5cd36a60012f7bc"},
+    {file = "pyre2_updated-0.3.8-cp311-cp311-win_amd64.whl", hash = "sha256:45c0940dbda4a2c45652e69ab52946c2395171f3e3a96bce456a8ddb45b337e1"},
+    {file = "pyre2_updated-0.3.8-cp312-cp312-macosx_10_15_universal2.whl", hash = "sha256:4db83d0f148d91f9b67b71eb3fd04a7e1d09397e7ecea75972632cd46c27ba6e"},
+    {file = "pyre2_updated-0.3.8-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:53d27f552fac2149c9dbe45faf1f6236c55fba42ea579799a07cdc853e3732d6"},
+    {file = "pyre2_updated-0.3.8-cp312-cp312-win_amd64.whl", hash = "sha256:648196c6fe7b115431f2bedc48660333a61f6628bde7efefc14098d67f86b7b4"},
+    {file = "pyre2_updated-0.3.8-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:802dec5801912c76b21dcc3d91810ae9ff0cc308e78fb0aa32d93e921783f5d8"},
+    {file = "pyre2_updated-0.3.8-cp37-cp37m-win_amd64.whl", hash = "sha256:daf366a83b70b08cc4c59477455a28b2a108484d282824d350217a8a7378d229"},
+    {file = "pyre2_updated-0.3.8-cp38-cp38-macosx_10_15_universal2.whl", hash = "sha256:f1c406e30aed02699888ae6938b83058f0845650991cd97db09e1686ce8a181a"},
+    {file = "pyre2_updated-0.3.8-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:8331fc7bb1fa57d2654046ed189631d70db1170d935264ce82a7291413ce60e4"},
+    {file = "pyre2_updated-0.3.8-cp38-cp38-win_amd64.whl", hash = "sha256:407ca7082e2049aeae0b2c716cc53cd92217d17886694fe0047ce5d636161155"},
+    {file = "pyre2_updated-0.3.8-cp39-cp39-macosx_10_15_universal2.whl", hash = "sha256:99942f75a252691117880fc60941f20170d35bcb3ccb72aff9a1bbce951d4db0"},
+    {file = "pyre2_updated-0.3.8-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:ff764613bd436689cf5e4d3c14a25cf8465474e1db9f2a39738bbf481dd07300"},
+    {file = "pyre2_updated-0.3.8-cp39-cp39-win_amd64.whl", hash = "sha256:350be9580700b67af87f5227453d1123bc9f4513f0bcc60450574f1bc46cb24f"},
 ]
 
 [package.extras]
@@ -144,4 +145,4 @@ re2-wheels = ["pyre2-updated"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "de1929238ea940e9bcc0ce277712bcc3fcddb51c2f445446421d36d61260ce65"
+content-hash = "ce9e87f85bc36cab5115844de702e0792e15b9074dd404bcca80c960bf249d14"

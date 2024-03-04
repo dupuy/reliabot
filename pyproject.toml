@@ -39,7 +39,7 @@ python = "^3.8"  # 3.8 end-of-life 2024-10
 "ruamel.yaml" = "^0.18.6"
 
 pyre2 = { version = "^0.3.6", optional = true }
-pyre2-updated = { version = "^0.3.7", optional = true }
+pyre2-updated = { version = "^0.3.8", optional = true }
 
 [tool.poetry.extras]
 re2 = ["pyre2"]

@@ -132,10 +132,10 @@ warning messages, by installing a Python RE2 regular expression package. These
 require installation of the C++ RE2 library (run `brew install re2`, or use
 Linux/BSD tools to install the `re2` package).
 
-> ⚠️The `pyre2-wheels` extra (which depends on [pyre2-updated][7]) doesn't work
-> for Python 3.12 – it only supports Python 3.6 to 3.11. If you need Python
-> 3.12 and can't get the `pyre2` extra to work, use the [`--re` option][8] to
-> turn off warnings about failure to load `re2`.
+> ⚠️The `pyre2-wheels` extra (which depends on [pyre2-updated][7]) only works
+> for Python 3.7 to 3.12. If you have to use another Python version and the
+> `pyre2` extra doesn't work, use the [`--re` option][8] to turn off warnings
+> about failure to load `re2`.
 
 ```shell
 pip3 install 'reliabot[pyre2-wheels]'

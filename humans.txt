@@ -1,3 +1,4 @@
 /* TEAM */
   Original Author: dupuy (Alexander Dupuy)
   First Contributor: appills
+  Earliest Code Writer: drdrang [tidy-md-refs.py]

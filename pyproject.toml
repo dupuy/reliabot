@@ -91,6 +91,7 @@ select = [
 ]
 ignore = [
     "ANN101",  # missing-type-self
+    "B028",  # no-explicit-stacklevel
     "D105",  # undocumented-magic-method
     "ISC001",  # single-line-implicit-string-concatenation  # formatter conflict
     "PLR091", # too-manu-*  # TODO: reduce complexity or disable with comments

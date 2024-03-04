@@ -155,6 +155,12 @@ python = "^3.8"  # 3.8 end-of-life 2024-10
 pyre2 = { version = "^0.3.6", optional = true }
 pyre2-updated = { version = "^0.3.8", optional = true }
 
+[tool.poetry.group.testing]
+optional = true
+
+[tool.poetry.group.testing.dependencies]
+tox = "^4.13.0"
+
 [tool.poetry.extras]
 re2 = ["pyre2"]
 re2-wheels = ["pyre2-updated"]

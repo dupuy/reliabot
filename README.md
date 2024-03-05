@@ -132,20 +132,20 @@ warning messages, by installing a Python RE2 regular expression package. These
 require installation of the C++ RE2 library (run `brew install re2`, or use
 Linux/BSD tools to install the `re2` package).
 
-> ⚠️The `pyre2-wheels` extra (which depends on [pyre2-updated][7]) only works
-> for Python 3.7 to 3.12. If you have to use another Python version and the
-> `pyre2` extra doesn't work, use the [`--re` option][8] to turn off warnings
-> about failure to load `re2`.
+> ⚠️The `re2-wheels` extra (which depends on [pyre2-updated][7]) only works for
+> Python 3.7 to 3.12. If you have to use another Python version and the `pyre2`
+> extra doesn't work, use the [`--re` option][8] to turn off warnings about
+> failure to load `re2`.
 
 ```shell
-pip3 install 'reliabot[pyre2-wheels]'
+pip3 install 'reliabot[re2-wheels]'
 ```
 
 Alternately, you can try the original `pyre2` to build from source. This
-requires a C++ compiler and libraries installed on your system.
+requires you to have installed a C++ compiler, header files, and libraries.
 
 ```shell
-pip3 install 'reliabot[pyre2]'
+pip3 install 'reliabot[re2]'
 ```
 
 Once installed, you can add the Python binary directory to your `PATH`.
@@ -158,11 +158,11 @@ Once installed, you can add the Python binary directory to your `PATH`.
 > command.
 
 The [pre‑commit documentation][9] has detailed instructions for installing and
-configuring `pre‑commit`. Once you have:
+configuring `pre‑commit`. After you:
 
-1. installed `pre‑commit`,
+1. install `pre‑commit`,
 
-2. added a `.pre‑commit-config.yaml` configuration, for example by running:
+2. add a `.pre‑commit-config.yaml` configuration, for example by running:
 
    ```shell
    pre-commit sample-config > .pre-commit-config.yaml
@@ -170,7 +170,7 @@ configuring `pre‑commit`. Once you have:
 
    and
 
-3. installed the Git hooks for your repository,
+3. install the Git hooks for your repository,
 
 add the following to the `repos` entry in `.pre‑commit‑config.yaml`
 ([Installing with RE2][10] explains the motivation for the

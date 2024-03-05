@@ -9,10 +9,15 @@ Quis
 TOML
 [Dd]ependabot
 [Rr]eliabot
+argv
 commitizen
+cron
 docstring
 doctest
+dotfiles
 formatters
+gitleaks
+gitlint
 ipsos
 markdownlint
 mdformat

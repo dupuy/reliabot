@@ -57,7 +57,7 @@ commit_preprocessors = [
 commit_parsers = [
   { message = "^feat", group = "<!-- 0 -->🚀 Features" },
   { message = "^fix: auto-fixes", skip = true },
-  { message = "^fix", group = "<!-- 1 -->🔨 Fixes" },
+  { message = "^fix", group = "<!-- 1 -->🛠️ Fixes" },
   { message = "^doc", group = "<!-- 2 -->📚 Documentation" },
   { message = "^perf", group = "<!-- 3 -->⚡ Performance" },
   { message = "^refactor", group = "<!-- 4 -->🚜 Refactor" },

@@ -32,6 +32,8 @@ jobs:
       - name: 'Stale issue/PR check'
         uses: actions/stale@28ca1036281a5e5922ead5184a1bbf96e5fc984e # v9.0.0
         with:
+          days-before-stale: 63
+          days-before-close: 14 # stale + close + 13 <= artifact retention (90 max)
           exempt-all-pr-assignees: true
           stale-issue-label: 'inactive-issue'
           stale-issue-message: 'This will be closed if there’s no activity soon'

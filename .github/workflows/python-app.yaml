@@ -210,7 +210,6 @@ jobs:
           config: release.toml
 
       - name: 'Upload distribution package as an artifact'
-        id: upload-artifact
         if: >
           github.repository == 'dupuy/reliabot' &&
           env.version_tag != env.commit_tag &&
@@ -347,6 +346,11 @@ jobs:
           name: '${{ env.dist-artifact-name }}'
           path: dist/
 
+      - name: 'Create annotated tag for release'
+        run: |
+          git tag "$version_tag" -F "$OUTPUT" --cleanup=whitespace
+          git push --tags
+
       - name: 'Publish release to PyPI'
         if: >
           env.commit_tag != env.version_tag && env.pre-release == 'false' &&
@@ -382,7 +386,7 @@ jobs:
         uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5 # v1.14.0
         with:
           allowUpdates: true
-          commit: '${{ github.ref }}'
+          commit: '${{ github.ref }}' # This only generates a non-annotated tag.
           draft: false
           omitBodyDuringUpdate: true
           omitNameDuringUpdate: true
@@ -421,7 +425,7 @@ jobs:
         uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5 # v1.14.0
         with:
           allowUpdates: true
-          commit: '${{ github.ref }}'
+          # Don't set commit, publish job creates an annotated tag.
           draft: false
           omitBodyDuringUpdate: true
           omitNameDuringUpdate: true

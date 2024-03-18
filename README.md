@@ -1,9 +1,18 @@
 [![pre-commit enabled](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/dupuy/reliabot/main.svg)](https://results.pre-commit.ci/latest/github/dupuy/reliabot/main)
+[![Python build workflow status](https://img.shields.io/github/actions/workflow/status/dupuy/reliabot/python-app.yaml)](https://github.com/dupuy/reliabot/actions/workflows/python-app.yaml)
 [![CodeQL status](https://github.com/dupuy/reliabot/workflows/CodeQL/badge.svg)](https://github.com/dupuy/reliabot/security/)
 
 [![OpenSSF scorecard](https://api.securityscorecards.dev/projects/github.com/dupuy/reliabot/badge)](https://securityscorecards.dev/viewer/?uri=github.com/dupuy/reliabot)
 [![OpenSSF best practices](https://www.bestpractices.dev/projects/8459/badge)](https://www.bestpractices.dev/projects/8459)
+![PyPI Version](https://img.shields.io/pypi/v/reliabot)
+[![GitHub Release](https://img.shields.io/github/v/release/dupuy/reliabot)](https://github.com/dupuy/reliabot/releases)
+
+[![GitHub License](https://img.shields.io/github/license/dupuy/reliabot)](LICENSE)
+![GitHub repository size](https://img.shields.io/github/repo-size/dupuy/reliabot)
+![GitHub repository file+folder count](https://img.shields.io/github/directory-file-count/dupuy/reliabot)
+![Lines of code](https://tokei.rs/b1/github/dupuy/reliabot)
+![GitHub top language](https://img.shields.io/github/languages/top/dupuy/reliabot)
 
 # Reliabot – Maintain Dependabot configuration
 

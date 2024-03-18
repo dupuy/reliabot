@@ -11,7 +11,6 @@
 [![GitHub License](https://img.shields.io/github/license/dupuy/reliabot)](LICENSE)
 ![GitHub repository size](https://img.shields.io/github/repo-size/dupuy/reliabot)
 ![GitHub repository file+folder count](https://img.shields.io/github/directory-file-count/dupuy/reliabot)
-![Lines of code](https://img.shields.io/tokei/lines/github/dupuy/reliabot)
 ![Lines of code](https://tokei.rs/b1/github/dupuy/reliabot)
 ![GitHub top language](https://img.shields.io/github/languages/top/dupuy/reliabot)
 

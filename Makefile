@@ -58,8 +58,12 @@ major minor patch release: has-git-cliff has-poetry
 	esac; poetry version "$${VERSION}"
 	git checkout -b "release-`${PR_BRANCH}`"
 	mkdir -p docs
-	git-cliff --config=pyproject.toml --tag "`${PR_BRANCH}`" \
-	  --output "docs/CHANGELOG-`${PR_MAJOR}`.md"
+	LAST=`git describe | sed 's/-.*//'` &&                              \
+	git-cliff --config=pyproject.toml --tag "`${PR_BRANCH}`" $${LAST}.. \
+	  > "docs/changelog-$$$$~" &&                                       \
+	sed '/^# C/,/^releases/d' "docs/CHANGELOG-`${PR_MAJOR}`.md"         \
+	 >> "docs/changelog-$$$$~" &&                                       \
+	mv "docs/changelog-$$$$~" "docs/CHANGELOG-`${PR_MAJOR}`.md"
 	git add docs/CHANGELOG-*.md
 	-pre-commit run mdformat
 	ln -sf "docs/CHANGELOG-`${PR_MAJOR}`.md" CHANGELOG.md

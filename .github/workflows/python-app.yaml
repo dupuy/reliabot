@@ -340,7 +340,7 @@ jobs:
 
       - name: 'Download release artifacts'
         if: >
-          env.commit_tag != env.version_tag && !env.pre-release &&
+          env.commit_tag != env.version_tag && env.pre-release == 'false' &&
           !startsWith(env.commit_tag, format('{0}-', env.version_tag))
         uses: actions/download-artifact@c850b930e6ba138125429b7e5c93fc707a7f8427 # v4.1.4
         with:
@@ -349,7 +349,7 @@ jobs:
 
       - name: 'Publish release to PyPI'
         if: >
-          env.commit_tag != env.version_tag && !env.pre-release &&
+          env.commit_tag != env.version_tag && env.pre-release == 'false' &&
           !startsWith(env.commit_tag, format('{0}-', env.version_tag))
         uses: pypa/gh-action-pypi-publish@81e9d935c883d0b210363ab89cf05f3894778450 # v1.8.14
 
@@ -375,7 +375,7 @@ jobs:
 
       - name: 'Publish GitHub pre-release'
         if: >
-          env.commit_tag != env.version_tag && env.pre-release &&
+          env.commit_tag != env.version_tag && env.pre-release == 'true' &&
           !startsWith(env.commit_tag, format('{0}-', env.version_tag))
         uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5 # v1.14.0
         with:
@@ -412,7 +412,7 @@ jobs:
 
       - name: 'Publish GitHub release'
         if: >
-          env.commit_tag != env.version_tag && !env.pre-release &&
+          env.commit_tag != env.version_tag && env.pre-release == 'false' &&
           !startsWith(env.commit_tag, format('{0}-', env.version_tag))
         uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5 # v1.14.0
         with:

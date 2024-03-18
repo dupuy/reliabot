@@ -1,4 +1,4 @@
-TARGETS := all build clean devtools major minor patch release \
+TARGETS := all build clean devtools major minor patch prerelease release \
            tests uninstall uninstall-pipx update words
 TOOLS := git-cliff poetry tox vale
 TOOL_DIR := ${HOME}/.local/bin
@@ -18,6 +18,8 @@ _:
 	$(echo) "- $(MAJOR)"
 	$(echo) "- $(MINOR)"
 	$(echo) "- $(PATCH)"
+	$(echo) "- $(PRERELEASE)"
+	$(echo) "- $(RELEASE)"
 	$(echo) "- $(TESTS)"
 	$(echo) "- $(TOX)"
 	$(echo) "- $(UNINSTALL)"
@@ -38,17 +40,18 @@ CLEAN= clean - Remove (generated) files ignored by Git
 clean:
 	git clean -diX
 
-DEVTOOLS= tools - Install all development and documentation tools
+DEVTOOLS= devtools - Install all development and documentation tools
 devtools: $(TOOLS)
 
 MAJOR= major - Generate a major version release branch/PR
 MINOR= minor - Generate a minor version release branch/PR
 PATCH= patch - Generate a patch version release branch/PR
+PRERELEASE= prerelease - Generate a pre-release branch/PR
 RELEASE= release - Generate a semantic version release branch/PR
 PR_MAKE_TAG=sed -e 's/^/v/' -e 's/a/-alpha./' -e 's/b/-beta./' -e 's/rc/-rc./'
 PR_BRANCH=poetry version --short | ${PR_MAKE_TAG}
 PR_MAJOR=poetry version --short | sed -n -e '{s/\..*//p;q;}'
-major minor patch release: has-git-cliff has-poetry
+major minor patch prerelease release: has-git-cliff has-poetry
 	git checkout main
 	case $@ in \
 	  release) \

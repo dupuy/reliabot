@@ -69,15 +69,15 @@ major minor patch release: has-git-cliff has-poetry
 	ln -sf "docs/CHANGELOG-`${PR_MAJOR}`.md" CHANGELOG.md
 	poetry lock
 	git add pyproject.toml CHANGELOG.md docs/CHANGELOG-*.md poetry.lock
-	SKIP=codespell,markdown-link-check,vale \
-	  git commit -m "chore(release): reliabot `${PR_BRANCH}`"
-	RELEASE="release-`${PR_BRANCH}`"; \
-	git push --set-upstream origin "$${RELEASE}"; \
-	if which gh >/dev/null 2>&1; then \
-	  gh pr create --fill; \
-	else \
-	  URL=`git config remote.origin.url`; \
-	  BASE=`expr $${URL} : '.*github\.com.\(.*\)\.git'`; \
+	TITLE="chore(release): reliabot `${PR_BRANCH}`";                       \
+	SKIP=codespell,markdown-link-check,vale git commit -m "$${TITLE}";     \
+	RELEASE="release-`${PR_BRANCH}`";                                      \
+	git push --set-upstream origin "$${RELEASE}";                          \
+	if which gh >/dev/null 2>&1; then                                      \
+	  gh pr create --fill-verbose --title="$${TITLE}";                     \
+	else                                                                   \
+	  URL=`git config remote.origin.url`;                                  \
+	  BASE=`expr $${URL} : '.*github\.com.\(.*\)\.git'`;                   \
 	  echo "PR: https://github.com/$${BASE}/compare/$${RELEASE}?expand=1"; \
 	fi
 

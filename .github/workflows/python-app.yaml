@@ -290,14 +290,13 @@ jobs:
       name: test-pypi
       url: https://test.pypi.org/p/reliabot
     permissions:
-      contents: read
       id-token: write # IMPORTANT: trusted publishing requires this permission
 
     steps:
       - name: 'Harden runner'
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
-          # disable-sudo: true
+          disable-sudo: true
           egress-policy: audit
           allowed-endpoints: >
             upload.pypi.org:443
@@ -328,14 +327,13 @@ jobs:
     needs:
       - tests
     permissions:
-      contents: read
       id-token: write # IMPORTANT: trusted publishing requires this permission
 
     steps:
       - name: 'Harden runner'
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
-          # disable-sudo: true
+          disable-sudo: true
           egress-policy: audit
           allowed-endpoints: >
             upload.pypi.org:443
@@ -372,8 +370,8 @@ jobs:
       - name: 'Harden runner'
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
-          # disable-sudo: true
-          egress-policy: audit
+          disable-sudo: true
+          egress-policy: block
           allowed-endpoints: >
             api.github.com:443
 
@@ -402,7 +400,7 @@ jobs:
       version_tag: ${{ needs.tests.outputs.version_tag }}
       pre-release: ${{ needs.tests.outputs.pre-release }}
     needs:
-      # - publish
+      - publish
       - tests
     permissions:
       contents: write
@@ -411,8 +409,8 @@ jobs:
       - name: 'Harden runner'
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
-          # disable-sudo: true
-          egress-policy: audit
+          disable-sudo: true
+          egress-policy: block
           allowed-endpoints: >
             api.github.com:443
 

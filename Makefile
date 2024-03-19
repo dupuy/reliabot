@@ -54,13 +54,13 @@ MAJOR_VERSION=poetry version --short | sed -n -e '{s/\..*//p;q;}'
 COMPARE=https://github.com/dupuy/reliabot/compare
 major minor patch prerelease release: has-git-cliff has-poetry
 	git checkout main
-	@case $@ in                                                 \
-	  release)                                                 \
-	    VERSION=`git-cliff -c pyproject.toml --bumped-version` \
-	    ;;                                                     \
-	  *) VERSION=$@ ;;                                         \
+	@case $@ in                                                           \
+	  release)                                                            \
+	    VERSION=`git-cliff -c bump.toml --bumped-version | sed 's/-.*//'` \
+	    ;;                                                                \
+	  *) VERSION=$@ ;;                                                    \
 	esac; poetry version "$${VERSION#v}"
-	@RELEASE="`$(VERSION_TAG)`" &&                                      \
+	@RELEASE="`$(VERSION_TAG)`" &&                                     \
 	CHANGELOG="docs/CHANGELOG-`$(MAJOR_VERSION)`.md" &&                \
 	CHANGELOG_TMP="docs/changelog-$$$$~" &&                            \
 	LAST=`git describe | sed 's/-.*//'` &&                             \

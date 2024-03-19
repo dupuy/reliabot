@@ -162,7 +162,7 @@ jobs:
                 echo "pr-release=true" ;
                 echo "release-name=Release $VERSION_TAG" ;;
             esac ;
-          } >>"$GITHUB_OUTPUT"
+          } | tee -a "$GITHUB_OUTPUT"
 
       - name: 'Set up Python'
         if: steps.computed.outputs.pr-commit == 'true'

@@ -160,6 +160,7 @@ jobs:
                 echo "pr-release=false" ; echo "release-name=" ;;
               *)
                 echo "artifact-name=dist-reliabot-$VERSION_TAG" ;
+                echo "pr-commit=true" ; echo "pr-tag=true" ;
                 case "$VERSION_TAG" in
                   *-*)
                     echo "pr-release=false" ;

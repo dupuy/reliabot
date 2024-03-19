@@ -33,7 +33,7 @@
 #
 # [The pr-tag test uses '-' to prevent 'v1.2.10' starts with 'v1.2.1' mistakes.]
 #
-# - Tag push:     pr-commit=false pr-release=<ANY> pr-tag=false (take no action)
+# - Tag push:     pr-commit=false pr-release=false pr-tag=false (take no action)
 # - "Interim" PR: pr-commit=true pr-release=false pr-tag=false (no tag/release)
 # - Pre-release:  pr-commit=true pr-release=false pr-tag=true (tag + TestPyPI)
 # - Release:      pr-commit=true pr-release=true pr-tag=true (annotated + PyPI)
@@ -144,25 +144,32 @@ jobs:
         id: computed
         run: >
           {
-            COMMIT_TAG=$(git describe --tags) ;
+            COMMIT_TAG=$(git describe --tags) &&
+              echo "COMMIT_TAG=$COMMIT_TAG" >&2 ;
             VERSION_TAG="v`poetry version --short |
               sed -e 's/a/-alpha./' -e 's/b/-beta./' -e 's/rc/-rc./'`" &&
                 echo "VERSION_TAG=$VERSION_TAG" ;
-            echo "artifact-name=dist-reliabot-$VERSION_TAG" ;
             case "$COMMIT_TAG" in
-              ${VERSION_TAG}) echo "pr-commit=false" ; echo "pr-tag=false" ;;
-              ${VERSION_TAG}-*) echo "pr-commit=true" ; echo "pr-tag=false" ;;
-              *) echo "pr-commit=true" ; echo "pr-tag=true" ;;
-            esac ;
-            case "$VERSION_TAG" in
-              *-*)
-                echo "pr-release=false" ;
-                echo "release-name=Pre-release $VERSION_TAG" ;;
+              ${VERSION_TAG})
+                echo "artifact-name=" ;
+                echo "pr-commit=false" ; echo "pr-tag=false" ;
+                echo "pr-release=false" ; echo "release-name=" ;;
+              ${VERSION_TAG}-*)
+                echo "artifact-name=" ;
+                echo "pr-commit=true" ; echo "pr-tag=false" ;
+                echo "pr-release=false" ; echo "release-name=" ;;
               *)
-                echo "pr-release=true" ;
-                echo "release-name=Release $VERSION_TAG" ;;
+                echo "artifact-name=dist-reliabot-$VERSION_TAG" ;
+                case "$VERSION_TAG" in
+                  *-*)
+                    echo "pr-release=false" ;
+                    echo "release-name=Pre-release $VERSION_TAG" ;;
+                  *)
+                    echo "pr-release=true" ;
+                    echo "release-name=Release $VERSION_TAG" ;;
+                esac ;
             esac ;
-          } >>"$GITHUB_OUTPUT"
+          } | tee -a "$GITHUB_OUTPUT"
 
       - name: 'Set up Python'
         if: steps.computed.outputs.pr-commit == 'true'
@@ -354,7 +361,6 @@ jobs:
       VERSION_TAG: ${{ needs.tests.outputs.VERSION_TAG }}
       artifact-name: ${{ needs.tests.outputs.artifact-name }}
       pr-release: ${{ needs.tests.outputs.pr-release }}
-      pr-tag: ${{ needs.tests.outputs.pr-tag }}
     environment:
       name: pypi
       url: https://pypi.org/p/reliabot
@@ -366,7 +372,7 @@ jobs:
 
     steps:
       - name: 'Harden runner'
-        if: env.pr-tag == 'true'
+        if: env.pr-release == 'true'
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
           disable-sudo: true
@@ -376,7 +382,7 @@ jobs:
             upload.pypi.org:443
 
       - name: 'Checkout repository'
-        if: env.pr-release == 'true' && env.pr-tag == 'true'
+        if: env.pr-release == 'true'
         uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # v4.1.2
         with:
           # The Git repository is only necessary for tagging and pushing.
@@ -385,20 +391,20 @@ jobs:
           persist-credentials: true
 
       - name: 'Download release artifacts'
-        if: env.pr-release == 'true' && env.pr-tag == 'true'
+        if: env.pr-release == 'true'
         uses: actions/download-artifact@c850b930e6ba138125429b7e5c93fc707a7f8427 # v4.1.4
         with:
           name: '${{ env.artifact-name }}'
           path: dist/
 
       - name: 'Create annotated tag for release'
-        if: env.pr-release == 'true' && env.pr-tag == 'true'
+        if: env.pr-release == 'true'
         run: |
           git tag "$VERSION_TAG" -F "$OUTPUT" --cleanup=whitespace
           git push --tags
 
       - name: 'Publish release to PyPI'
-        if: env.pr-release == 'true' && env.pr-tag == 'true'
+        if: env.pr-release == 'true'
         uses: pypa/gh-action-pypi-publish@81e9d935c883d0b210363ab89cf05f3894778450 # v1.8.14
 
   pre-release:
@@ -453,7 +459,7 @@ jobs:
 
     steps:
       - name: 'Harden runner'
-        if: env.pr-release == 'true' && env.pr-tag == 'true'
+        if: env.pr-release == 'true'
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
           disable-sudo: true
@@ -462,7 +468,7 @@ jobs:
             api.github.com:443
 
       - name: 'Publish GitHub release'
-        if: env.pr-release == 'true' && env.pr-tag == 'true'
+        if: env.pr-release == 'true'
         uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5 # v1.14.0
         with:
           allowUpdates: true

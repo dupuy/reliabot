@@ -1,58 +1,83 @@
 # This workflow runs for pull requests and pushes (merge/squash/rebase or tags).
-#
+
 # The TESTS job always runs, installing Python Poetry dependencies, building a
 # distribution and running tests on a matrix of Python versions. It also
-# computes several outputs used by other jobs. The first two use underscore '_'
-# rather than hyphen '-' so that shell run scripts can use them as variables
-# from the environment, rather than as '${{ }}' substitutions that can be
-# exploited by embedding shell meta-characters in the values.
+# computes several outputs for use by other jobs, often in 'if' conditions.
 #
-# - commit_tag - is set from the output of `git describe`
-# - version_tag - is set from the version in 'pyproject.toml'
+# The first output (VERSION_TAG) describes the intended Reliabot version, which
+# can be the current tag, but is usually a desired (pre-)release tag for this
+# workflow to apply, or the "left over" version of the most recent release tag.
+# All outputs are set as environment variables in the jobs that use them, but
+# this one uses underscore '_' rather than hyphen '-' in its name so that shell
+#'run' scripts can use it as an environment variable rather than as a '${{ }}'
+# substitution that would be vulnerable to shell meta-characters in the value.
+# Although TESTS uses `poetry version` to get this value from 'pyproject.toml',
+# and poetry rejects metacharacters in the version, it's still worth having
+# m shell-compatible name to protect against a compromised action or workflow
+# exploiting this environment variable by overriding the poetry-computed value.
 #
-# There are several conditions that can be determined from those two values:
-# - if commit_tag == version_tag - `git push --tags` from merge release? (no-op)
-# - elif commit_tag starts with version_tag - non-release PR (stale version tag)
-# - elif commit_tag contains '-' - pre-release (publish to TestPyPI)
-# - else - release (publish to TestPyPI and PyPI)
+# THe TESTS job uses `git describe` to compute another variable (COMMIT_TAG)
+# that is not an output. Its value can be the current VERSION_TAG ("v1.2.3") or
+# a previous VERSION_TAG followed by '-', the number of commits made since, and
+# a short commit hash, like this: 'v1.2.3-13-ca11ab1e'. The latter indicates an
+# "interim" (untagged) commit, and can be distinguished from a pre-release tag
+# like `v1.2.3-rc.5' by the presence of a second '-'.
 #
-# The TESTS job also computes some other outputs needed to coordinate between
-# the pull_request and push workflows:
+# The TESTS job uses these two variables to determine the type of push (merge)
+# or pull request the workflow is handling, and creates "pr-*" outputs for other
+# jobs to use in 'if' conditions to enable execution of various job steps.
 #
-# - dist-artifact-name - GitHub artifact containing dist/ release for publishing
-# - pre-release - 'true' if version_tag contains a '-', otherwise 'false'
-# - release-name - title for the GitHub release or pre-release
+# * pr-commit  :: COMMIT_TAG != VERSION_TAG
+# * pr-release :: VERSION_TAG has no '-'
+# * pr-tag     :: COMMIT_TAG does not start with VERSION_TAG + '-'
 #
+# [The pr-tag test uses '-' to prevent 'v1.2.10' starts with 'v1.2.1' mistakes.]
+#
+# - Tag push:     pr-commit=false pr-release=<ANY> pr-tag=false (take no action)
+# - "Interim" PR: pr-commit=true pr-release=false pr-tag=false (no tag/release)
+# - Pre-release:  pr-commit=true pr-release=false pr-tag=true (tag + TestPyPI)
+# - Release:      pr-commit=true pr-release=true pr-tag=true (annotated + PyPI)
+#
+# [Only releases use annotated tags so `git describe` ignores pre-releases.]
+# [Also note pr-tag=true implies pr-commit=true so latter test may be omitted.]
+#
+# The TESTS job also computes two other outputs to coordinate (upload/download)
+# between the pull_request and push workflows, and the jobs within them:
+#
+# - artifact-name - GitHub artifact containing dist/ release for publishing
+# - release-name - GitHub title of release or pre-release
+
 # Since only the last matrix instance output is available, and there's no way to
 # know which one that is, all matrix instances compute the outputs.
 #
-# All other jobs run only in one or the other of pull_request or push:
+# All other jobs run only on one or the other of pull_request or push events:
 #
 # pull_request:  build → draft-release, test-publish
 # push:          pre-release || ( publish → release )
-#
+
 # The BUILD job creates a Python package release, release notes, and a full
 # changelog, uploading them as artifacts for other pull_request and push jobs.
 # The lifetime of these artifacts is linked to the "stale" workflow that closes
 # inactive PRs. By closing PRs before their artifacts expire, the stale workflow
 # prevents push workflow failures. The pull_request workflow runs on "reopen"
 # or "ready for review" events, recreating expired artifacts before any "push".
-#
+
 # The DRAFT-RELEASE job creates a draft GitHub release (or pre-release, if the
 # version tag contains a '-').
-#
+
 # The TEST-PUBLISH job publishes the Python package from the uploaded build
 # artifact to TestPyPI; it does this for both pre-release and release builds.
-#
+
 # The jobs that run on push events are different for pre-releases and releases:
-# the PRE-RELEASE job removes the draft status from the GitHub release, and
-# creates and pushes an annotated tag for the pre-release (it only runs if the
-# pyproject.toml version is a new pre-release tag). FIXME FIXME
+
+# The PRE-RELEASE job removes the draft status from the GitHub release, and
+# creates and pushes a corresponding non-annotated tag for the pre-release.
 #
 # The PUBLISH job runs for release versions and publishes the Python package
-# from the uploaded build artifact to PyPI. If that job succeeds, the RELEASE
-# job runs and removes the draft status from the GitHub release, and creates and
-# pushes an annotated tag for the release. FIXME FIXME
+# from the uploaded build artifact to PyPI. It also creates and pushes an
+# annotated tag for the release.
+
+# The RELEASE job only removes the draft status from the GitHub release,
 
 name: 'Test, build, release, upload, publish, and tag Python Poetry app'
 
@@ -76,10 +101,11 @@ jobs:
     runs-on: ubuntu-22.04
 
     outputs:
-      commit_tag: ${{ steps.computed.outputs.commit_tag }}
-      version_tag: ${{ steps.computed.outputs.version_tag }}
-      dist-artifact-name: ${{ steps.computed.outputs.dist-artifact-name }}
-      pre-release: ${{ steps.computed.outputs.pre-release }}
+      VERSION_TAG: ${{ steps.computed.outputs.VERSION_TAG }}
+      artifact-name: ${{ steps.computed.outputs.artifact-name }}
+      pr-commit: ${{ steps.computed.outputs.pr-commit }}
+      pr-release: ${{ steps.computed.outputs.pr-release }}
+      pr-tag: ${{ steps.computed.outputs.pr-tag }}
       release-name: ${{ steps.computed.outputs.release-name }}
     strategy:
       matrix:
@@ -106,7 +132,7 @@ jobs:
       - name: 'Checkout repository'
         uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # v4.1.2
         with:
-          # The `git describe` commit_tag output requires these fetch-* options.
+          # The `git describe` COMMIT_TAG output requires these fetch-* options.
           fetch-depth: 0
           fetch-tags: true
           persist-credentials: false
@@ -114,35 +140,43 @@ jobs:
       - name: 'Install Poetry'
         run: 'pipx install poetry'
 
+      - name: 'Compute outputs for other jobs'
+        id: computed
+        run: >
+          {
+            COMMIT_TAG=$(git describe --tags) ;
+            VERSION_TAG="v`poetry version --short |
+              sed -e 's/a/-alpha./' -e 's/b/-beta./' -e 's/rc/-rc./'`" &&
+                echo "VERSION_TAG=$VERSION_TAG" ;
+            echo "artifact-name=dist-reliabot-$VERSION_TAG" ;
+            case "$COMMIT_TAG" in
+              ${VERSION_TAG}) echo "pr-commit=false" ; echo "pr-tag=false" ;;
+              ${VERSION_TAG}-*) echo "pr-commit=true" ; echo "pr-tag=false" ;;
+              *) echo "pr-commit=true" ; echo "pr-tag=true" ;;
+            esac ;
+            case "$VERSION_TAG" in
+              *-*)
+                echo "pr-release=false" ;
+                echo "release-name=Pre-release $VERSION_TAG" ;;
+              *)
+                echo "pr-release=true" ;
+                echo "release-name=Release $VERSION_TAG" ;;
+            esac ;
+          } >>"$GITHUB_OUTPUT"
+
       - name: 'Set up Python'
+        if: steps.computed.outputs.pr-commit == 'true'
         uses: actions/setup-python@0a5c61591373683505ea898e09a3ea4f39ef2b9c # v5.0.0
         with:
           python-version: '${{ matrix.python-version }}'
           cache: 'poetry'
 
-      - name: 'Compute outputs for other jobs'
-        id: computed
-        run: >
-          {
-            TAG=$(git describe --tags) && echo "commit_tag=$TAG" ;
-            VERSION="v`poetry version --short |
-              sed -e 's/a/-alpha./' -e 's/b/-beta./' -e 's/rc/-rc./'`" &&
-                echo "version_tag=$VERSION" ;
-            echo "dist-artifact-name=dist-reliabot-$VERSION" ;
-            case "$VERSION" in
-              *-*)
-                echo "pre-release=true" ;
-                echo "release-name=Pre-release $VERSION" ;;
-              *)
-                echo "pre-release=false" ;
-                echo "release-name=Release $VERSION" ;;
-            esac ;
-          } >>"$GITHUB_OUTPUT"
-
       - name: 'Install dependencies'
+        if: steps.computed.outputs.pr-commit == 'true'
         run: 'poetry install --extras re2-wheels --with testing'
 
       - name: 'Run tests with coverage'
+        if: steps.computed.outputs.pr-commit == 'true'
         run: 'poetry run tox -e py'
 
   build:
@@ -151,14 +185,17 @@ jobs:
     # No build for push events, which use artifacts from pull_request
     if: github.event_name == 'pull_request'
     env:
-      commit_tag: ${{ needs.tests.outputs.commit_tag }}
-      version_tag: ${{ needs.tests.outputs.version_tag }}
-      dist-artifact-name: ${{ needs.tests.outputs.dist-artifact-name }}
+      VERSION_TAG: ${{ needs.tests.outputs.VERSION_TAG }}
+      artifact-name: ${{ needs.tests.outputs.artifact-name }}
+      pr-commit: ${{ needs.tests.outputs.pr-commit }}
+      pr-release: ${{ needs.tests.outputs.pr-release }}
+      pr-tag: ${{ needs.tests.outputs.pr-tag }}
     needs:
       - tests
 
     steps:
       - name: 'Harden runner'
+        if: env.pr-commit == 'true'
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
           disable-sudo: true
@@ -170,6 +207,7 @@ jobs:
             pypi.org:443
 
       - name: 'Checkout repository'
+        if: env.pr-commit == 'true'
         uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # v4.1.2
         with:
           # The `git-cliff` release notes action requires these fetch-* options.
@@ -178,46 +216,42 @@ jobs:
           persist-credentials: false
 
       - name: 'Install Poetry'
+        if: env.pr-commit == 'true'
         run: 'pipx install poetry'
 
       - name: 'Set up Python'
+        if: env.pr-commit == 'true'
         uses: actions/setup-python@0a5c61591373683505ea898e09a3ea4f39ef2b9c # v5.0.0
         with:
           python-version: '>=3.9 <3.13'
           cache: 'poetry'
 
       - name: 'Build distribution packages'
+        if: env.pr-commit == 'true'
         run: 'poetry build'
 
       - name: 'Generate release notes'
-        if: >
-          env.version_tag != env.commit_tag &&
-          !startsWith(env.commit_tag, format('{0}-', env.version_tag))
+        if: env.pr-tag == 'true'
         uses: orhun/git-cliff-action@8b17108aad4d9362649a5dae020746c2a767c90d # v3.0.2
         with:
           args: >
             '--unreleased'
-            '--tag=${{ env.version_tag }}'
+            '--tag=${{ env.VERSION_TAG }}'
           config: release.toml
 
       - name: 'Generate "unreleased" notes'
-        if: >
-          env.version_tag != env.commit_tag &&
-          startsWith(env.commit_tag, format('{0}-', env.version_tag))
+        if: env.pr-commit == 'true' && env.pr-tag == 'false'
         uses: orhun/git-cliff-action@8b17108aad4d9362649a5dae020746c2a767c90d # v3.0.2
         with:
           args: '--unreleased'
           config: release.toml
 
       - name: 'Upload distribution package as an artifact'
-        if: >
-          github.repository == 'dupuy/reliabot' &&
-          env.version_tag != env.commit_tag &&
-          !startsWith(env.commit_tag, format('{0}-', env.version_tag))
+        if: github.repository == 'dupuy/reliabot' && env.pr-tag == 'true'
         uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
         with:
           if-no-files-found: error
-          name: '${{ env.dist-artifact-name }}'
+          name: '${{ env.artifact-name }}'
           overwrite: true
           path: 'dist/*'
           retention-days: 90 # stale + close + 13 <= artifact retention (90 max)
@@ -230,10 +264,10 @@ jobs:
       github.event_name == 'pull_request' &&
       github.repository == 'dupuy/reliabot'
     env:
-      commit_tag: ${{ needs.tests.outputs.commit_tag }}
-      version_tag: ${{ needs.tests.outputs.version_tag }}
-      dist-artifact-name: ${{ needs.tests.outputs.dist-artifact-name }}
-      pre-release: ${{ needs.tests.outputs.pre-release }}
+      VERSION_TAG: ${{ needs.tests.outputs.VERSION_TAG }}
+      artifact-name: ${{ needs.tests.outputs.artifact-name }}
+      pr-release: ${{ needs.tests.outputs.pr-release }}
+      pr-tag: ${{ needs.tests.outputs.pr-tag }}
       release-name: ${{ needs.tests.outputs.release-name }}
     needs:
       - build
@@ -243,6 +277,7 @@ jobs:
 
     steps:
       - name: 'Harden runner'
+        if: env.pr-tag == 'true'
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
           disable-sudo: true
@@ -252,14 +287,14 @@ jobs:
             uploads.github.com:443
 
       - name: 'Download release artifacts'
-        if: "!startsWith(env.commit_tag, format('{0}-', env.version_tag))"
+        if: env.pr-tag == 'true'
         uses: actions/download-artifact@c850b930e6ba138125429b7e5c93fc707a7f8427 # v4.1.4
         with:
-          name: '${{ env.dist-artifact-name }}'
+          name: '${{ env.artifact-name }}'
           path: dist/
 
       - name: 'Create draft release and upload artifacts'
-        if: "!startsWith(env.commit_tag, format('{0}-', env.version_tag))"
+        if: env.pr-tag == 'true'
         uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5 # v1.14.0
         with:
           allowUpdates: true
@@ -268,8 +303,8 @@ jobs:
           bodyFile: '${{ env.OUTPUT }}'
           draft: true
           name: '${{ env.release-name }}'
-          prerelease: '${{ env.pre-release }}'
-          tag: '${{ env.version_tag }}'
+          prerelease: "${{ env.pr-release && 'false' || 'true' }}"
+          tag: '${{ env.VERSION_TAG }}'
           updateOnlyUnreleased: true
 
   test-publish:
@@ -279,9 +314,8 @@ jobs:
       github.event_name == 'pull_request' &&
       github.repository == 'dupuy/reliabot'
     env:
-      commit_tag: ${{ needs.tests.outputs.commit_tag }}
-      version_tag: ${{ needs.tests.outputs.version_tag }}
-      dist-artifact-name: ${{ needs.tests.outputs.dist-artifact-name }}
+      artifact-name: ${{ needs.tests.outputs.artifact-name }}
+      pr-tag: ${{ needs.tests.outputs.pr-tag }}
     needs:
       - build
       - tests
@@ -293,6 +327,7 @@ jobs:
 
     steps:
       - name: 'Harden runner'
+        if: env.pr-tag == 'true'
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
           disable-sudo: true
@@ -301,14 +336,14 @@ jobs:
             upload.pypi.org:443
 
       - name: 'Download release artifacts'
-        if: "!startsWith(env.commit_tag, format('{0}-', env.version_tag))"
+        if: env.pr-tag == 'true'
         uses: actions/download-artifact@c850b930e6ba138125429b7e5c93fc707a7f8427 # v4.1.4
         with:
-          name: '${{ env.dist-artifact-name }}'
+          name: '${{ env.artifact-name }}'
           path: dist/
 
-      - name: 'Publish pre-release to TestPyPI'
-        if: "!startsWith(env.commit_tag, format('{0}-', env.version_tag))"
+      - name: 'Publish (pre-)release to TestPyPI'
+        if: env.pr-tag == 'true'
         uses: pypa/gh-action-pypi-publish@81e9d935c883d0b210363ab89cf05f3894778450 # v1.8.14
 
   publish:
@@ -316,10 +351,10 @@ jobs:
 
     if: github.event_name == 'push' && github.repository == 'dupuy/reliabot'
     env:
-      commit_tag: ${{ needs.tests.outputs.commit_tag }}
-      version_tag: ${{ needs.tests.outputs.version_tag }}
-      dist-artifact-name: ${{ needs.tests.outputs.dist-artifact-name }}
-      pre-release: ${{ needs.tests.outputs.pre-release }}
+      VERSION_TAG: ${{ needs.tests.outputs.VERSION_TAG }}
+      artifact-name: ${{ needs.tests.outputs.artifact-name }}
+      pr-release: ${{ needs.tests.outputs.pr-release }}
+      pr-tag: ${{ needs.tests.outputs.pr-tag }}
     environment:
       name: pypi
       url: https://pypi.org/p/reliabot
@@ -331,6 +366,7 @@ jobs:
 
     steps:
       - name: 'Harden runner'
+        if: env.pr-tag == 'true'
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
           disable-sudo: true
@@ -340,6 +376,7 @@ jobs:
             upload.pypi.org:443
 
       - name: 'Checkout repository'
+        if: env.pr-release == 'true' && env.pr-tag == 'true'
         uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # v4.1.2
         with:
           # The Git repository is only necessary for tagging and pushing.
@@ -348,23 +385,20 @@ jobs:
           persist-credentials: true
 
       - name: 'Download release artifacts'
-        if: >
-          env.commit_tag != env.version_tag && env.pre-release == 'false' &&
-          !startsWith(env.commit_tag, format('{0}-', env.version_tag))
+        if: env.pr-release == 'true' && env.pr-tag == 'true'
         uses: actions/download-artifact@c850b930e6ba138125429b7e5c93fc707a7f8427 # v4.1.4
         with:
-          name: '${{ env.dist-artifact-name }}'
+          name: '${{ env.artifact-name }}'
           path: dist/
 
       - name: 'Create annotated tag for release'
+        if: env.pr-release == 'true' && env.pr-tag == 'true'
         run: |
-          git tag "$version_tag" -F "$OUTPUT" --cleanup=whitespace
+          git tag "$VERSION_TAG" -F "$OUTPUT" --cleanup=whitespace
           git push --tags
 
       - name: 'Publish release to PyPI'
-        if: >
-          env.commit_tag != env.version_tag && env.pre-release == 'false' &&
-          !startsWith(env.commit_tag, format('{0}-', env.version_tag))
+        if: env.pr-release == 'true' && env.pr-tag == 'true'
         uses: pypa/gh-action-pypi-publish@81e9d935c883d0b210363ab89cf05f3894778450 # v1.8.14
 
   pre-release:
@@ -372,9 +406,9 @@ jobs:
 
     if: github.event_name == 'push' && github.repository == 'dupuy/reliabot'
     env:
-      commit_tag: ${{ needs.tests.outputs.commit_tag }}
-      version_tag: ${{ needs.tests.outputs.version_tag }}
-      pre-release: ${{ needs.tests.outputs.pre-release }}
+      VERSION_TAG: ${{ needs.tests.outputs.VERSION_TAG }}
+      pr-release: ${{ needs.tests.outputs.pr-release }}
+      pr-tag: ${{ needs.tests.outputs.pr-tag }}
     needs:
       - tests
     permissions:
@@ -382,6 +416,7 @@ jobs:
 
     steps:
       - name: 'Harden runner'
+        if: env.pr-release == 'false' && env.pr-tag == 'true'
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
           disable-sudo: true
@@ -390,9 +425,7 @@ jobs:
             api.github.com:443
 
       - name: 'Publish GitHub pre-release'
-        if: >
-          env.commit_tag != env.version_tag && env.pre-release == 'true' &&
-          !startsWith(env.commit_tag, format('{0}-', env.version_tag))
+        if: env.pr-release == 'false' && env.pr-tag == 'true'
         uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5 # v1.14.0
         with:
           allowUpdates: true
@@ -400,9 +433,9 @@ jobs:
           draft: false
           omitBodyDuringUpdate: true
           omitNameDuringUpdate: true
-          prerelease: '${{ env.pre-release }}'
+          prerelease: true
           replacesArtifacts: false
-          tag: '${{ env.version_tag }}'
+          tag: '${{ env.VERSION_TAG }}'
           updateOnlyUnreleased: true
 
   release:
@@ -410,17 +443,17 @@ jobs:
 
     if: github.event_name == 'push' && github.repository == 'dupuy/reliabot'
     env:
-      commit_tag: ${{ needs.tests.outputs.commit_tag }}
-      version_tag: ${{ needs.tests.outputs.version_tag }}
-      pre-release: ${{ needs.tests.outputs.pre-release }}
+      VERSION_TAG: ${{ needs.tests.outputs.VERSION_TAG }}
+      pr-release: ${{ needs.tests.outputs.pr-release }}
+      pr-tag: ${{ needs.tests.outputs.pr-tag }}
     needs:
-      - publish
       - tests
     permissions:
       contents: write
 
     steps:
       - name: 'Harden runner'
+        if: env.pr-release == 'true' && env.pr-tag == 'true'
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
           disable-sudo: true
@@ -429,9 +462,7 @@ jobs:
             api.github.com:443
 
       - name: 'Publish GitHub release'
-        if: >
-          env.commit_tag != env.version_tag && env.pre-release == 'false' &&
-          !startsWith(env.commit_tag, format('{0}-', env.version_tag))
+        if: env.pr-release == 'true' && env.pr-tag == 'true'
         uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5 # v1.14.0
         with:
           allowUpdates: true
@@ -441,5 +472,5 @@ jobs:
           omitNameDuringUpdate: true
           prerelease: false
           replacesArtifacts: false
-          tag: '${{ github.ref }}'
+          tag: '${{ env.VERSION_TAG }}'
           updateOnlyUnreleased: true

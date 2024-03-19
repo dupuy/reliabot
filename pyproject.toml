@@ -111,9 +111,7 @@ filter_commits = false
 # regex for matching git tags
 tag_pattern = "v[0-9].*"
 # regex for skipping tags
-skip_tags = "-(alpha|beta)"
-# regex for ignoring tags
-ignore_tags = "-rc"
+skip_tags = "-(alpha|beta|rc)"
 # sort the tags topologically
 topo_order = false
 # sort the commits inside sections by oldest/newest order
@@ -121,7 +119,7 @@ sort_commits = "newest"
 
 [tool.poetry]
 name = "reliabot"
-version = "0.2.4rc1"
+version = "0.2.4"
 description = "Maintain GitHub Dependabot configuration."
 license = "MIT"
 authors = ["Alexander Dupuy <alex@dupuy.us>"]

@@ -49,38 +49,42 @@ PATCH= patch - Generate a patch version release branch/PR
 PRERELEASE= prerelease - Generate a pre-release branch/PR
 RELEASE= release - Generate a semantic version release branch/PR
 PR_MAKE_TAG=sed -e 's/^/v/' -e 's/a/-alpha./' -e 's/b/-beta./' -e 's/rc/-rc./'
-PR_BRANCH=poetry version --short | ${PR_MAKE_TAG}
-PR_MAJOR=poetry version --short | sed -n -e '{s/\..*//p;q;}'
+VERSION_TAG=poetry version --short | $(PR_MAKE_TAG)
+MAJOR_VERSION=poetry version --short | sed -n -e '{s/\..*//p;q;}'
+COMPARE=https://github.com/dupuy/reliabot/compare
 major minor patch prerelease release: has-git-cliff has-poetry
 	git checkout main
-	case $@ in \
-	  release) \
-	    VERSION=`git-cliff -c pyproject.toml --bumped-version | tr -d v` \
-	    ;; \
-	  *) VERSION=$@ ;; \
-	esac; poetry version "$${VERSION}"
-	git checkout -b "release-`${PR_BRANCH}`"
-	mkdir -p docs
-	LAST=`git describe | sed 's/-.*//'` &&                              \
-	git-cliff --config=pyproject.toml --tag "`${PR_BRANCH}`" $${LAST}.. \
-	  > "docs/changelog-$$$$~" &&                                       \
-	sed '/^# C/,/^releases/d' "docs/CHANGELOG-`${PR_MAJOR}`.md"         \
-	 >> "docs/changelog-$$$$~" &&                                       \
-	mv "docs/changelog-$$$$~" "docs/CHANGELOG-`${PR_MAJOR}`.md"
+	@case $@ in                                                           \
+	  release)                                                            \
+	    VERSION=`git-cliff -c bump.toml --bumped-version | sed 's/-.*//'` \
+	    ;;                                                                \
+	  *) VERSION=$@ ;;                                                    \
+	esac; poetry version "$${VERSION#v}"
+	@RELEASE="`$(VERSION_TAG)`" &&                                     \
+	CHANGELOG="docs/CHANGELOG-`$(MAJOR_VERSION)`.md" &&                \
+	CHANGELOG_TMP="docs/changelog-$$$$~" &&                            \
+	LAST=`git describe | sed 's/-.*//'` &&                             \
+	git checkout -b "release-$${RELEASE}"; mkdir -p docs &&            \
+	git-cliff --config=pyproject.toml --tag "$${RELEASE}" $${LAST}..   \
+	  >"$${CHANGELOG_TMP}" &&                                          \
+	sed '/^# C/,/^releases/d' "$${CHANGELOG}" >>"$${CHANGELOG_TMP}" && \
+	echo "[$${RELEASE#v}]: $(COMPARE)/$${LAST}..$${RELEASE}"           \
+	  >>"$${CHANGELOG_TMP}" &&                                         \
+	mv "$${CHANGELOG_TMP}" "$${CHANGELOG}" &&                          \
+	ln -sf "$${CHANGELOG}" CHANGELOG.md
 	git add docs/CHANGELOG-*.md
 	-pre-commit run mdformat
-	ln -sf "docs/CHANGELOG-`${PR_MAJOR}`.md" CHANGELOG.md
 	poetry lock
 	git add pyproject.toml CHANGELOG.md docs/CHANGELOG-*.md poetry.lock
-	TITLE="chore(release): reliabot `${PR_BRANCH}`";                       \
-	SKIP=codespell,markdown-link-check,vale git commit -m "$${TITLE}";     \
-	RELEASE="release-`${PR_BRANCH}`";                                      \
-	git push --set-upstream origin "$${RELEASE}";                          \
+	TITLE="chore(release): reliabot `$(VERSION_TAG)`" &&                   \
+	SKIP=codespell,markdown-link-check,vale git commit -m "$${TITLE}" &&   \
+	RELEASE="`git branch --show-current`" &&                               \
+	git push --set-upstream origin "$${RELEASE}" &&                        \
 	if which gh >/dev/null 2>&1; then                                      \
 	  gh pr create --fill-verbose --title="$${TITLE}";                     \
 	else                                                                   \
-	  URL=`git config remote.origin.url`;                                  \
-	  BASE=`expr $${URL} : '.*github\.com.\(.*\)\.git'`;                   \
+	  URL=`git config remote.origin.url` &&                                \
+	  BASE=`expr $${URL} : '.*github\.com.\(.*\)\.git'` &&                 \
 	  echo "PR: https://github.com/$${BASE}/compare/$${RELEASE}?expand=1"; \
 	fi
 

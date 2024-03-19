@@ -144,12 +144,21 @@ jobs:
         id: computed
         run: >
           {
-            COMMIT_TAG=$(git describe --tags) &&
+            COMMIT_TAG=$(git describe) &&
               echo "COMMIT_TAG=$COMMIT_TAG" >&2 ;
             VERSION_TAG="v`poetry version --short |
               sed -e 's/a/-alpha./' -e 's/b/-beta./' -e 's/rc/-rc./'`" &&
                 echo "VERSION_TAG=$VERSION_TAG" ;
             case "$COMMIT_TAG" in
+              *-[abr]*-[1-9]*-*)
+                exec >&2
+                echo "The COMMIT_TAG that 'git describe' created is based on" ;
+                echo "a pre-release tag, which prevents proper generation" ;
+                echo "of new releases!" ;
+                echo "Make sure git describe is not using --tags, and use" ;
+                echo "'git show' to check if the pre-release base tag is" ;
+                echo "an annotated tag like release tags."
+                exit 1 ;;
               ${VERSION_TAG})
                 echo "artifact-name=" ;
                 echo "pr-commit=false" ; echo "pr-tag=false" ;

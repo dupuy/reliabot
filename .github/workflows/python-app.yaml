@@ -324,7 +324,7 @@ jobs:
           artifactErrorsFailBuild: true
           artifacts: dist/*
           bodyFile: '${{ env.OUTPUT }}'
-          draft: true
+          draft: false # should be true, but then cannot download from push
           name: '${{ env.release-name }}'
           prerelease: "${{ env.pr-release && 'false' || 'true' }}"
           tag: '${{ env.VERSION_TAG }}'

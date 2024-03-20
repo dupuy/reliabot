@@ -14,6 +14,9 @@
 ![Lines of code](https://tokei.rs/b1/github/dupuy/reliabot)
 ![GitHub top language](https://img.shields.io/github/languages/top/dupuy/reliabot)
 
+[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/dupuy/reliabot.svg)](http://isitmaintained.com/project/dupuy/reliabot "Average time to resolve an issue")
+[![Percentage of issues still open](http://isitmaintained.com/badge/open/dupuy/reliabot.svg)](http://isitmaintained.com/project/dupuy/reliabot "Percentage of issues still open")
+
 # Reliabot – Maintain Dependabot configuration
 
 Reliabot is a tool that helps maintain Dependabot configurations in your GitHub

@@ -38,8 +38,8 @@
 # - Pre-release:  pr-commit=true pr-release=false pr-tag=true (tag + TestPyPI)
 # - Release:      pr-commit=true pr-release=true pr-tag=true (annotated + PyPI)
 #
-# [Only releases use annotated tags so `git describe` ignores pre-releases.]
-# [Also note pr-tag=true implies pr-commit=true so latter test may be omitted.]
+# * Only releases use annotated tags so that `git describe` skips pre-releases.
+# * Note: pr-release=true => pr-tag=true => pr-commit=true for short 'if' tests.
 #
 # The TESTS job also computes two other outputs to coordinate (upload/download)
 # between the pull_request and push workflows, and the jobs within them:
@@ -56,14 +56,20 @@
 # push:          pre-release || ( publish → release )
 
 # The BUILD job creates a Python package release, release notes, and a full
-# changelog, uploading them as artifacts for other pull_request and push jobs.
-# The lifetime of these artifacts is linked to the "stale" workflow that closes
-# inactive PRs. By closing PRs before their artifacts expire, the stale workflow
-# prevents push workflow failures. The pull_request workflow runs on "reopen"
-# or "ready for review" events, recreating expired artifacts before any "push".
+# changelog, uploading them as workflow artifacts for other pull_request jobs.
+
+# The lifetime of workflow artifacts is linked to the "stale" workflow that
+# closes inactive PRs. By closing PRs before artifacts expire, the stale
+# workflow prevents push workflow failures. The pull_request workflow runs on
+# "reopen" and "ready for review", recreating expired artifacts before a push.
+#
+# The default token only permits access to artifacts in the same workflow run.
+# Rather than using a secret personal access token, push workflow jobs download
+# the same files from the draft release assets (the following job uploads them).
 
 # The DRAFT-RELEASE job creates a draft GitHub release (or pre-release, if the
-# version tag contains a '-').
+# version tag contains a '-'), and uploads the workflow artifacts created by
+# the build job as release assets.
 
 # The TEST-PUBLISH job publishes the Python package from the uploaded build
 # artifact to TestPyPI; it does this for both pre-release and release builds.
@@ -199,7 +205,7 @@ jobs:
   build:
     runs-on: ubuntu-22.04
 
-    # No build for push events, which use artifacts from pull_request
+    # No build for push events, which use release assets from pull_request
     if: github.event_name == 'pull_request'
     env:
       VERSION_TAG: ${{ needs.tests.outputs.VERSION_TAG }}
@@ -303,14 +309,14 @@ jobs:
             api.github.com:443
             uploads.github.com:443
 
-      - name: 'Download release artifacts'
+      - name: 'Download workflow artifacts'
         if: env.pr-tag == 'true'
         uses: actions/download-artifact@c850b930e6ba138125429b7e5c93fc707a7f8427 # v4.1.4
         with:
           name: '${{ env.artifact-name }}'
           path: dist/
 
-      - name: 'Create draft release and upload artifacts'
+      - name: 'Create draft release and upload artifact assets'
         if: env.pr-tag == 'true'
         uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5 # v1.14.0
         with:
@@ -331,6 +337,7 @@ jobs:
       github.event_name == 'pull_request' &&
       github.repository == 'dupuy/reliabot'
     env:
+      VERSION_TAG: ${{ needs.tests.outputs.VERSION_TAG }}
       artifact-name: ${{ needs.tests.outputs.artifact-name }}
       pr-tag: ${{ needs.tests.outputs.pr-tag }}
     needs:
@@ -352,12 +359,20 @@ jobs:
           allowed-endpoints: >
             upload.pypi.org:443
 
-      - name: 'Download release artifacts'
+      - name: 'Download workflow artifacts'
         if: env.pr-tag == 'true'
         uses: actions/download-artifact@c850b930e6ba138125429b7e5c93fc707a7f8427 # v4.1.4
         with:
           name: '${{ env.artifact-name }}'
           path: dist/
+
+      - name: 'Download release assets'
+        if: env.pr-tag == 'true'
+        env:
+          GH_TOKEN: '${{ github.token }}'
+        run: |
+          gh release download "$VERSION_TAG" -D release/
+          diff -r dist/ release/
 
       - name: 'Publish (pre-)release to TestPyPI'
         if: env.pr-tag == 'true'
@@ -400,7 +415,7 @@ jobs:
           fetch-tags: true
           persist-credentials: true
 
-      - name: 'Download release artifacts'
+      - name: 'Download release assets'
         if: env.pr-release == 'true'
         uses: actions/download-artifact@c850b930e6ba138125429b7e5c93fc707a7f8427 # v4.1.4
         with:

@@ -32,10 +32,17 @@ jobs:
       - name: 'Stale issue/PR check'
         uses: actions/stale@28ca1036281a5e5922ead5184a1bbf96e5fc984e # v9.0.0
         with:
+          close-issue-label: 'wontfix'
+          close-issue-message: 'Closed due to lack of activity'
+          close-pr-label: 'wontfix'
+          close-pr-message: 'Closed due to lack of activity'
+          days-before-close: 14 # stale+close+13 <= artifact retention (90 max)
           days-before-stale: 63
-          days-before-close: 14 # stale + close + 13 <= artifact retention (90 max)
-          exempt-all-pr-assignees: true
-          stale-issue-label: 'inactive-issue'
+          delete-branch: true # branches can almost always be reopened
+          exempt-all-assignees: true
+          exempt-all-milestones: true
+          exempt-issue-labels: 'bug,enhancement'
+          stale-issue-label: 'inactive'
           stale-issue-message: 'This will be closed if there’s no activity soon'
-          stale-pr-label: 'inactive-pr'
+          stale-pr-label: 'inactive'
           stale-pr-message: 'This PR will be closed if there’s no activity soon'

@@ -46,7 +46,7 @@ repos:
         args:
           - --branch=main
           - --branch=master
-          - --pattern=.*[^A-Za-z0-9/.-].*
+          - --pattern=.*[^A-Za-z0-9/._-].* # / . and _ for dependabot
       # - id: sort-simple-yaml
       - id: requirements-txt-fixer
         exclude: reliabot/requirements.txt

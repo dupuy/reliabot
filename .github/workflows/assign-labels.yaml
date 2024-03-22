@@ -1,0 +1,76 @@
+# This workflow assigns labels to PRs based on conventional commit titles.
+
+# It looks at the commits in a pull request, mapping their commit types
+# (and some scopes) into labels according to the mappings in this workflow file.
+#
+# You can adjust the specific behavior by modifying this file.
+# For more information, see:
+# https://github.com/dupuy/action-assign-labels?tab=readme-ov-file#computer-how-to-use-action-assign-labels
+
+name: 'Assign labels to PRs from conventional commit titles'
+
+on:
+  pull_request:
+    branches: ['main']
+    types:
+      - opened
+      - ready_for_review
+      - reopened
+      - synchronize
+
+# Declare default permissions as read only.
+permissions:
+  contents: read
+
+jobs:
+  assign-labels:
+    runs-on: ubuntu-22.04
+    permissions:
+      pull-requests: write
+
+    steps:
+      - name: 'Harden runner'
+        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+        with:
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            api.github.com:443
+
+      - name: 'Assign labels'
+        uses: dupuy/action-assign-labels@1dfd81460fecb4e681823603cf0edf81d43b66c8
+        with:
+          apply-changes: true
+          conventional-commits: |
+            conventional-commits:
+              - type: 'fix'
+                nouns: ['fix']
+                labels: ['bug']
+              - type: 'feature'
+                nouns: ['feat']
+                labels: ['enhancement']
+              - type: 'breaking_change'
+                nouns: ['BREAKING CHANGE', 'BREAKING', 'feat!', 'fix!']
+                labels: ['major']
+
+              - type: 'build'
+                nouns: ['build', 'chore']
+                labels: ['deployment']
+              - type: 'ci'
+                nouns: ['ci', 'test']
+                labels: ['testing']
+              - type: 'documentation'
+                nouns: ['docs']
+                labels: ['documentation']
+              - type: 'performance'
+                nouns: ['perf']
+                labels: ['performance']
+              - type: 'refactor'
+                nouns: ['refactor']
+                labels: ['refactor']
+              - type: 'style'
+                nouns: ['style']
+                labels: ['style']
+
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          maintain-labels-not-matched: true

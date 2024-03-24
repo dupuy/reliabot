@@ -38,7 +38,7 @@ jobs:
             api.github.com:443
 
       - name: 'Assign labels'
-        uses: dupuy/action-assign-labels@1dfd81460fecb4e681823603cf0edf81d43b66c8
+        uses: dupuy/action-assign-labels@b6939985ff45d0ddb5254ead207198af4f93fba5
         with:
           apply-changes: true
           conventional-commits: |
@@ -54,9 +54,9 @@ jobs:
                 labels: ['major']
 
               - type: 'build'
-                nouns: ['build', 'chore']
+                nouns: ['build', 'build(deps)', 'build(dev-deps)', 'chore']
                 labels: ['deployment']
-              - type: 'ci'
+              - type: 'integration'
                 nouns: ['ci', 'test']
                 labels: ['testing']
               - type: 'documentation'

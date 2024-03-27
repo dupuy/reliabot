@@ -95,7 +95,7 @@ jobs:
 
       - name: 'Verify labels in a PR'
         id: action-verify-labels
-        uses: dupuy/action-verify-labels@16e1b6e0801717f0498e64a354bfd228ab432f8c
+        uses: dupuy/action-verify-labels@f2d8f55b8239b178f74433bfd9c260e4ed21b205
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           request-review: true

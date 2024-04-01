@@ -31,6 +31,7 @@ https://leancrew.com/all-this/2012/09/tidying-markdown-reference-links/ or
 https://web.archive.org/web/20120920012828/http://www.leancrew.com/all-this/
 WayBack machine archive link.
 """
+
 from __future__ import annotations
 
 import argparse

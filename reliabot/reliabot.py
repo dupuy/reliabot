@@ -18,6 +18,7 @@ in the `testdir` hierarchy that cannot be added to the Git repository:
 >>> if os.path.islink("testdir") and os.readlink("testdir") == "../testdir/":
 ...     _ = isdir(".git") or os.mkdir(".git")
 """
+
 from __future__ import annotations
 
 import os

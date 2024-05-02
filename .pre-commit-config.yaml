@@ -172,19 +172,6 @@ repos:
       - id: ruff
         args: [--fix]
         name: 'ruff --fix'
-  #  - repo: https://github.com/hhatto/autopep8
-  #    rev: v2.0.4 #### Replaced by ruff --fix ####
-  #    hooks:
-  #      - id: autopep8
-  #  - repo: https://github.com/PyCQA/autoflake
-  #    rev: v2.2.1 #### Replaced by ruff --fix ####
-  #    hooks:
-  #      - id: autoflake
-  #  - repo: https://github.com/PyCQA/docformatter
-  #    rev: v1.7.5 #### Replaced by ruff --format ####
-  #    hooks:
-  #      - id: docformatter
-  #        args: [--in-place, --wrap-descriptions=79]
   - repo: https://github.com/asottile/reorder-python-imports
     rev: v3.12.0
     hooks:
@@ -211,7 +198,7 @@ repos:
           - --messages-only
           - --doc-warnings
           # All other prospector tools are replaced by ruff --fix
-          - --tool=pylint # comment out if you get "pylint: astroid-error ..."
+          # - --tool=pylint # comment out if you get "pylint: astroid-error ..."
           - --tool=dodgy
   - repo: https://github.com/PyCQA/bandit
     rev: 1.7.7

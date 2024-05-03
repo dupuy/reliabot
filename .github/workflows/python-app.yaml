@@ -265,7 +265,7 @@ jobs:
 
       - name: 'Upload distribution package as an artifact'
         if: github.repository == 'dupuy/reliabot' && env.pr-tag == 'true'
-        uses: actions/upload-artifact@1746f4ab65b179e0ea60a494b83293b640dd5bba # v4.3.2
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
         with:
           if-no-files-found: error
           name: '${{ env.artifact-name }}'

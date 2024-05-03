@@ -185,6 +185,7 @@ repos:
           - --remove-import=from typing import Set
           - --remove-import=from typing import Tuple
         files: ^(?!setup.py$).*\.py$
+        stages: [manual] # prevent whitespace battle with ruff --format (Black)
   - repo: https://github.com/PyCQA/prospector
     rev: v1.10.3
     hooks:

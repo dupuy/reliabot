@@ -9,11 +9,11 @@
 # and tests should always be run before merging.
 #
 # reliabot: mapping=4 offset=2 sequence=4 width=75
-default_stages: [commit]
+default_stages: [pre-commit]
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v5.0.0
     hooks:
       # - id: autopep8-wrapper
       #  args: ['-i', '--ignore=E501']
@@ -99,20 +99,20 @@ repos:
 
   # Global
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v3.1.0
+    rev: v4.0.0-alpha.8
     hooks:
       - id: prettier
         args: [--single-quote]
         exclude: testdir/github/action[.]yml|styles/
         exclude_types: [markdown]
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.2.6
+    rev: v2.3.0
     hooks:
       - id: codespell
         args: [-L, 'pullrequest,pullrequests']
         exclude: styles/
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.18.2
+    rev: v8.21.2
     hooks:
       - id: gitleaks
 
@@ -143,7 +143,7 @@ repos:
     hooks:
       - id: shellcheck
   - repo: https://github.com/scop/pre-commit-shfmt
-    rev: v3.8.0-1
+    rev: v3.10.0-1
     hooks:
       # Choose one of:
       #- id: shfmt-docker # Docker image (requires Docker to run)
@@ -166,14 +166,14 @@ repos:
 
   # Python
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.3.5
+    rev: v0.7.2
     hooks:
       # Run the linter.
       - id: ruff
         args: [--fix]
         name: 'ruff --fix'
   - repo: https://github.com/asottile/reorder-python-imports
-    rev: v3.12.0
+    rev: v3.14.0
     hooks:
       - id: reorder-python-imports
         args:
@@ -187,7 +187,7 @@ repos:
         files: ^(?!setup.py$).*\.py$
         stages: [manual] # prevent whitespace battle with ruff --format (Black)
   - repo: https://github.com/PyCQA/prospector
-    rev: v1.10.3
+    rev: v1.12.1
     hooks:
       - id: prospector
         # Needed for pylint import checks.
@@ -202,13 +202,13 @@ repos:
           # - --tool=pylint # comment out if you get "pylint: astroid-error ..."
           - --tool=dodgy
   - repo: https://github.com/PyCQA/bandit
-    rev: 1.7.8
+    rev: 1.7.10
     hooks:
       - id: bandit
         args: [-c, pyproject.toml]
         additional_dependencies: ['bandit[toml]']
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.9.0
+    rev: v1.13.0
     hooks:
       - id: mypy
   - repo: https://github.com/pre-commit/pygrep-hooks
@@ -229,7 +229,7 @@ repos:
     hooks:
       - id: dead
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.3.5
+    rev: v0.7.2
     hooks:
       # Run the formatter.
       - id: ruff-format
@@ -256,7 +256,7 @@ repos:
         types: [markdown]
         exclude: tests/
   - repo: https://github.com/executablebooks/mdformat
-    rev: 0.7.17
+    rev: 0.7.18
     hooks:
       - id: mdformat
         args:
@@ -288,7 +288,7 @@ repos:
         exclude: tests/
 
   - repo: https://github.com/errata-ai/vale
-    rev: v3.3.1
+    rev: v3.8.0
     hooks:
       - id: vale
         exclude: LICENSE|humans\.txt|requirements.*|styles/

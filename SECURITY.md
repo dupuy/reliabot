@@ -24,8 +24,8 @@ there is a 1.x release, this policy would change to account for that.
 
 | Version | Supported |
 | ------- | --------- |
-| 0.2.x   | ✅         |
-| \< 0.2  | ❌         |
+| 0.2.x   | ✅        |
+| \< 0.2  | ❌        |
 
 [1]: https://github.com/dupuy/reliabot/security/advisories/new
 [2]: mailto:alex@dupuy.us

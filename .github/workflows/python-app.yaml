@@ -361,7 +361,7 @@ jobs:
 
       - name: 'Publish (pre-)release to TestPyPI'
         if: env.pr-tag == 'true'
-        uses: pypa/gh-action-pypi-publish@81e9d935c883d0b210363ab89cf05f3894778450 # v1.8.14
+        uses: pypa/gh-action-pypi-publish@fb13cb306901256ace3dab689990e13a5550ffaa # v1.11.0
 
   publish:
     runs-on: ubuntu-22.04
@@ -415,7 +415,7 @@ jobs:
 
       - name: 'Publish release to PyPI'
         if: env.pr-release == 'true'
-        uses: pypa/gh-action-pypi-publish@81e9d935c883d0b210363ab89cf05f3894778450 # v1.8.14
+        uses: pypa/gh-action-pypi-publish@fb13cb306901256ace3dab689990e13a5550ffaa # v1.11.0
 
   pre-release:
     runs-on: ubuntu-22.04

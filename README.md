@@ -470,4 +470,4 @@ before the document start marker, like this:
 [16]: https://github.com/google/yamlfmt
 [17]: https://github.com/jumanjihouse/pre-commit-hook-yamlfmt
 [18]: https://www.yaml.info/learn/document.html#start
-[19]: https://yaml.readthedocs.io/en/latest/pyyaml/#defaulting-to-yaml-12-support
+[19]: https://yaml.dev/doc/ruamel.yaml/pyyaml/#Defaulting_to_YAML_1.2_support

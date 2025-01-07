@@ -465,7 +465,7 @@ before the document start marker, like this:
 [11]: https://docs.renovatebot.com/
 [12]: https://docs.renovatebot.com/configuration-options
 [13]: https://brew.sh/
-[14]: https://github.com/search?q=repo%3Adupuy%2Freliabot%20%20Exclusions.add&type=code
+[14]: https://github.com/dupuy/reliabot/blame/1a44935/reliabot/reliabot.py#L460-L470
 [15]: https://prettier.io/docs/en/precommit#option-2-pre-commithttpsgithubcompre-commitpre-commit
 [16]: https://github.com/google/yamlfmt
 [17]: https://github.com/jumanjihouse/pre-commit-hook-yamlfmt

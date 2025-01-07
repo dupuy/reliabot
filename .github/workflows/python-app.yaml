@@ -98,7 +98,7 @@ permissions:
 
 jobs:
   tests:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     outputs:
       VERSION_TAG: ${{ steps.computed.outputs.VERSION_TAG }}
@@ -197,7 +197,7 @@ jobs:
         run: 'poetry run tox -e py'
 
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     # No build for push events, which use artifacts from pull_request
     if: github.event_name == 'pull_request'
@@ -274,7 +274,7 @@ jobs:
           retention-days: 90 # stale + close + 13 <= artifact retention (90 max)
 
   draft-release:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     # No draft for push; that uses artifact and draft release from pull_request.
     if: >
@@ -325,7 +325,7 @@ jobs:
           updateOnlyUnreleased: true
 
   test-publish:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     if: >
       github.event_name == 'pull_request' &&
@@ -364,7 +364,7 @@ jobs:
         uses: pypa/gh-action-pypi-publish@15c56dba361d8335944d31a2ecd17d700fc7bcbc # v1.12.2
 
   publish:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     if: github.event_name == 'push' && github.repository == 'dupuy/reliabot'
     env:
@@ -418,7 +418,7 @@ jobs:
         uses: pypa/gh-action-pypi-publish@15c56dba361d8335944d31a2ecd17d700fc7bcbc # v1.12.2
 
   pre-release:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     if: github.event_name == 'push' && github.repository == 'dupuy/reliabot'
     env:
@@ -455,7 +455,7 @@ jobs:
           updateOnlyUnreleased: true
 
   release:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     if: github.event_name == 'push' && github.repository == 'dupuy/reliabot'
     env:

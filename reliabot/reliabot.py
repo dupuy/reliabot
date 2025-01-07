@@ -37,8 +37,8 @@ from os.path import join
 from os.path import split
 from typing import Any
 from typing import Callable
-from typing import Iterable
-from typing import Iterator
+from collections.abc import Iterable
+from collections.abc import Iterator
 from typing import Optional
 from typing import TextIO
 from typing import Union

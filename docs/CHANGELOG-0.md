@@ -72,17 +72,17 @@ releases.
 - Reliabot v0.2.1
 - Revamp GitHub Actions workflows by @dupuy in
   [#84](https://github.com/dupuy/reliabot/pull/84)
-- Bump actions/checkout from 4.1.1 to 4.1.2 by @dependabot\[bot\] in
+- Bump actions/checkout from 4.1.1 to 4.1.2 by @dependabot[bot] in
   [#82](https://github.com/dupuy/reliabot/pull/82)
-- Bump github/codeql-action from 3.24.6 to 3.24.7 by @dependabot\[bot\] in
+- Bump github/codeql-action from 3.24.6 to 3.24.7 by @dependabot[bot] in
   [#83](https://github.com/dupuy/reliabot/pull/83)
 - 'make' targets for release PRs by @dupuy in
   [#77](https://github.com/dupuy/reliabot/pull/77)
 - Reuse 🛠️ for fixes in release notes by @dupuy in
   [#74](https://github.com/dupuy/reliabot/pull/74)
-- Bump pypa/gh-action-pypi-publish 1.8.12 to 1.8.14 by @dependabot\[bot\] in
+- Bump pypa/gh-action-pypi-publish 1.8.12 to 1.8.14 by @dependabot[bot] in
   [#72](https://github.com/dupuy/reliabot/pull/72)
-- Bump tox from 4.13.0 to 4.14.1 by @dependabot\[bot\] in
+- Bump tox from 4.13.0 to 4.14.1 by @dependabot[bot] in
   [#73](https://github.com/dupuy/reliabot/pull/73) \`\`
 - GitHub Action for building, testing, releasing, and publishing by @dupuy in
   [#67](https://github.com/dupuy/reliabot/pull/67)
@@ -92,31 +92,30 @@ releases.
   [#68](https://github.com/dupuy/reliabot/pull/68)
 - Pre-commit hook for tidy numbering and ordering of all Markdown reference
   links by @dupuy in [#35](https://github.com/dupuy/reliabot/pull/35)
-- Bump pyre2-updated from 0.3.7 to 0.3.8 by @dependabot\[bot\] in
+- Bump pyre2-updated from 0.3.7 to 0.3.8 by @dependabot[bot] in
   [#66](https://github.com/dupuy/reliabot/pull/66)
-- Bump github/codeql-action from 2.24.5 to 3.24.6 by @dependabot\[bot\] in
+- Bump github/codeql-action from 2.24.5 to 3.24.6 by @dependabot[bot] in
   [#61](https://github.com/dupuy/reliabot/pull/61)
-- Bump actions/dependency-review-action from 2.5.1 to 4.1.3 by
-  @dependabot\[bot\] in [#63](https://github.com/dupuy/reliabot/pull/63)
-  \[bot\]@users.noreply.github.com>
+- Bump actions/dependency-review-action from 2.5.1 to 4.1.3 by @dependabot[bot]
+  in [#63](https://github.com/dupuy/reliabot/pull/63)
+  [bot]@users.noreply.github.com>
 - Cleanup checks and workflows by @dupuy in
   [#60](https://github.com/dupuy/reliabot/pull/60)
 - Workflow files by @dupuy in [#59](https://github.com/dupuy/reliabot/pull/59)
 - StepSecurity Bot <bot@stepsecurity.io> by @step-security-bot in
   [#56](https://github.com/dupuy/reliabot/pull/56)
-- Bump actions/checkout from 3.1.0 to 4.1.1 by @dependabot\[bot\] in
+- Bump actions/checkout from 3.1.0 to 4.1.1 by @dependabot[bot] in
   [#54](https://github.com/dupuy/reliabot/pull/54)
-- Bump actions/upload-artifact from 3.1.0 to 4.3.1 by @dependabot\[bot\] in
+- Bump actions/upload-artifact from 3.1.0 to 4.3.1 by @dependabot[bot] in
   [#50](https://github.com/dupuy/reliabot/pull/50)
 - CodeQL & OpenSSF scorecard + best practices badges by @dupuy in
   [#53](https://github.com/dupuy/reliabot/pull/53)
-- Bump github/codeql-action from 2.2.4 to 3.24.5 by @dependabot\[bot\] in
+- Bump github/codeql-action from 2.2.4 to 3.24.5 by @dependabot[bot] in
   [#49](https://github.com/dupuy/reliabot/pull/49)
-- Bump ossf/scorecard-action from 2.1.2 to 2.3.1 by @dependabot\[bot\] in
+- Bump ossf/scorecard-action from 2.1.2 to 2.3.1 by @dependabot[bot] in
   [#51](https://github.com/dupuy/reliabot/pull/51)
 - Create ossf-scorecard.yaml workflow by @dupuy
-- Pre-commit-ci\[bot\]
-  \<66853113+pre-commit-ci\[bot\]@users.noreply.github.com>
+- Pre-commit-ci[bot] \<66853113+pre-commit-ci[bot]@users.noreply.github.com>
 - CONTRIBUTING.md by @dupuy in [#23](https://github.com/dupuy/reliabot/pull/23)
 - //contributing.md/how-to-build-contributing-md/ and
 - //generator.contributing.md/#
@@ -129,9 +128,9 @@ releases.
   [#44](https://github.com/dupuy/reliabot/pull/44)
 - Replace many pre-commit checks/etc. with ruff by @dupuy in
   [#38](https://github.com/dupuy/reliabot/pull/38)
-- Pre-commit.ci auto update by @pre-commit-ci\[bot\] in
+- Pre-commit.ci auto update by @pre-commit-ci[bot] in
   [#41](https://github.com/dupuy/reliabot/pull/41)
-- Bump ruamel-yaml from 0.18.5 to 0.18.6 by @dependabot\[bot\] in
+- Bump ruamel-yaml from 0.18.5 to 0.18.6 by @dependabot[bot] in
   [#43](https://github.com/dupuy/reliabot/pull/43)
 
 #### Fixed 🛠
@@ -178,7 +177,7 @@ releases.
   [#26](https://github.com/dupuy/reliabot/pull/26)
 - Explain reliabot options and verify console examples by @dupuy in
   [#25](https://github.com/dupuy/reliabot/pull/25)
-- Bump ruamel-yaml from 0.17.40 to 0.18.5 by @dependabot\[bot\] in
+- Bump ruamel-yaml from 0.17.40 to 0.18.5 by @dependabot[bot] in
   [#24](https://github.com/dupuy/reliabot/pull/24)
 - Provide better error when ruamel.yaml isn't available by @appills in
   [#18](https://github.com/dupuy/reliabot/pull/18)

@@ -6,16 +6,13 @@ labels: ''
 assignees: ''
 ---
 
-> Before reporting a problem, search for similar issues:
-> \
+> Before reporting a problem, search for similar issues: \
 > https://github.com/dupuy/reliabot/issues?q=is%3Aissue+sort%3Acomments-desc
 
-> If you find one, please add a comment in that issue. For more help, see
-> \
+> If you find one, please add a comment in that issue. For more help, see \
 > https://github.com/dupuy/reliabot/blob/main/CONTRIBUTING.md#reporting-problems.
 
-> ⚠️**Don't report security related issues or vulnerabilities here**. See
-> \
+> ⚠️**Don't report security related issues or vulnerabilities here**. See \
 > https://github.com/dupuy/reliabot/security/policy for secure reporting.
 
 ## Describe the problem

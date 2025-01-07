@@ -163,6 +163,11 @@ tox = "^4.23.2"
 re2 = ["pyre2"]
 re2-wheels = ["pyre2-updated"]
 
+# Uncomment when ready to require poetry >= 2.0; for now it's just a warning:
+# poetry-plugin-export will not be installed by default in a future version...
+#[tool.poetry.requires-plugins]
+#poetry-plugin-export = ">1.7"
+
 [tool.poetry.scripts]
 reliabot = 'reliabot.reliabot:main'
 

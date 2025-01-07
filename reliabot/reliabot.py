@@ -37,11 +37,14 @@ from os.path import join
 from os.path import split
 from typing import Any
 from typing import Callable
-from collections.abc import Iterable
-from collections.abc import Iterator
 from typing import Optional
 from typing import TextIO
 from typing import Union
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
+    from collections.abc import Iterator
 
 
 class Err(IntEnum):

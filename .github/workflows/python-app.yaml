@@ -98,7 +98,7 @@ permissions:
 
 jobs:
   tests:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
 
     outputs:
       VERSION_TAG: ${{ steps.computed.outputs.VERSION_TAG }}

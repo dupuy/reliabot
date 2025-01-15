@@ -73,8 +73,7 @@ major minor patch prerelease release: has-git-cliff has-poetry
 	mv "$${CHANGELOG_TMP}" "$${CHANGELOG}" &&                          \
 	ln -sf "$${CHANGELOG}" CHANGELOG.md
 	git add docs/CHANGELOG-*.md
-	-pre-commit run mdformat
-	poetry lock
+	-pre-commit run mdformat poetry-lock
 	git add pyproject.toml CHANGELOG.md docs/CHANGELOG-*.md poetry.lock
 	TITLE="chore(release): reliabot `$(VERSION_TAG)`" &&                   \
 	SKIP=codespell,markdown-link-check,vale git commit -m "$${TITLE}" &&   \

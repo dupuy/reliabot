@@ -189,9 +189,17 @@ jobs:
           python-version: '${{ matrix.python-version }}'
           cache: 'poetry'
 
-      - name: 'Install dependencies'
-        if: steps.computed.outputs.pr-commit == 'true'
+      - name: 'Install dependencies with extras'
+        if: >
+          steps.computed.outputs.pr-commit == 'true' &&
+          matrix.python-version != 3.13
         run: 'poetry install --extras re2-wheels --with testing'
+
+      - name: 'Install dependencies without extras'
+        if: >
+          steps.computed.outputs.pr-commit == 'true' &&
+          matrix.python-version == 3.13
+        run: 'poetry install --with testing'
 
       - name: 'Run tests with coverage'
         if: steps.computed.outputs.pr-commit == 'true'

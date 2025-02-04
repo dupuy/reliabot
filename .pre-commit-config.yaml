@@ -99,20 +99,20 @@ repos:
 
   # Global
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v3.1.0
+    rev: v4.0.0-alpha.8
     hooks:
       - id: prettier
         args: [--single-quote]
         exclude: testdir/github/action[.]yml|styles/
         exclude_types: [markdown]
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.3.0
+    rev: v2.4.1
     hooks:
       - id: codespell
         args: [-L, 'pullrequest,pullrequests']
         exclude: styles/
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.22.1
+    rev: v8.23.3
     hooks:
       - id: gitleaks
 
@@ -166,7 +166,7 @@ repos:
 
   # Python
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.8.6
+    rev: v0.9.4
     hooks:
       # Run the linter.
       - id: ruff
@@ -187,7 +187,7 @@ repos:
         files: ^(?!setup.py$).*\.py$
         stages: [manual] # prevent whitespace battle with ruff --format (Black)
   - repo: https://github.com/PyCQA/prospector
-    rev: v1.13.3
+    rev: v1.14.1
     hooks:
       - id: prospector
         # Needed for pylint import checks.
@@ -202,7 +202,7 @@ repos:
           # - --tool=pylint # comment out if you get "pylint: astroid-error ..."
           - --tool=dodgy
   - repo: https://github.com/PyCQA/bandit
-    rev: 1.8.0
+    rev: 1.8.2
     hooks:
       - id: bandit
         args: [-c, pyproject.toml]
@@ -225,11 +225,11 @@ repos:
       # - id: rst-inline-touching-normal
       - id: text-unicode-replacement-char
   - repo: https://github.com/asottile/dead
-    rev: v1.5.2
+    rev: v2.0.1
     hooks:
       - id: dead
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.8.6
+    rev: v0.9.4
     hooks:
       # Run the formatter.
       - id: ruff-format
@@ -256,7 +256,7 @@ repos:
         types: [markdown]
         exclude: tests/
   - repo: https://github.com/executablebooks/mdformat
-    rev: 0.7.21
+    rev: 0.7.22
     hooks:
       - id: mdformat
         args:
@@ -288,7 +288,7 @@ repos:
         exclude: tests/
 
   - repo: https://github.com/errata-ai/vale
-    rev: v3.9.3
+    rev: v3.9.4
     hooks:
       - id: vale
         exclude: LICENSE|humans\.txt|requirements.*|styles/

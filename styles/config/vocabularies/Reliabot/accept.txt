@@ -13,7 +13,9 @@ argv
 commitizen
 cron
 docstring
+docstrings
 doctest
+doctests
 dotfiles
 formatters
 gitleaks

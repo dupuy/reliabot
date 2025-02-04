@@ -131,7 +131,7 @@ jobs:
             pypi.org:443
 
       - name: 'Checkout repository'
-        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           # The `git describe` COMMIT_TAG output requires these fetch-* options.
           fetch-depth: 0
@@ -234,7 +234,7 @@ jobs:
 
       - name: 'Checkout repository'
         if: env.pr-commit == 'true'
-        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           # The `git-cliff` release notes action requires these fetch-* options.
           fetch-depth: 0
@@ -402,7 +402,7 @@ jobs:
 
       - name: 'Checkout repository'
         if: env.pr-release == 'true'
-        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           # The Git repository is only necessary for tagging and pushing.
           fetch-depth: 1

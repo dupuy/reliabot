@@ -258,7 +258,7 @@ jobs:
 
       - name: 'Generate release notes'
         if: env.pr-tag == 'true'
-        uses: orhun/git-cliff-action@e364f07989916ffb9f50d7ef6c0a8c48082c2792 # v4.4.1
+        uses: orhun/git-cliff-action@4a4a951bc43fafe41cd2348d181853f52356bee7 # v4.4.2
         with:
           args: >
             '--unreleased'
@@ -267,7 +267,7 @@ jobs:
 
       - name: 'Generate "unreleased" notes'
         if: env.pr-commit == 'true' && env.pr-tag == 'false'
-        uses: orhun/git-cliff-action@e364f07989916ffb9f50d7ef6c0a8c48082c2792 # v4.4.1
+        uses: orhun/git-cliff-action@4a4a951bc43fafe41cd2348d181853f52356bee7 # v4.4.2
         with:
           args: '--unreleased'
           config: release.toml

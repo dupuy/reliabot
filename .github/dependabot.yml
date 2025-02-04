@@ -20,3 +20,8 @@ updates:
           - 'github/codeql-action/*'
           - 'ossf/*'
           - 'step-security/*'
+      gh-actions-releases:
+        patterns:
+          - 'ncipollo/release-action'
+          - 'orhun/git-cliff-action'
+          - 'pypa/*'

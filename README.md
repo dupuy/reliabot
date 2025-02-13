@@ -28,7 +28,7 @@ repository. This is especially helpful for [Terraform][1] “Infrastructure as
 Code” repositories or any sort of "mono-repo" with many folders that may
 require version updates.
 
-> [_Quis renovatores ipsos renovat?_][2] :octocat:🤖🧑🏽‍🔧
+> [_Quis renovatores ipsos renovat?_][2] :octocat::dependabot:🧑🏽‍🔧
 
 <!-- mdformat-toc start --slug=github --no-anchors --maxlevel=3 --minlevel=2 -->
 

@@ -84,6 +84,8 @@ repos:
         args: [--update]
         entry: reliabot/reliabot.py
         language: python
+        # Can't use 3.13 yet - https://github.com/dupuy/reliabot/issues/174
+        language_version: python3.12
         name: maintain dependabot configuration
         pass_filenames: false
       - id: reliabot-pre-commit-files
@@ -94,6 +96,8 @@ repos:
         entry: reliabot/reliabot.py
         files: ^(reliabot/reliabot[.]py|[.]pre-commit-(config|hooks)[.]py)$
         language: python
+        # Can't use 3.13 yet - https://github.com/dupuy/reliabot/issues/174
+        language_version: python3.12
         name: maintain pre-commit files configuration
         pass_filenames: false
 
@@ -115,6 +119,11 @@ repos:
     rev: v8.23.3
     hooks:
       - id: gitleaks
+  - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
+    rev: '3.2.0'
+    hooks:
+      - id: editorconfig-checker
+        alias: ec
 
   # YAML
   - repo: https://github.com/adrienverge/yamllint

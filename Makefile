@@ -1,5 +1,5 @@
 TARGETS := all build clean devtools major minor patch prerelease release \
-           tests uninstall uninstall-pipx update words
+	    tests uninstall uninstall-pipx update words
 TOOLS := git-cliff poetry tox vale
 TOOL_DIR := ${HOME}/.local/bin
 

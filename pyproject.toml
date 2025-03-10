@@ -157,7 +157,7 @@ pyre2-updated = { version = "^0.3.8", optional = true }
 optional = true
 
 [tool.poetry.group.testing.dependencies]
-tox = "^4.24.1"
+tox = "^4.24.2"
 
 [tool.poetry.extras]
 re2 = ["pyre2"]

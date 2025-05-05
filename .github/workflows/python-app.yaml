@@ -121,7 +121,7 @@ jobs:
 
     steps:
       - name: 'Harden runner'
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           disable-sudo: true
           egress-policy: audit
@@ -184,7 +184,7 @@ jobs:
 
       - name: 'Set up Python'
         if: steps.computed.outputs.pr-commit == 'true'
-        uses: actions/setup-python@8d9ed9ac5c53483de85588cdf95a591a75ab9f55 # v5.5.0
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: '${{ matrix.python-version }}'
           cache: 'poetry'
@@ -222,7 +222,7 @@ jobs:
     steps:
       - name: 'Harden runner'
         if: env.pr-commit == 'true'
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -248,7 +248,7 @@ jobs:
 
       - name: 'Set up Python'
         if: env.pr-commit == 'true'
-        uses: actions/setup-python@8d9ed9ac5c53483de85588cdf95a591a75ab9f55 # v5.5.0
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: '>=3.9 <3.14'
           cache: 'poetry'
@@ -305,7 +305,7 @@ jobs:
     steps:
       - name: 'Harden runner'
         if: env.pr-tag == 'true'
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -315,7 +315,7 @@ jobs:
 
       - name: 'Download release artifacts'
         if: env.pr-tag == 'true'
-        uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4.2.1
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: '${{ env.artifact-name }}'
           path: dist/
@@ -355,7 +355,7 @@ jobs:
     steps:
       - name: 'Harden runner'
         if: env.pr-tag == 'true'
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           disable-sudo: true
           egress-policy: audit
@@ -364,7 +364,7 @@ jobs:
 
       - name: 'Download release artifacts'
         if: env.pr-tag == 'true'
-        uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4.2.1
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: '${{ env.artifact-name }}'
           path: dist/
@@ -393,7 +393,7 @@ jobs:
     steps:
       - name: 'Harden runner'
         if: env.pr-release == 'true'
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           disable-sudo: true
           egress-policy: audit
@@ -412,7 +412,7 @@ jobs:
 
       - name: 'Download release artifacts'
         if: env.pr-release == 'true'
-        uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4.2.1
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: '${{ env.artifact-name }}'
           path: dist/
@@ -443,7 +443,7 @@ jobs:
     steps:
       - name: 'Harden runner'
         if: env.pr-release == 'false' && env.pr-tag == 'true'
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -480,7 +480,7 @@ jobs:
     steps:
       - name: 'Harden runner'
         if: env.pr-release == 'true'
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           disable-sudo: true
           egress-policy: block

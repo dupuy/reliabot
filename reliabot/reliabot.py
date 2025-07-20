@@ -37,7 +37,6 @@ from os.path import join
 from os.path import split
 from typing import Any
 from typing import Callable
-from typing import Optional
 from typing import TextIO
 from typing import Union
 from typing import TYPE_CHECKING
@@ -92,7 +91,7 @@ def error(message: str, *, debug_hint: bool = True) -> None:
         sys.exit(int(Err.INTERNAL))
 
 
-def dedup_warn(message: str, key: Optional[str] = None) -> None:
+def dedup_warn(message: str, key: str | None = None) -> None:
     """Print warning to stderr if non-empty key has not been warned before.
 
     These stderr messages for end-users do not use Python Warnings, which are
@@ -263,7 +262,7 @@ WARN_KEYS: set[str] = set()
 
 
 # pylint: disable=too-many-locals
-def main(optargv: Optional[list[str]] = None) -> int:
+def main(optargv: list[str] | None = None) -> int:
     """Create or update Dependabot configuration in a Git repo.
 
     This function parses arguments and options and handles exceptions,

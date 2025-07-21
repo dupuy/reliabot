@@ -266,6 +266,7 @@ jobs:
             '--unreleased'
             '--tag=${{ env.VERSION_TAG }}'
           config: release.toml
+          version: 'v2.9.1'
 
       - name: 'Generate "unreleased" notes'
         if: env.pr-commit == 'true' && env.pr-tag == 'false'
@@ -273,6 +274,7 @@ jobs:
         with:
           args: '--unreleased'
           config: release.toml
+          version: 'v2.9.1'
 
       - name: 'Upload distribution package as an artifact'
         if: github.repository == 'dupuy/reliabot' && env.pr-tag == 'true'

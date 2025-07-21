@@ -2,8 +2,8 @@
 
 ## Reporting a Vulnerability
 
-DON'T report **security related issues or vulnerabilities** on the GitHub
-issue tracker, or place sensitive information there or elsewhere in public.
+DON'T report **security related issues or vulnerabilities** on the GitHub issue
+tracker, or place sensitive information there or elsewhere in public.
 
 DO [open a draft security advisory][1] and provide relevant information there.
 

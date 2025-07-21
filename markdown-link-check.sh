@@ -17,12 +17,30 @@ trap 'rm -f "$TMP_CONFIG";' EXIT
 
 cat >"$TMP_CONFIG" <<EOF
 {
+  "aliveStatusCodes": [200, 403, 429],
+  "httpHeaders": [
+    {
+      "urls": [
+        "https://apple.stackexchange.com/",
+        "https://serverfault.com/",
+        "https://stackexchange.com/",
+        "https://stackoverflow.com/",
+        "https://superuser.com/",
+        "https://unix.stackexchange.com/"
+      ],
+      "headers": {
+        "User-Agent": "markdown-link-check/reliabot"
+      }
+    }
+  ],
   "replacementPatterns": [
     {
       "pattern": "^/",
       "replacement": "file://$(pwd)/"
     }
-  ]
+  ],
+  "retryCount": 1,
+  "retryOn429": true
 }
 EOF
 

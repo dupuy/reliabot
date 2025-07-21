@@ -290,12 +290,6 @@ repos:
         args: [--style=.mdl-style.rb]
         exclude: tests/
 
-  - repo: https://github.com/mineiros-io/pre-commit-hooks
-    rev: v0.5.1
-    hooks:
-      - id: markdown-link-check
-        exclude: tests/
-
   - repo: https://github.com/errata-ai/vale
     rev: v3.12.0
     hooks:
@@ -375,6 +369,16 @@ repos:
         language: pygrep
         entry: ^\s+:(returns\s[^:]*|(param|raises|var)(\s+[^:\s]+\s[^:]*)?):\s
         types: [python]
+      - id: markdown-link-check
+        name: Check links in Markdown sources
+        # Uses Node.js https://github.com/tcort/markdown-link-check
+        # Hook adapted from https://github.com/mineiros-io/pre-commit-hooks/
+        description: |
+          Checks hyperlinks in a markdown text to see if they're still valid.
+        entry: markdown-link-check.sh
+        language: script
+        types: [markdown]
+        exclude: tests/
 ci:
   autofix_commit_msg: |
     fix: auto-fixes from pre-commit.ci

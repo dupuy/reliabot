@@ -1,10 +1,9 @@
-#!/usr/bin/env bash
-
+#!/bin/sh
 set -e
 
 if command -v npm >/dev/null 2>&1; then
   prefix=$(npm config get prefix)
-  export PATH=${PATH}:${prefix}/bin
+  export PATH="${PATH}:${prefix}/bin"
 fi
 
 if ! command -v markdown-link-check >/dev/null 2>&1; then
@@ -13,20 +12,8 @@ if ! command -v markdown-link-check >/dev/null 2>&1; then
   exit 1
 fi
 
-while getopts ':p' 'OPTKEY'; do
-  case ${OPTKEY} in
-    'p') set +e ;;
-    *)
-        echo "unimplemented option -- ${OPTKEY}" >&2
-        exit 1
-        ;;
-  esac
-done
-
-shift $((OPTIND-1))
-
 TMP_CONFIG="$(mktemp)"
-trap 'rm -f $TMP_CONFIG;' EXIT
+trap 'rm -f "$TMP_CONFIG";' EXIT
 
 cat >"$TMP_CONFIG" <<EOF
 {

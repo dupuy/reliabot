@@ -1053,7 +1053,7 @@ def self_test() -> int:
         os.environ["PYTHONWARNINGS"] = "default"  # Also affect subprocesses
 
     # pylint: disable=import-outside-toplevel,redefined-outer-name
-    import doctest
+    import doctest  # noqa: PLC0415
 
     flags = DOCTEST_OPTION_FLAGS
     mod = None

@@ -8,9 +8,12 @@ Pylint
 Quis
 TOML
 [Dd]ependabot
+[Dd]upuy
 [Rr]eliabot
 argv
+autoupdate
 commitizen
+config
 cron
 docstring
 docstrings

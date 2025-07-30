@@ -341,6 +341,7 @@ jobs:
     runs-on: ubuntu-24.04
 
     if: >
+      false && # temporarily disable
       github.event_name == 'pull_request' &&
       github.repository == 'dupuy/reliabot'
     env:

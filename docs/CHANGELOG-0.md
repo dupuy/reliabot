@@ -6,6 +6,1763 @@ It uses the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format,
 and follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html) for
 releases.
 
+## [0.2.5] - 2025-07-30
+
+### Details
+
+#### Added 🚀
+
+- Add .editorconfig and editorconfig-checker pre-commit by @dupuyarc in
+  [#191](https://github.com/dupuy/reliabot/pull/191)
+- Bump actions/dependency-review-action from 4.1.3 to 4.2.3 by @dependabot[bot]
+  in [#106](https://github.com/dupuy/reliabot/pull/106)
+
+#### Changed 🔄
+
+- #174 pyre2-updated for py313 by @dupuy in
+  [#220](https://github.com/dupuy/reliabot/pull/220)
+- #174 pyre2-updated for py313 by @dupuy in
+  [#220](https://github.com/dupuy/reliabot/pull/220)
+- Markdown-link-check config for StackExchange sites by @dupuy in
+  [#218](https://github.com/dupuy/reliabot/pull/218)
+- Markdown-link-check config for StackExchange sites by @dupuy in
+  [#218](https://github.com/dupuy/reliabot/pull/218)
+- Markdown-link-check config for StackExchange sites by @dupuy in
+  [#218](https://github.com/dupuy/reliabot/pull/218)
+- Markdown-link-check config for StackExchange sites by @dupuy in
+  [#218](https://github.com/dupuy/reliabot/pull/218)
+- Markdown link check for StackExchange sites by @dupuy in
+  [#217](https://github.com/dupuy/reliabot/pull/217)
+- Markdown link check for StackExchange sites by @dupuy in
+  [#217](https://github.com/dupuy/reliabot/pull/217)
+- Markdown link check for StackExchange sites by @dupuy in
+  [#217](https://github.com/dupuy/reliabot/pull/217)
+- Markdown link check for StackExchange sites by @dupuy in
+  [#217](https://github.com/dupuy/reliabot/pull/217)
+- Improve SECURITY.md by @dupuy in
+  [#216](https://github.com/dupuy/reliabot/pull/216)
+- - Improve SECURITY.md by @dupuy in
+    [#216](https://github.com/dupuy/reliabot/pull/216)
+- Simpler and clearer instructions up top. by @dupuy in
+  [#216](https://github.com/dupuy/reliabot/pull/216)
+- - fix: auto-fixes from pre-commit.ci by @dupuy in
+    [#216](https://github.com/dupuy/reliabot/pull/216)
+- Configured by .pre-commit-config.yaml by @dupuy in
+  [#216](https://github.com/dupuy/reliabot/pull/216)
+- Checks run by https://pre-commit.ci by @dupuy in
+  [#216](https://github.com/dupuy/reliabot/pull/216)
+- --------- by @dupuy in [#216](https://github.com/dupuy/reliabot/pull/216)
+- Pre-commit-ci[bot] \<66853113+pre-commit-ci[bot]@users.noreply.github.com> by
+  @dupuy in [#216](https://github.com/dupuy/reliabot/pull/216)
+- Update git-cliff version for GHA workflows by @dupuy in
+  [#215](https://github.com/dupuy/reliabot/pull/215)
+- Update git-cliff version for GHA workflows by @dupuy in
+  [#215](https://github.com/dupuy/reliabot/pull/215)
+- Bump github/codeql-action from 3.28.16 to 3.29.2 by @dependabot[bot] in
+  [#211](https://github.com/dupuy/reliabot/pull/211)
+- Bump github/codeql-action from 3.28.16 to 3.29.2 by @dependabot[bot] in
+  [#211](https://github.com/dupuy/reliabot/pull/211)
+- Bump github/codeql-action from 3.28.16 to 3.29.2 by @dependabot[bot] in
+  [#211](https://github.com/dupuy/reliabot/pull/211)
+- Bump github/codeql-action from 3.28.16 to 3.29.2 by @dependabot[bot] in
+  [#211](https://github.com/dupuy/reliabot/pull/211)
+- Bump github/codeql-action from 3.28.16 to 3.29.2 by @dependabot[bot] in
+  [#211](https://github.com/dupuy/reliabot/pull/211)
+- Bump github/codeql-action from 3.28.16 to 3.29.2 by @dependabot[bot] in
+  [#211](https://github.com/dupuy/reliabot/pull/211)
+- Bump github/codeql-action from 3.28.16 to 3.29.2 by @dependabot[bot] in
+  [#211](https://github.com/dupuy/reliabot/pull/211)
+- Bump github/codeql-action from 3.28.16 to 3.29.2 by @dependabot[bot] in
+  [#211](https://github.com/dupuy/reliabot/pull/211)
+- Bump github/codeql-action from 3.28.16 to 3.29.2 by @dependabot[bot] in
+  [#211](https://github.com/dupuy/reliabot/pull/211)
+- Bump github/codeql-action from 3.28.16 to 3.29.2 by @dependabot[bot] in
+  [#211](https://github.com/dupuy/reliabot/pull/211)
+- Bump github/codeql-action from 3.28.16 to 3.29.2 by @dependabot[bot] in
+  [#211](https://github.com/dupuy/reliabot/pull/211)
+- Bump github/codeql-action from 3.28.16 to 3.29.2 by @dependabot[bot] in
+  [#211](https://github.com/dupuy/reliabot/pull/211)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#211](https://github.com/dupuy/reliabot/pull/211)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#211](https://github.com/dupuy/reliabot/pull/211)
+- Bump ncipollo/release-action from 1.16.0 to 1.18.0 in the gh-actions-releases
+  group by @dependabot[bot] in
+  [#210](https://github.com/dupuy/reliabot/pull/210)
+- Bump ncipollo/release-action by @dependabot[bot] in
+  [#210](https://github.com/dupuy/reliabot/pull/210)
+- Bump ncipollo/release-action from 1.16.0 to 1.18.0 in the gh-actions-releases
+  group by @dependabot[bot] in
+  [#210](https://github.com/dupuy/reliabot/pull/210)
+- Bump ncipollo/release-action from 1.16.0 to 1.18.0 in the gh-actions-releases
+  group by @dependabot[bot] in
+  [#210](https://github.com/dupuy/reliabot/pull/210)
+- Bump ncipollo/release-action from 1.16.0 to 1.18.0 in the gh-actions-releases
+  group by @dependabot[bot] in
+  [#210](https://github.com/dupuy/reliabot/pull/210)
+- Bump ncipollo/release-action from 1.16.0 to 1.18.0 in the gh-actions-releases
+  group by @dependabot[bot] in
+  [#210](https://github.com/dupuy/reliabot/pull/210)
+- Bump ncipollo/release-action from 1.16.0 to 1.18.0 in the gh-actions-releases
+  group by @dependabot[bot] in
+  [#210](https://github.com/dupuy/reliabot/pull/210)
+- Bump ncipollo/release-action from 1.16.0 to 1.18.0 in the gh-actions-releases
+  group by @dependabot[bot] in
+  [#210](https://github.com/dupuy/reliabot/pull/210)
+- Bump ncipollo/release-action from 1.16.0 to 1.18.0 in the gh-actions-releases
+  group by @dependabot[bot] in
+  [#210](https://github.com/dupuy/reliabot/pull/210)
+- Bump ncipollo/release-action from 1.16.0 to 1.18.0 in the gh-actions-releases
+  group by @dependabot[bot] in
+  [#210](https://github.com/dupuy/reliabot/pull/210)
+- Bump ncipollo/release-action from 1.16.0 to 1.18.0 in the gh-actions-releases
+  group by @dependabot[bot] in
+  [#210](https://github.com/dupuy/reliabot/pull/210)
+- Bump ncipollo/release-action from 1.16.0 to 1.18.0 in the gh-actions-releases
+  group by @dependabot[bot] in
+  [#210](https://github.com/dupuy/reliabot/pull/210)
+- Bump ncipollo/release-action from 1.16.0 to 1.18.0 in the gh-actions-releases
+  group by @dependabot[bot] in
+  [#210](https://github.com/dupuy/reliabot/pull/210)
+- Bump ncipollo/release-action from 1.16.0 to 1.18.0 in the gh-actions-releases
+  group by @dependabot[bot] in
+  [#210](https://github.com/dupuy/reliabot/pull/210)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#210](https://github.com/dupuy/reliabot/pull/210)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#210](https://github.com/dupuy/reliabot/pull/210)
+- Bump the gh-actions-infrastructure group across 1 directory with 3 updates by
+  @dependabot[bot] in [#209](https://github.com/dupuy/reliabot/pull/209)
+- Bump the gh-actions-infrastructure group across 1 directory with 3 updates by
+  @dependabot[bot] in [#209](https://github.com/dupuy/reliabot/pull/209)
+- Bump the gh-actions-infrastructure group across 1 directory with 3 updates by
+  @dependabot[bot] in [#209](https://github.com/dupuy/reliabot/pull/209)
+- Bump the gh-actions-infrastructure group across 1 directory with 3 updates by
+  @dependabot[bot] in [#209](https://github.com/dupuy/reliabot/pull/209)
+- Bump the gh-actions-infrastructure group across 1 directory with 3 updates by
+  @dependabot[bot] in [#209](https://github.com/dupuy/reliabot/pull/209)
+- Bump the gh-actions-infrastructure group across 1 directory with 3 updates by
+  @dependabot[bot] in [#209](https://github.com/dupuy/reliabot/pull/209)
+- Bump the gh-actions-infrastructure group across 1 directory with 3 updates by
+  @dependabot[bot] in [#209](https://github.com/dupuy/reliabot/pull/209)
+- Bump the gh-actions-infrastructure group across 1 directory with 3 updates by
+  @dependabot[bot] in [#209](https://github.com/dupuy/reliabot/pull/209)
+- Bump the gh-actions-infrastructure group across 1 directory with 3 updates by
+  @dependabot[bot] in [#209](https://github.com/dupuy/reliabot/pull/209)
+- Bump the gh-actions-infrastructure group across 1 directory with 3 updates by
+  @dependabot[bot] in [#209](https://github.com/dupuy/reliabot/pull/209)
+- Bump the gh-actions-infrastructure group across 1 directory with 3 updates by
+  @dependabot[bot] in [#209](https://github.com/dupuy/reliabot/pull/209)
+- Bump the gh-actions-infrastructure group across 1 directory with 3 updates by
+  @dependabot[bot] in [#209](https://github.com/dupuy/reliabot/pull/209)
+- Bump the gh-actions-infrastructure group across 1 directory with 3 updates by
+  @dependabot[bot] in [#209](https://github.com/dupuy/reliabot/pull/209)
+- Bump the gh-actions-infrastructure group across 1 directory with 3 updates by
+  @dependabot[bot] in [#209](https://github.com/dupuy/reliabot/pull/209)
+- Bump the gh-actions-infrastructure group across 1 directory with 3 updates by
+  @dependabot[bot] in [#209](https://github.com/dupuy/reliabot/pull/209)
+- Bump the gh-actions-infrastructure group across 1 directory with 3 updates by
+  @dependabot[bot] in [#209](https://github.com/dupuy/reliabot/pull/209)
+- Bump the gh-actions-infrastructure group across 1 directory with 3 updates by
+  @dependabot[bot] in [#209](https://github.com/dupuy/reliabot/pull/209)
+- Bump the gh-actions-infrastructure group across 1 directory with 3 updates by
+  @dependabot[bot] in [#209](https://github.com/dupuy/reliabot/pull/209)
+- Bump the gh-actions-infrastructure group across 1 directory with 3 updates by
+  @dependabot[bot] in [#209](https://github.com/dupuy/reliabot/pull/209)
+- Bump the gh-actions-infrastructure group across 1 directory with 3 updates by
+  @dependabot[bot] in [#209](https://github.com/dupuy/reliabot/pull/209)
+- Bump the gh-actions-infrastructure group across 1 directory with 3 updates by
+  @dependabot[bot] in [#209](https://github.com/dupuy/reliabot/pull/209)
+- Bump the gh-actions-infrastructure group across 1 directory with 3 updates by
+  @dependabot[bot] in [#209](https://github.com/dupuy/reliabot/pull/209)
+- Bump the gh-actions-infrastructure group across 1 directory with 3 updates by
+  @dependabot[bot] in [#209](https://github.com/dupuy/reliabot/pull/209)
+- Bump the gh-actions-infrastructure group across 1 directory with 3 updates by
+  @dependabot[bot] in [#209](https://github.com/dupuy/reliabot/pull/209)
+- Bump the gh-actions-infrastructure group across 1 directory with 3 updates by
+  @dependabot[bot] in [#209](https://github.com/dupuy/reliabot/pull/209)
+- Bump the gh-actions-infrastructure group across 1 directory with 3 updates by
+  @dependabot[bot] in [#209](https://github.com/dupuy/reliabot/pull/209)
+- Bump the gh-actions-infrastructure group across 1 directory with 3 updates by
+  @dependabot[bot] in [#209](https://github.com/dupuy/reliabot/pull/209)
+- Bump the gh-actions-infrastructure group across 1 directory with 3 updates by
+  @dependabot[bot] in [#209](https://github.com/dupuy/reliabot/pull/209)
+- Bump the gh-actions-infrastructure group across 1 directory with 3 updates by
+  @dependabot[bot] in [#209](https://github.com/dupuy/reliabot/pull/209)
+- Bump the gh-actions-infrastructure group across 1 directory with 3 updates by
+  @dependabot[bot] in [#209](https://github.com/dupuy/reliabot/pull/209)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#209](https://github.com/dupuy/reliabot/pull/209)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#209](https://github.com/dupuy/reliabot/pull/209)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#208](https://github.com/dupuy/reliabot/pull/208)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#208](https://github.com/dupuy/reliabot/pull/208)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#208](https://github.com/dupuy/reliabot/pull/208)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#208](https://github.com/dupuy/reliabot/pull/208)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#208](https://github.com/dupuy/reliabot/pull/208)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#208](https://github.com/dupuy/reliabot/pull/208)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#208](https://github.com/dupuy/reliabot/pull/208)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#208](https://github.com/dupuy/reliabot/pull/208)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#208](https://github.com/dupuy/reliabot/pull/208)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#208](https://github.com/dupuy/reliabot/pull/208)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#208](https://github.com/dupuy/reliabot/pull/208)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#208](https://github.com/dupuy/reliabot/pull/208)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#208](https://github.com/dupuy/reliabot/pull/208)
+- Pre-commit-ci[bot] \<66853113+pre-commit-ci[bot]@users.noreply.github.com> by
+  @pre-commit-ci[bot] in [#208](https://github.com/dupuy/reliabot/pull/208)
+- Alexander Dupuy <33216+dupuy@users.noreply.github.com> by @pre-commit-ci[bot]
+  in [#208](https://github.com/dupuy/reliabot/pull/208)
+- Python build GHA hardening by @dupuy in
+  [#214](https://github.com/dupuy/reliabot/pull/214)
+- For updated Ruff checks by @dupuy in
+  [#213](https://github.com/dupuy/reliabot/pull/213)
+- For updated Ruff checks by @dupuy in
+  [#213](https://github.com/dupuy/reliabot/pull/213)
+- For updated Ruff checks by @dupuy in
+  [#213](https://github.com/dupuy/reliabot/pull/213)
+- For updated Ruff checks by @dupuy in
+  [#213](https://github.com/dupuy/reliabot/pull/213)
+- For updated Ruff checks by @dupuy in
+  [#213](https://github.com/dupuy/reliabot/pull/213)
+- For updated Ruff checks by @dupuy in
+  [#213](https://github.com/dupuy/reliabot/pull/213)
+- Optional[X] -> X | None by @dupuy in
+  [#212](https://github.com/dupuy/reliabot/pull/212)
+- Optional[X] -> X | None by @dupuy in
+  [#212](https://github.com/dupuy/reliabot/pull/212)
+- Optional[X] -> X | None by @dupuy in
+  [#212](https://github.com/dupuy/reliabot/pull/212)
+- Optional[X] -> X | None by @dupuy in
+  [#212](https://github.com/dupuy/reliabot/pull/212)
+- Optional[X] -> X | None by @dupuy in
+  [#212](https://github.com/dupuy/reliabot/pull/212)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#204](https://github.com/dupuy/reliabot/pull/204)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#204](https://github.com/dupuy/reliabot/pull/204)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#204](https://github.com/dupuy/reliabot/pull/204)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#204](https://github.com/dupuy/reliabot/pull/204)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#204](https://github.com/dupuy/reliabot/pull/204)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#204](https://github.com/dupuy/reliabot/pull/204)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#204](https://github.com/dupuy/reliabot/pull/204)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#204](https://github.com/dupuy/reliabot/pull/204)
+- Pre-commit-ci[bot] \<66853113+pre-commit-ci[bot]@users.noreply.github.com> by
+  @pre-commit-ci[bot] in [#204](https://github.com/dupuy/reliabot/pull/204)
+- Alexander Dupuy <33216+dupuy@users.noreply.github.com> by @pre-commit-ci[bot]
+  in [#204](https://github.com/dupuy/reliabot/pull/204)
+- Bump the gh-actions-infrastructure group with 3 updates by @dependabot[bot]
+  in [#202](https://github.com/dupuy/reliabot/pull/202)
+- Bump github/codeql-action from 3.28.15 to 3.28.16 by @dependabot[bot] in
+  [#203](https://github.com/dupuy/reliabot/pull/203)
+- Bump github/codeql-action from 3.28.10 to 3.28.13 by @dependabot[bot] in
+  [#200](https://github.com/dupuy/reliabot/pull/200)
+- Bump github/codeql-action from 3.28.10 to 3.28.13 by @dependabot[bot] in
+  [#200](https://github.com/dupuy/reliabot/pull/200)
+- Bump github/codeql-action from 3.28.10 to 3.28.13 by @dependabot[bot] in
+  [#200](https://github.com/dupuy/reliabot/pull/200)
+- Bump github/codeql-action from 3.28.10 to 3.28.13 by @dependabot[bot] in
+  [#200](https://github.com/dupuy/reliabot/pull/200)
+- Bump github/codeql-action from 3.28.10 to 3.28.13 by @dependabot[bot] in
+  [#200](https://github.com/dupuy/reliabot/pull/200)
+- Bump github/codeql-action from 3.28.10 to 3.28.13 by @dependabot[bot] in
+  [#200](https://github.com/dupuy/reliabot/pull/200)
+- Bump github/codeql-action from 3.28.10 to 3.28.13 by @dependabot[bot] in
+  [#200](https://github.com/dupuy/reliabot/pull/200)
+- Bump github/codeql-action from 3.28.10 to 3.28.13 by @dependabot[bot] in
+  [#200](https://github.com/dupuy/reliabot/pull/200)
+- Bump github/codeql-action from 3.28.10 to 3.28.13 by @dependabot[bot] in
+  [#200](https://github.com/dupuy/reliabot/pull/200)
+- Bump github/codeql-action from 3.28.10 to 3.28.13 by @dependabot[bot] in
+  [#200](https://github.com/dupuy/reliabot/pull/200)
+- Bump github/codeql-action from 3.28.10 to 3.28.13 by @dependabot[bot] in
+  [#200](https://github.com/dupuy/reliabot/pull/200)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#200](https://github.com/dupuy/reliabot/pull/200)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#200](https://github.com/dupuy/reliabot/pull/200)
+- Alexander Dupuy <33216+dupuy@users.noreply.github.com> by @dependabot[bot] in
+  [#200](https://github.com/dupuy/reliabot/pull/200)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#201](https://github.com/dupuy/reliabot/pull/201)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#201](https://github.com/dupuy/reliabot/pull/201)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#201](https://github.com/dupuy/reliabot/pull/201)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#201](https://github.com/dupuy/reliabot/pull/201)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#201](https://github.com/dupuy/reliabot/pull/201)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#201](https://github.com/dupuy/reliabot/pull/201)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#201](https://github.com/dupuy/reliabot/pull/201)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#201](https://github.com/dupuy/reliabot/pull/201)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#201](https://github.com/dupuy/reliabot/pull/201)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#201](https://github.com/dupuy/reliabot/pull/201)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#201](https://github.com/dupuy/reliabot/pull/201)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#201](https://github.com/dupuy/reliabot/pull/201)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#201](https://github.com/dupuy/reliabot/pull/201)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#201](https://github.com/dupuy/reliabot/pull/201)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#201](https://github.com/dupuy/reliabot/pull/201)
+- Pre-commit-ci[bot] \<66853113+pre-commit-ci[bot]@users.noreply.github.com> by
+  @pre-commit-ci[bot] in [#201](https://github.com/dupuy/reliabot/pull/201)
+- Alexander Dupuy <33216+dupuy@users.noreply.github.com> by @pre-commit-ci[bot]
+  in [#201](https://github.com/dupuy/reliabot/pull/201)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#199](https://github.com/dupuy/reliabot/pull/199)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#199](https://github.com/dupuy/reliabot/pull/199)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#199](https://github.com/dupuy/reliabot/pull/199)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#199](https://github.com/dupuy/reliabot/pull/199)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#199](https://github.com/dupuy/reliabot/pull/199)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#199](https://github.com/dupuy/reliabot/pull/199)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#199](https://github.com/dupuy/reliabot/pull/199)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#199](https://github.com/dupuy/reliabot/pull/199)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#199](https://github.com/dupuy/reliabot/pull/199)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#199](https://github.com/dupuy/reliabot/pull/199)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#199](https://github.com/dupuy/reliabot/pull/199)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#199](https://github.com/dupuy/reliabot/pull/199)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#199](https://github.com/dupuy/reliabot/pull/199)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#199](https://github.com/dupuy/reliabot/pull/199)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#199](https://github.com/dupuy/reliabot/pull/199)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#199](https://github.com/dupuy/reliabot/pull/199)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#199](https://github.com/dupuy/reliabot/pull/199)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#199](https://github.com/dupuy/reliabot/pull/199)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#199](https://github.com/dupuy/reliabot/pull/199)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#199](https://github.com/dupuy/reliabot/pull/199)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#199](https://github.com/dupuy/reliabot/pull/199)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#199](https://github.com/dupuy/reliabot/pull/199)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#199](https://github.com/dupuy/reliabot/pull/199)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#199](https://github.com/dupuy/reliabot/pull/199)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#199](https://github.com/dupuy/reliabot/pull/199)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#199](https://github.com/dupuy/reliabot/pull/199)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#199](https://github.com/dupuy/reliabot/pull/199)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#199](https://github.com/dupuy/reliabot/pull/199)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#199](https://github.com/dupuy/reliabot/pull/199)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#199](https://github.com/dupuy/reliabot/pull/199)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#199](https://github.com/dupuy/reliabot/pull/199)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#199](https://github.com/dupuy/reliabot/pull/199)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#199](https://github.com/dupuy/reliabot/pull/199)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#199](https://github.com/dupuy/reliabot/pull/199)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#199](https://github.com/dupuy/reliabot/pull/199)
+- Bump tox from 4.24.2 to 4.25.0 by @dependabot[bot] in
+  [#198](https://github.com/dupuy/reliabot/pull/198)
+- Bump tox from 4.24.2 to 4.25.0 by @dependabot[bot] in
+  [#198](https://github.com/dupuy/reliabot/pull/198)
+- Bump tox from 4.24.2 to 4.25.0 by @dependabot[bot] in
+  [#198](https://github.com/dupuy/reliabot/pull/198)
+- Bump tox from 4.24.2 to 4.25.0 by @dependabot[bot] in
+  [#198](https://github.com/dupuy/reliabot/pull/198)
+- Bump tox from 4.24.2 to 4.25.0 by @dependabot[bot] in
+  [#198](https://github.com/dupuy/reliabot/pull/198)
+- Bump tox from 4.24.2 to 4.25.0 by @dependabot[bot] in
+  [#198](https://github.com/dupuy/reliabot/pull/198)
+- Bump tox from 4.24.2 to 4.25.0 by @dependabot[bot] in
+  [#198](https://github.com/dupuy/reliabot/pull/198)
+- Bump tox from 4.24.2 to 4.25.0 by @dependabot[bot] in
+  [#198](https://github.com/dupuy/reliabot/pull/198)
+- Bump tox from 4.24.2 to 4.25.0 by @dependabot[bot] in
+  [#198](https://github.com/dupuy/reliabot/pull/198)
+- Bump tox from 4.24.2 to 4.25.0 by @dependabot[bot] in
+  [#198](https://github.com/dupuy/reliabot/pull/198)
+- Bump tox from 4.24.2 to 4.25.0 by @dependabot[bot] in
+  [#198](https://github.com/dupuy/reliabot/pull/198)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#198](https://github.com/dupuy/reliabot/pull/198)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#198](https://github.com/dupuy/reliabot/pull/198)
+- Bump tox from 4.24.1 to 4.24.2 by @dependabot[bot] in
+  [#197](https://github.com/dupuy/reliabot/pull/197)
+- Bump tox from 4.24.1 to 4.24.2 by @dependabot[bot] in
+  [#197](https://github.com/dupuy/reliabot/pull/197)
+- Bump tox from 4.24.1 to 4.24.2 by @dependabot[bot] in
+  [#197](https://github.com/dupuy/reliabot/pull/197)
+- Bump tox from 4.24.1 to 4.24.2 by @dependabot[bot] in
+  [#197](https://github.com/dupuy/reliabot/pull/197)
+- Bump tox from 4.24.1 to 4.24.2 by @dependabot[bot] in
+  [#197](https://github.com/dupuy/reliabot/pull/197)
+- Bump tox from 4.24.1 to 4.24.2 by @dependabot[bot] in
+  [#197](https://github.com/dupuy/reliabot/pull/197)
+- Bump tox from 4.24.1 to 4.24.2 by @dependabot[bot] in
+  [#197](https://github.com/dupuy/reliabot/pull/197)
+- Bump tox from 4.24.1 to 4.24.2 by @dependabot[bot] in
+  [#197](https://github.com/dupuy/reliabot/pull/197)
+- Bump tox from 4.24.1 to 4.24.2 by @dependabot[bot] in
+  [#197](https://github.com/dupuy/reliabot/pull/197)
+- Bump tox from 4.24.1 to 4.24.2 by @dependabot[bot] in
+  [#197](https://github.com/dupuy/reliabot/pull/197)
+- Bump tox from 4.24.1 to 4.24.2 by @dependabot[bot] in
+  [#197](https://github.com/dupuy/reliabot/pull/197)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#197](https://github.com/dupuy/reliabot/pull/197)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#197](https://github.com/dupuy/reliabot/pull/197)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#196](https://github.com/dupuy/reliabot/pull/196)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#196](https://github.com/dupuy/reliabot/pull/196)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#196](https://github.com/dupuy/reliabot/pull/196)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#196](https://github.com/dupuy/reliabot/pull/196)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#196](https://github.com/dupuy/reliabot/pull/196)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#196](https://github.com/dupuy/reliabot/pull/196)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#196](https://github.com/dupuy/reliabot/pull/196)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#196](https://github.com/dupuy/reliabot/pull/196)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#196](https://github.com/dupuy/reliabot/pull/196)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#196](https://github.com/dupuy/reliabot/pull/196)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#196](https://github.com/dupuy/reliabot/pull/196)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#196](https://github.com/dupuy/reliabot/pull/196)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#196](https://github.com/dupuy/reliabot/pull/196)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#196](https://github.com/dupuy/reliabot/pull/196)
+- Pre-commit-ci[bot] \<66853113+pre-commit-ci[bot]@users.noreply.github.com> by
+  @pre-commit-ci[bot] in [#196](https://github.com/dupuy/reliabot/pull/196)
+- Alexander Dupuy <33216+dupuy@users.noreply.github.com> by @pre-commit-ci[bot]
+  in [#196](https://github.com/dupuy/reliabot/pull/196)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Bump the gh-actions-infrastructure group with 4 updates by @dependabot[bot]
+  in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#193](https://github.com/dupuy/reliabot/pull/193)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#193](https://github.com/dupuy/reliabot/pull/193)
+- Bump ncipollo/release-action from 1.14.0 to 1.16.0 in the gh-actions-releases
+  group by @dependabot[bot] in
+  [#194](https://github.com/dupuy/reliabot/pull/194)
+- Bump ncipollo/release-action by @dependabot[bot] in
+  [#194](https://github.com/dupuy/reliabot/pull/194)
+- Bump ncipollo/release-action from 1.14.0 to 1.16.0 in the gh-actions-releases
+  group by @dependabot[bot] in
+  [#194](https://github.com/dupuy/reliabot/pull/194)
+- Bump ncipollo/release-action from 1.14.0 to 1.16.0 in the gh-actions-releases
+  group by @dependabot[bot] in
+  [#194](https://github.com/dupuy/reliabot/pull/194)
+- Bump ncipollo/release-action from 1.14.0 to 1.16.0 in the gh-actions-releases
+  group by @dependabot[bot] in
+  [#194](https://github.com/dupuy/reliabot/pull/194)
+- Bump ncipollo/release-action from 1.14.0 to 1.16.0 in the gh-actions-releases
+  group by @dependabot[bot] in
+  [#194](https://github.com/dupuy/reliabot/pull/194)
+- Bump ncipollo/release-action from 1.14.0 to 1.16.0 in the gh-actions-releases
+  group by @dependabot[bot] in
+  [#194](https://github.com/dupuy/reliabot/pull/194)
+- Bump ncipollo/release-action from 1.14.0 to 1.16.0 in the gh-actions-releases
+  group by @dependabot[bot] in
+  [#194](https://github.com/dupuy/reliabot/pull/194)
+- Bump ncipollo/release-action from 1.14.0 to 1.16.0 in the gh-actions-releases
+  group by @dependabot[bot] in
+  [#194](https://github.com/dupuy/reliabot/pull/194)
+- Bump ncipollo/release-action from 1.14.0 to 1.16.0 in the gh-actions-releases
+  group by @dependabot[bot] in
+  [#194](https://github.com/dupuy/reliabot/pull/194)
+- Bump ncipollo/release-action from 1.14.0 to 1.16.0 in the gh-actions-releases
+  group by @dependabot[bot] in
+  [#194](https://github.com/dupuy/reliabot/pull/194)
+- Bump ncipollo/release-action from 1.14.0 to 1.16.0 in the gh-actions-releases
+  group by @dependabot[bot] in
+  [#194](https://github.com/dupuy/reliabot/pull/194)
+- Bump ncipollo/release-action from 1.14.0 to 1.16.0 in the gh-actions-releases
+  group by @dependabot[bot] in
+  [#194](https://github.com/dupuy/reliabot/pull/194)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#194](https://github.com/dupuy/reliabot/pull/194)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#194](https://github.com/dupuy/reliabot/pull/194)
+- Bump github/codeql-action from 3.28.8 to 3.28.10 by @dependabot[bot] in
+  [#195](https://github.com/dupuy/reliabot/pull/195)
+- Bump github/codeql-action from 3.28.8 to 3.28.10 by @dependabot[bot] in
+  [#195](https://github.com/dupuy/reliabot/pull/195)
+- Bump github/codeql-action from 3.28.8 to 3.28.10 by @dependabot[bot] in
+  [#195](https://github.com/dupuy/reliabot/pull/195)
+- Bump github/codeql-action from 3.28.8 to 3.28.10 by @dependabot[bot] in
+  [#195](https://github.com/dupuy/reliabot/pull/195)
+- Bump github/codeql-action from 3.28.8 to 3.28.10 by @dependabot[bot] in
+  [#195](https://github.com/dupuy/reliabot/pull/195)
+- Bump github/codeql-action from 3.28.8 to 3.28.10 by @dependabot[bot] in
+  [#195](https://github.com/dupuy/reliabot/pull/195)
+- Bump github/codeql-action from 3.28.8 to 3.28.10 by @dependabot[bot] in
+  [#195](https://github.com/dupuy/reliabot/pull/195)
+- Bump github/codeql-action from 3.28.8 to 3.28.10 by @dependabot[bot] in
+  [#195](https://github.com/dupuy/reliabot/pull/195)
+- Bump github/codeql-action from 3.28.8 to 3.28.10 by @dependabot[bot] in
+  [#195](https://github.com/dupuy/reliabot/pull/195)
+- Bump github/codeql-action from 3.28.8 to 3.28.10 by @dependabot[bot] in
+  [#195](https://github.com/dupuy/reliabot/pull/195)
+- Bump github/codeql-action from 3.28.8 to 3.28.10 by @dependabot[bot] in
+  [#195](https://github.com/dupuy/reliabot/pull/195)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#195](https://github.com/dupuy/reliabot/pull/195)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#195](https://github.com/dupuy/reliabot/pull/195)
+- Bump orhun/git-cliff-action from 4.4.1 to 4.4.2 by @dependabot[bot] in
+  [#185](https://github.com/dupuy/reliabot/pull/185)
+- Bump orhun/git-cliff-action from 4.4.1 to 4.4.2 by @dependabot[bot] in
+  [#185](https://github.com/dupuy/reliabot/pull/185)
+- Bump orhun/git-cliff-action from 4.4.1 to 4.4.2 by @dependabot[bot] in
+  [#185](https://github.com/dupuy/reliabot/pull/185)
+- Bump orhun/git-cliff-action from 4.4.1 to 4.4.2 by @dependabot[bot] in
+  [#185](https://github.com/dupuy/reliabot/pull/185)
+- Bump orhun/git-cliff-action from 4.4.1 to 4.4.2 by @dependabot[bot] in
+  [#185](https://github.com/dupuy/reliabot/pull/185)
+- Bump orhun/git-cliff-action from 4.4.1 to 4.4.2 by @dependabot[bot] in
+  [#185](https://github.com/dupuy/reliabot/pull/185)
+- Bump orhun/git-cliff-action from 4.4.1 to 4.4.2 by @dependabot[bot] in
+  [#185](https://github.com/dupuy/reliabot/pull/185)
+- Bump orhun/git-cliff-action from 4.4.1 to 4.4.2 by @dependabot[bot] in
+  [#185](https://github.com/dupuy/reliabot/pull/185)
+- Bump orhun/git-cliff-action from 4.4.1 to 4.4.2 by @dependabot[bot] in
+  [#185](https://github.com/dupuy/reliabot/pull/185)
+- Bump orhun/git-cliff-action from 4.4.1 to 4.4.2 by @dependabot[bot] in
+  [#185](https://github.com/dupuy/reliabot/pull/185)
+- Bump orhun/git-cliff-action from 4.4.1 to 4.4.2 by @dependabot[bot] in
+  [#185](https://github.com/dupuy/reliabot/pull/185)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#185](https://github.com/dupuy/reliabot/pull/185)
+- Bump orhun/git-cliff-action from 4.4.1 to 4.4.2 by @dependabot[bot] in
+  [#185](https://github.com/dupuy/reliabot/pull/185)
+- Bump orhun/git-cliff-action from 4.4.1 to 4.4.2 by @dependabot[bot] in
+  [#185](https://github.com/dupuy/reliabot/pull/185)
+- Bump orhun/git-cliff-action from 4.4.1 to 4.4.2 by @dependabot[bot] in
+  [#185](https://github.com/dupuy/reliabot/pull/185)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#185](https://github.com/dupuy/reliabot/pull/185)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#185](https://github.com/dupuy/reliabot/pull/185)
+- Alexander Dupuy <33216+dupuy@users.noreply.github.com> by @dependabot[bot] in
+  [#185](https://github.com/dupuy/reliabot/pull/185)
+- Bump pypa/gh-action-pypi-publish from 1.12.2 to 1.12.4 by @dependabot[bot] in
+  [#186](https://github.com/dupuy/reliabot/pull/186)
+- Bump pypa/gh-action-pypi-publish from 1.12.2 to 1.12.4 by @dependabot[bot] in
+  [#186](https://github.com/dupuy/reliabot/pull/186)
+- Bump pypa/gh-action-pypi-publish from 1.12.2 to 1.12.4 by @dependabot[bot] in
+  [#186](https://github.com/dupuy/reliabot/pull/186)
+- Bump pypa/gh-action-pypi-publish from 1.12.2 to 1.12.4 by @dependabot[bot] in
+  [#186](https://github.com/dupuy/reliabot/pull/186)
+- Bump pypa/gh-action-pypi-publish from 1.12.2 to 1.12.4 by @dependabot[bot] in
+  [#186](https://github.com/dupuy/reliabot/pull/186)
+- Bump pypa/gh-action-pypi-publish from 1.12.2 to 1.12.4 by @dependabot[bot] in
+  [#186](https://github.com/dupuy/reliabot/pull/186)
+- Bump pypa/gh-action-pypi-publish from 1.12.2 to 1.12.4 by @dependabot[bot] in
+  [#186](https://github.com/dupuy/reliabot/pull/186)
+- Bump pypa/gh-action-pypi-publish from 1.12.2 to 1.12.4 by @dependabot[bot] in
+  [#186](https://github.com/dupuy/reliabot/pull/186)
+- Bump pypa/gh-action-pypi-publish from 1.12.2 to 1.12.4 by @dependabot[bot] in
+  [#186](https://github.com/dupuy/reliabot/pull/186)
+- Bump pypa/gh-action-pypi-publish from 1.12.2 to 1.12.4 by @dependabot[bot] in
+  [#186](https://github.com/dupuy/reliabot/pull/186)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#186](https://github.com/dupuy/reliabot/pull/186)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#186](https://github.com/dupuy/reliabot/pull/186)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#182](https://github.com/dupuy/reliabot/pull/182)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#182](https://github.com/dupuy/reliabot/pull/182)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#182](https://github.com/dupuy/reliabot/pull/182)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#182](https://github.com/dupuy/reliabot/pull/182)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#182](https://github.com/dupuy/reliabot/pull/182)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#182](https://github.com/dupuy/reliabot/pull/182)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#182](https://github.com/dupuy/reliabot/pull/182)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#182](https://github.com/dupuy/reliabot/pull/182)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#182](https://github.com/dupuy/reliabot/pull/182)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#182](https://github.com/dupuy/reliabot/pull/182)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#182](https://github.com/dupuy/reliabot/pull/182)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#182](https://github.com/dupuy/reliabot/pull/182)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#182](https://github.com/dupuy/reliabot/pull/182)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#182](https://github.com/dupuy/reliabot/pull/182)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#182](https://github.com/dupuy/reliabot/pull/182)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#182](https://github.com/dupuy/reliabot/pull/182)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#182](https://github.com/dupuy/reliabot/pull/182)
+- Pre-commit-ci[bot] \<66853113+pre-commit-ci[bot]@users.noreply.github.com> by
+  @pre-commit-ci[bot] in [#182](https://github.com/dupuy/reliabot/pull/182)
+- Alexander Dupuy <33216+dupuy@users.noreply.github.com> by @pre-commit-ci[bot]
+  in [#182](https://github.com/dupuy/reliabot/pull/182)
+- Group GitHub Actions release dependabot updates by @dupuy in
+  [#187](https://github.com/dupuy/reliabot/pull/187)
+- Group GitHub Actions release dependabot updates by @dupuy in
+  [#187](https://github.com/dupuy/reliabot/pull/187)
+- Group GitHub Actions release dependabot updates by @dupuy in
+  [#187](https://github.com/dupuy/reliabot/pull/187)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Bump the gh-actions-infrastructure group with 6 updates by @dependabot[bot]
+  in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#184](https://github.com/dupuy/reliabot/pull/184)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#184](https://github.com/dupuy/reliabot/pull/184)
+- Group GitHub Actions infrastructure dependabot updates by @dupuy in
+  [#183](https://github.com/dupuy/reliabot/pull/183)
+- Group GitHub Actions infrastructure dependabot updates by @dupuy in
+  [#183](https://github.com/dupuy/reliabot/pull/183)
+- Bump github/codeql-action from 3.27.5 to 3.28.8 by @dependabot[bot] in
+  [#177](https://github.com/dupuy/reliabot/pull/177)
+- Bump github/codeql-action from 3.27.5 to 3.28.8 by @dependabot[bot] in
+  [#177](https://github.com/dupuy/reliabot/pull/177)
+- Bump github/codeql-action from 3.27.5 to 3.28.8 by @dependabot[bot] in
+  [#177](https://github.com/dupuy/reliabot/pull/177)
+- Bump github/codeql-action from 3.27.5 to 3.28.8 by @dependabot[bot] in
+  [#177](https://github.com/dupuy/reliabot/pull/177)
+- Bump github/codeql-action from 3.27.5 to 3.28.8 by @dependabot[bot] in
+  [#177](https://github.com/dupuy/reliabot/pull/177)
+- Bump github/codeql-action from 3.27.5 to 3.28.8 by @dependabot[bot] in
+  [#177](https://github.com/dupuy/reliabot/pull/177)
+- Bump github/codeql-action from 3.27.5 to 3.28.8 by @dependabot[bot] in
+  [#177](https://github.com/dupuy/reliabot/pull/177)
+- Bump github/codeql-action from 3.27.5 to 3.28.8 by @dependabot[bot] in
+  [#177](https://github.com/dupuy/reliabot/pull/177)
+- Bump github/codeql-action from 3.27.5 to 3.28.8 by @dependabot[bot] in
+  [#177](https://github.com/dupuy/reliabot/pull/177)
+- Bump github/codeql-action from 3.27.5 to 3.28.8 by @dependabot[bot] in
+  [#177](https://github.com/dupuy/reliabot/pull/177)
+- Bump github/codeql-action from 3.27.5 to 3.28.8 by @dependabot[bot] in
+  [#177](https://github.com/dupuy/reliabot/pull/177)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#177](https://github.com/dupuy/reliabot/pull/177)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#177](https://github.com/dupuy/reliabot/pull/177)
+- Bump tox from 4.23.2 to 4.24.1 by @dependabot[bot] in
+  [#176](https://github.com/dupuy/reliabot/pull/176)
+- Bump tox from 4.23.2 to 4.24.1 by @dependabot[bot] in
+  [#176](https://github.com/dupuy/reliabot/pull/176)
+- Bump tox from 4.23.2 to 4.24.1 by @dependabot[bot] in
+  [#176](https://github.com/dupuy/reliabot/pull/176)
+- Bump tox from 4.23.2 to 4.24.1 by @dependabot[bot] in
+  [#176](https://github.com/dupuy/reliabot/pull/176)
+- Bump tox from 4.23.2 to 4.24.1 by @dependabot[bot] in
+  [#176](https://github.com/dupuy/reliabot/pull/176)
+- Bump tox from 4.23.2 to 4.24.1 by @dependabot[bot] in
+  [#176](https://github.com/dupuy/reliabot/pull/176)
+- Bump tox from 4.23.2 to 4.24.1 by @dependabot[bot] in
+  [#176](https://github.com/dupuy/reliabot/pull/176)
+- Bump tox from 4.23.2 to 4.24.1 by @dependabot[bot] in
+  [#176](https://github.com/dupuy/reliabot/pull/176)
+- Bump tox from 4.23.2 to 4.24.1 by @dependabot[bot] in
+  [#176](https://github.com/dupuy/reliabot/pull/176)
+- Bump tox from 4.23.2 to 4.24.1 by @dependabot[bot] in
+  [#176](https://github.com/dupuy/reliabot/pull/176)
+- Bump tox from 4.23.2 to 4.24.1 by @dependabot[bot] in
+  [#176](https://github.com/dupuy/reliabot/pull/176)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#176](https://github.com/dupuy/reliabot/pull/176)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#176](https://github.com/dupuy/reliabot/pull/176)
+- Test on python 3.13 by @dupuy in
+  [#172](https://github.com/dupuy/reliabot/pull/172)
+- Test on python 3.13 by @dupuy in
+  [#172](https://github.com/dupuy/reliabot/pull/172)
+- Test on python 3.13 by @dupuy in
+  [#172](https://github.com/dupuy/reliabot/pull/172)
+- Update GitHub Actions container OS to Ubuntu 24.04 by @dupuy in
+  [#173](https://github.com/dupuy/reliabot/pull/173)
+- Update GitHub Actions container OS to Ubuntu 24.04 by @dupuy in
+  [#173](https://github.com/dupuy/reliabot/pull/173)
+- Update GitHub Actions container OS to Ubuntu 24.04 by @dupuy in
+  [#173](https://github.com/dupuy/reliabot/pull/173)
+- Update GitHub Actions container OS to Ubuntu 24.04 by @dupuy in
+  [#173](https://github.com/dupuy/reliabot/pull/173)
+- Update GitHub Actions container OS to Ubuntu 24.04 by @dupuy in
+  [#173](https://github.com/dupuy/reliabot/pull/173)
+- Pre-position fix for poetry warning about poetry-plugin-export by @dupuy in
+  [#168](https://github.com/dupuy/reliabot/pull/168)
+- Pre-position fix for poetry warning about poetry-plugin-export by @dupuy in
+  [#168](https://github.com/dupuy/reliabot/pull/168)
+- Python dependency updates by @dupuy
+- HTTP 429 rate limit errors checking implementation link by @dupuy
+- Broken link to ruamel.yaml docs by @dupuy
+- Revert v4-alpha update to prettier by @dupuy
+- Auto-fixes from pre-commit.ci by @pre-commit-ci[bot]
+- Auto-fixes from pre-commit.ci by @pre-commit-ci[bot]
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot]
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot]
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot]
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot]
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot]
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot]
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot]
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot]
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot]
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot]
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot]
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot]
+- Bump orhun/git-cliff-action from 3.0.2 to 4.4.1 by @dependabot[bot] in
+  [#167](https://github.com/dupuy/reliabot/pull/167)
+- Bump orhun/git-cliff-action from 3.0.2 to 4.4.1 by @dependabot[bot] in
+  [#167](https://github.com/dupuy/reliabot/pull/167)
+- Bump orhun/git-cliff-action from 3.0.2 to 4.4.1 by @dependabot[bot] in
+  [#167](https://github.com/dupuy/reliabot/pull/167)
+- Bump orhun/git-cliff-action from 3.0.2 to 4.4.1 by @dependabot[bot] in
+  [#167](https://github.com/dupuy/reliabot/pull/167)
+- Bump orhun/git-cliff-action from 3.0.2 to 4.4.1 by @dependabot[bot] in
+  [#167](https://github.com/dupuy/reliabot/pull/167)
+- Bump orhun/git-cliff-action from 3.0.2 to 4.4.1 by @dependabot[bot] in
+  [#167](https://github.com/dupuy/reliabot/pull/167)
+- Bump orhun/git-cliff-action from 3.0.2 to 4.4.1 by @dependabot[bot] in
+  [#167](https://github.com/dupuy/reliabot/pull/167)
+- Bump orhun/git-cliff-action from 3.0.2 to 4.4.1 by @dependabot[bot] in
+  [#167](https://github.com/dupuy/reliabot/pull/167)
+- Bump orhun/git-cliff-action from 3.0.2 to 4.4.1 by @dependabot[bot] in
+  [#167](https://github.com/dupuy/reliabot/pull/167)
+- Bump orhun/git-cliff-action from 3.0.2 to 4.4.1 by @dependabot[bot] in
+  [#167](https://github.com/dupuy/reliabot/pull/167)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#167](https://github.com/dupuy/reliabot/pull/167)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#167](https://github.com/dupuy/reliabot/pull/167)
+- Bump actions/download-artifact from 4.1.7 to 4.1.8 by @dependabot[bot] in
+  [#166](https://github.com/dupuy/reliabot/pull/166)
+- Bump actions/download-artifact from 4.1.7 to 4.1.8 by @dependabot[bot] in
+  [#166](https://github.com/dupuy/reliabot/pull/166)
+- Bump actions/download-artifact from 4.1.7 to 4.1.8 by @dependabot[bot] in
+  [#166](https://github.com/dupuy/reliabot/pull/166)
+- Bump actions/download-artifact from 4.1.7 to 4.1.8 by @dependabot[bot] in
+  [#166](https://github.com/dupuy/reliabot/pull/166)
+- Bump actions/download-artifact from 4.1.7 to 4.1.8 by @dependabot[bot] in
+  [#166](https://github.com/dupuy/reliabot/pull/166)
+- Bump actions/download-artifact from 4.1.7 to 4.1.8 by @dependabot[bot] in
+  [#166](https://github.com/dupuy/reliabot/pull/166)
+- Bump actions/download-artifact from 4.1.7 to 4.1.8 by @dependabot[bot] in
+  [#166](https://github.com/dupuy/reliabot/pull/166)
+- Bump actions/download-artifact from 4.1.7 to 4.1.8 by @dependabot[bot] in
+  [#166](https://github.com/dupuy/reliabot/pull/166)
+- Bump actions/download-artifact from 4.1.7 to 4.1.8 by @dependabot[bot] in
+  [#166](https://github.com/dupuy/reliabot/pull/166)
+- Bump actions/download-artifact from 4.1.7 to 4.1.8 by @dependabot[bot] in
+  [#166](https://github.com/dupuy/reliabot/pull/166)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#166](https://github.com/dupuy/reliabot/pull/166)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#166](https://github.com/dupuy/reliabot/pull/166)
+- Bump step-security/harden-runner from 2.10.1 to 2.10.2 by @dependabot[bot] in
+  [#165](https://github.com/dupuy/reliabot/pull/165)
+- Bump step-security/harden-runner from 2.10.1 to 2.10.2 by @dependabot[bot] in
+  [#165](https://github.com/dupuy/reliabot/pull/165)
+- Bump step-security/harden-runner from 2.10.1 to 2.10.2 by @dependabot[bot] in
+  [#165](https://github.com/dupuy/reliabot/pull/165)
+- Bump step-security/harden-runner from 2.10.1 to 2.10.2 by @dependabot[bot] in
+  [#165](https://github.com/dupuy/reliabot/pull/165)
+- Bump step-security/harden-runner from 2.10.1 to 2.10.2 by @dependabot[bot] in
+  [#165](https://github.com/dupuy/reliabot/pull/165)
+- Bump step-security/harden-runner from 2.10.1 to 2.10.2 by @dependabot[bot] in
+  [#165](https://github.com/dupuy/reliabot/pull/165)
+- Bump step-security/harden-runner from 2.10.1 to 2.10.2 by @dependabot[bot] in
+  [#165](https://github.com/dupuy/reliabot/pull/165)
+- Bump step-security/harden-runner from 2.10.1 to 2.10.2 by @dependabot[bot] in
+  [#165](https://github.com/dupuy/reliabot/pull/165)
+- Bump step-security/harden-runner from 2.10.1 to 2.10.2 by @dependabot[bot] in
+  [#165](https://github.com/dupuy/reliabot/pull/165)
+- Bump step-security/harden-runner from 2.10.1 to 2.10.2 by @dependabot[bot] in
+  [#165](https://github.com/dupuy/reliabot/pull/165)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#165](https://github.com/dupuy/reliabot/pull/165)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#165](https://github.com/dupuy/reliabot/pull/165)
+- Bump github/codeql-action from 3.25.3 to 3.27.5 by @dependabot[bot] in
+  [#164](https://github.com/dupuy/reliabot/pull/164)
+- Bump github/codeql-action from 3.25.3 to 3.27.5 by @dependabot[bot] in
+  [#164](https://github.com/dupuy/reliabot/pull/164)
+- Bump github/codeql-action from 3.25.3 to 3.27.5 by @dependabot[bot] in
+  [#164](https://github.com/dupuy/reliabot/pull/164)
+- Bump github/codeql-action from 3.25.3 to 3.27.5 by @dependabot[bot] in
+  [#164](https://github.com/dupuy/reliabot/pull/164)
+- Bump github/codeql-action from 3.25.3 to 3.27.5 by @dependabot[bot] in
+  [#164](https://github.com/dupuy/reliabot/pull/164)
+- Bump github/codeql-action from 3.25.3 to 3.27.5 by @dependabot[bot] in
+  [#164](https://github.com/dupuy/reliabot/pull/164)
+- Bump github/codeql-action from 3.25.3 to 3.27.5 by @dependabot[bot] in
+  [#164](https://github.com/dupuy/reliabot/pull/164)
+- Bump github/codeql-action from 3.25.3 to 3.27.5 by @dependabot[bot] in
+  [#164](https://github.com/dupuy/reliabot/pull/164)
+- Bump github/codeql-action from 3.25.3 to 3.27.5 by @dependabot[bot] in
+  [#164](https://github.com/dupuy/reliabot/pull/164)
+- Bump github/codeql-action from 3.25.3 to 3.27.5 by @dependabot[bot] in
+  [#164](https://github.com/dupuy/reliabot/pull/164)
+- Bump github/codeql-action from 3.25.3 to 3.27.5 by @dependabot[bot] in
+  [#164](https://github.com/dupuy/reliabot/pull/164)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#164](https://github.com/dupuy/reliabot/pull/164)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#164](https://github.com/dupuy/reliabot/pull/164)
+- Bump pypa/gh-action-pypi-publish from 1.11.0 to 1.12.2 by @dependabot[bot] in
+  [#163](https://github.com/dupuy/reliabot/pull/163)
+- Bump pypa/gh-action-pypi-publish from 1.11.0 to 1.12.2 by @dependabot[bot] in
+  [#163](https://github.com/dupuy/reliabot/pull/163)
+- Bump pypa/gh-action-pypi-publish from 1.11.0 to 1.12.2 by @dependabot[bot] in
+  [#163](https://github.com/dupuy/reliabot/pull/163)
+- Bump pypa/gh-action-pypi-publish from 1.11.0 to 1.12.2 by @dependabot[bot] in
+  [#163](https://github.com/dupuy/reliabot/pull/163)
+- Bump pypa/gh-action-pypi-publish from 1.11.0 to 1.12.2 by @dependabot[bot] in
+  [#163](https://github.com/dupuy/reliabot/pull/163)
+- Bump pypa/gh-action-pypi-publish from 1.11.0 to 1.12.2 by @dependabot[bot] in
+  [#163](https://github.com/dupuy/reliabot/pull/163)
+- Bump pypa/gh-action-pypi-publish from 1.11.0 to 1.12.2 by @dependabot[bot] in
+  [#163](https://github.com/dupuy/reliabot/pull/163)
+- Bump pypa/gh-action-pypi-publish from 1.11.0 to 1.12.2 by @dependabot[bot] in
+  [#163](https://github.com/dupuy/reliabot/pull/163)
+- Bump pypa/gh-action-pypi-publish from 1.11.0 to 1.12.2 by @dependabot[bot] in
+  [#163](https://github.com/dupuy/reliabot/pull/163)
+- Bump pypa/gh-action-pypi-publish from 1.11.0 to 1.12.2 by @dependabot[bot] in
+  [#163](https://github.com/dupuy/reliabot/pull/163)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#163](https://github.com/dupuy/reliabot/pull/163)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#163](https://github.com/dupuy/reliabot/pull/163)
+- Bump tox from 4.15.0 to 4.23.2 by @dependabot[bot] in
+  [#162](https://github.com/dupuy/reliabot/pull/162)
+- Bump tox from 4.15.0 to 4.23.2 by @dependabot[bot] in
+  [#162](https://github.com/dupuy/reliabot/pull/162)
+- Bump tox from 4.15.0 to 4.23.2 by @dependabot[bot] in
+  [#162](https://github.com/dupuy/reliabot/pull/162)
+- Bump tox from 4.15.0 to 4.23.2 by @dependabot[bot] in
+  [#162](https://github.com/dupuy/reliabot/pull/162)
+- Bump tox from 4.15.0 to 4.23.2 by @dependabot[bot] in
+  [#162](https://github.com/dupuy/reliabot/pull/162)
+- Bump tox from 4.15.0 to 4.23.2 by @dependabot[bot] in
+  [#162](https://github.com/dupuy/reliabot/pull/162)
+- Bump tox from 4.15.0 to 4.23.2 by @dependabot[bot] in
+  [#162](https://github.com/dupuy/reliabot/pull/162)
+- Bump tox from 4.15.0 to 4.23.2 by @dependabot[bot] in
+  [#162](https://github.com/dupuy/reliabot/pull/162)
+- Bump tox from 4.15.0 to 4.23.2 by @dependabot[bot] in
+  [#162](https://github.com/dupuy/reliabot/pull/162)
+- Bump tox from 4.15.0 to 4.23.2 by @dependabot[bot] in
+  [#162](https://github.com/dupuy/reliabot/pull/162)
+- Bump tox from 4.15.0 to 4.23.2 by @dependabot[bot] in
+  [#162](https://github.com/dupuy/reliabot/pull/162)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#162](https://github.com/dupuy/reliabot/pull/162)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#162](https://github.com/dupuy/reliabot/pull/162)
+- Bump ossf/scorecard-action from 2.3.1 to 2.4.0 by @dependabot[bot] in
+  [#148](https://github.com/dupuy/reliabot/pull/148)
+- Bump ossf/scorecard-action from 2.3.1 to 2.4.0 by @dependabot[bot] in
+  [#148](https://github.com/dupuy/reliabot/pull/148)
+- Bump ossf/scorecard-action from 2.3.1 to 2.4.0 by @dependabot[bot] in
+  [#148](https://github.com/dupuy/reliabot/pull/148)
+- Bump ossf/scorecard-action from 2.3.1 to 2.4.0 by @dependabot[bot] in
+  [#148](https://github.com/dupuy/reliabot/pull/148)
+- Bump ossf/scorecard-action from 2.3.1 to 2.4.0 by @dependabot[bot] in
+  [#148](https://github.com/dupuy/reliabot/pull/148)
+- Bump ossf/scorecard-action from 2.3.1 to 2.4.0 by @dependabot[bot] in
+  [#148](https://github.com/dupuy/reliabot/pull/148)
+- Bump ossf/scorecard-action from 2.3.1 to 2.4.0 by @dependabot[bot] in
+  [#148](https://github.com/dupuy/reliabot/pull/148)
+- Bump ossf/scorecard-action from 2.3.1 to 2.4.0 by @dependabot[bot] in
+  [#148](https://github.com/dupuy/reliabot/pull/148)
+- Bump ossf/scorecard-action from 2.3.1 to 2.4.0 by @dependabot[bot] in
+  [#148](https://github.com/dupuy/reliabot/pull/148)
+- Bump ossf/scorecard-action from 2.3.1 to 2.4.0 by @dependabot[bot] in
+  [#148](https://github.com/dupuy/reliabot/pull/148)
+- Bump ossf/scorecard-action from 2.3.1 to 2.4.0 by @dependabot[bot] in
+  [#148](https://github.com/dupuy/reliabot/pull/148)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#148](https://github.com/dupuy/reliabot/pull/148)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#148](https://github.com/dupuy/reliabot/pull/148)
+- Alexander Dupuy <33216+dupuy@users.noreply.github.com> by @dependabot[bot] in
+  [#148](https://github.com/dupuy/reliabot/pull/148)
+- Bump pypa/gh-action-pypi-publish from 1.8.14 to 1.11.0 by @dependabot[bot] in
+  [#159](https://github.com/dupuy/reliabot/pull/159)
+- Bump pypa/gh-action-pypi-publish from 1.8.14 to 1.11.0 by @dependabot[bot] in
+  [#159](https://github.com/dupuy/reliabot/pull/159)
+- Bump pypa/gh-action-pypi-publish from 1.8.14 to 1.11.0 by @dependabot[bot] in
+  [#159](https://github.com/dupuy/reliabot/pull/159)
+- Bump pypa/gh-action-pypi-publish from 1.8.14 to 1.11.0 by @dependabot[bot] in
+  [#159](https://github.com/dupuy/reliabot/pull/159)
+- Bump pypa/gh-action-pypi-publish from 1.8.14 to 1.11.0 by @dependabot[bot] in
+  [#159](https://github.com/dupuy/reliabot/pull/159)
+- Bump pypa/gh-action-pypi-publish from 1.8.14 to 1.11.0 by @dependabot[bot] in
+  [#159](https://github.com/dupuy/reliabot/pull/159)
+- Bump pypa/gh-action-pypi-publish from 1.8.14 to 1.11.0 by @dependabot[bot] in
+  [#159](https://github.com/dupuy/reliabot/pull/159)
+- Bump pypa/gh-action-pypi-publish from 1.8.14 to 1.11.0 by @dependabot[bot] in
+  [#159](https://github.com/dupuy/reliabot/pull/159)
+- Bump pypa/gh-action-pypi-publish from 1.8.14 to 1.11.0 by @dependabot[bot] in
+  [#159](https://github.com/dupuy/reliabot/pull/159)
+- Bump pypa/gh-action-pypi-publish from 1.8.14 to 1.11.0 by @dependabot[bot] in
+  [#159](https://github.com/dupuy/reliabot/pull/159)
+- Bump pypa/gh-action-pypi-publish from 1.8.14 to 1.11.0 by @dependabot[bot] in
+  [#159](https://github.com/dupuy/reliabot/pull/159)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#159](https://github.com/dupuy/reliabot/pull/159)
+- Bump pypa/gh-action-pypi-publish from 1.8.14 to 1.11.0 by @dependabot[bot] in
+  [#159](https://github.com/dupuy/reliabot/pull/159)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#159](https://github.com/dupuy/reliabot/pull/159)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#159](https://github.com/dupuy/reliabot/pull/159)
+- Alexander Dupuy <33216+dupuy@users.noreply.github.com> by @dependabot[bot] in
+  [#159](https://github.com/dupuy/reliabot/pull/159)
+- Bump step-security/harden-runner from 2.7.1 to 2.10.1 by @dependabot[bot] in
+  [#157](https://github.com/dupuy/reliabot/pull/157)
+- Bump step-security/harden-runner from 2.7.1 to 2.10.1 by @dependabot[bot] in
+  [#157](https://github.com/dupuy/reliabot/pull/157)
+- Bump step-security/harden-runner from 2.7.1 to 2.10.1 by @dependabot[bot] in
+  [#157](https://github.com/dupuy/reliabot/pull/157)
+- Bump step-security/harden-runner from 2.7.1 to 2.10.1 by @dependabot[bot] in
+  [#157](https://github.com/dupuy/reliabot/pull/157)
+- Bump step-security/harden-runner from 2.7.1 to 2.10.1 by @dependabot[bot] in
+  [#157](https://github.com/dupuy/reliabot/pull/157)
+- Bump step-security/harden-runner from 2.7.1 to 2.10.1 by @dependabot[bot] in
+  [#157](https://github.com/dupuy/reliabot/pull/157)
+- Bump step-security/harden-runner from 2.7.1 to 2.10.1 by @dependabot[bot] in
+  [#157](https://github.com/dupuy/reliabot/pull/157)
+- Bump step-security/harden-runner from 2.7.1 to 2.10.1 by @dependabot[bot] in
+  [#157](https://github.com/dupuy/reliabot/pull/157)
+- Bump step-security/harden-runner from 2.7.1 to 2.10.1 by @dependabot[bot] in
+  [#157](https://github.com/dupuy/reliabot/pull/157)
+- Bump step-security/harden-runner from 2.7.1 to 2.10.1 by @dependabot[bot] in
+  [#157](https://github.com/dupuy/reliabot/pull/157)
+- Bump step-security/harden-runner from 2.7.1 to 2.10.1 by @dependabot[bot] in
+  [#157](https://github.com/dupuy/reliabot/pull/157)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#157](https://github.com/dupuy/reliabot/pull/157)
+- Bump step-security/harden-runner from 2.7.1 to 2.10.1 by @dependabot[bot] in
+  [#157](https://github.com/dupuy/reliabot/pull/157)
+- Bump step-security/harden-runner from 2.7.1 to 2.10.1 by @dependabot[bot] in
+  [#157](https://github.com/dupuy/reliabot/pull/157)
+- Bump step-security/harden-runner from 2.7.1 to 2.10.1 by @dependabot[bot] in
+  [#157](https://github.com/dupuy/reliabot/pull/157)
+- Bump step-security/harden-runner from 2.7.1 to 2.10.1 by @dependabot[bot] in
+  [#157](https://github.com/dupuy/reliabot/pull/157)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#157](https://github.com/dupuy/reliabot/pull/157)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#157](https://github.com/dupuy/reliabot/pull/157)
+- Pre-commit-ci[bot] \<66853113+pre-commit-ci[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#157](https://github.com/dupuy/reliabot/pull/157)
+- Alexander Dupuy <33216+dupuy@users.noreply.github.com> by @dependabot[bot] in
+  [#157](https://github.com/dupuy/reliabot/pull/157)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#135](https://github.com/dupuy/reliabot/pull/135)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#135](https://github.com/dupuy/reliabot/pull/135)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#135](https://github.com/dupuy/reliabot/pull/135)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#135](https://github.com/dupuy/reliabot/pull/135)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#135](https://github.com/dupuy/reliabot/pull/135)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#135](https://github.com/dupuy/reliabot/pull/135)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#135](https://github.com/dupuy/reliabot/pull/135)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#135](https://github.com/dupuy/reliabot/pull/135)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#135](https://github.com/dupuy/reliabot/pull/135)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#135](https://github.com/dupuy/reliabot/pull/135)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#135](https://github.com/dupuy/reliabot/pull/135)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#135](https://github.com/dupuy/reliabot/pull/135)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#135](https://github.com/dupuy/reliabot/pull/135)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#135](https://github.com/dupuy/reliabot/pull/135)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#135](https://github.com/dupuy/reliabot/pull/135)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#135](https://github.com/dupuy/reliabot/pull/135)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#135](https://github.com/dupuy/reliabot/pull/135)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#135](https://github.com/dupuy/reliabot/pull/135)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#135](https://github.com/dupuy/reliabot/pull/135)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#135](https://github.com/dupuy/reliabot/pull/135)
+- Pre-commit-ci[bot] \<66853113+pre-commit-ci[bot]@users.noreply.github.com> by
+  @pre-commit-ci[bot] in [#135](https://github.com/dupuy/reliabot/pull/135)
+- Alexander Dupuy <33216+dupuy@users.noreply.github.com> by @pre-commit-ci[bot]
+  in [#135](https://github.com/dupuy/reliabot/pull/135)
+- Dependabot noise, broken badge by @dupuy in
+  [#134](https://github.com/dupuy/reliabot/pull/134)
+- Dependabot noise, broken badge by @dupuy in
+  [#134](https://github.com/dupuy/reliabot/pull/134)
+- Dependabot noise, broken badge by @dupuy in
+  [#134](https://github.com/dupuy/reliabot/pull/134)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#117](https://github.com/dupuy/reliabot/pull/117)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#117](https://github.com/dupuy/reliabot/pull/117)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#117](https://github.com/dupuy/reliabot/pull/117)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#117](https://github.com/dupuy/reliabot/pull/117)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#117](https://github.com/dupuy/reliabot/pull/117)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#117](https://github.com/dupuy/reliabot/pull/117)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#117](https://github.com/dupuy/reliabot/pull/117)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#117](https://github.com/dupuy/reliabot/pull/117)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#117](https://github.com/dupuy/reliabot/pull/117)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#117](https://github.com/dupuy/reliabot/pull/117)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#117](https://github.com/dupuy/reliabot/pull/117)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#117](https://github.com/dupuy/reliabot/pull/117)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#117](https://github.com/dupuy/reliabot/pull/117)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#117](https://github.com/dupuy/reliabot/pull/117)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#117](https://github.com/dupuy/reliabot/pull/117)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#117](https://github.com/dupuy/reliabot/pull/117)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#117](https://github.com/dupuy/reliabot/pull/117)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#117](https://github.com/dupuy/reliabot/pull/117)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#117](https://github.com/dupuy/reliabot/pull/117)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#117](https://github.com/dupuy/reliabot/pull/117)
+- Pre-commit.ci autoupdate by @pre-commit-ci[bot] in
+  [#117](https://github.com/dupuy/reliabot/pull/117)
+- Pre-commit-ci[bot] \<66853113+pre-commit-ci[bot]@users.noreply.github.com> by
+  @pre-commit-ci[bot] in [#117](https://github.com/dupuy/reliabot/pull/117)
+- Alexander Dupuy <33216+dupuy@users.noreply.github.com> by @pre-commit-ci[bot]
+  in [#117](https://github.com/dupuy/reliabot/pull/117)
+- Alexander Dupuy <alex@dupuy.us> by @pre-commit-ci[bot] in
+  [#117](https://github.com/dupuy/reliabot/pull/117)
+- Bump actions/download-artifact from 4.1.5 to 4.1.7 by @dependabot[bot] in
+  [#127](https://github.com/dupuy/reliabot/pull/127)
+- Bump actions/download-artifact from 4.1.5 to 4.1.7 by @dependabot[bot] in
+  [#127](https://github.com/dupuy/reliabot/pull/127)
+- Bump actions/download-artifact from 4.1.5 to 4.1.7 by @dependabot[bot] in
+  [#127](https://github.com/dupuy/reliabot/pull/127)
+- Bump actions/download-artifact from 4.1.5 to 4.1.7 by @dependabot[bot] in
+  [#127](https://github.com/dupuy/reliabot/pull/127)
+- Bump actions/download-artifact from 4.1.5 to 4.1.7 by @dependabot[bot] in
+  [#127](https://github.com/dupuy/reliabot/pull/127)
+- Bump actions/download-artifact from 4.1.5 to 4.1.7 by @dependabot[bot] in
+  [#127](https://github.com/dupuy/reliabot/pull/127)
+- Bump actions/download-artifact from 4.1.5 to 4.1.7 by @dependabot[bot] in
+  [#127](https://github.com/dupuy/reliabot/pull/127)
+- Bump actions/download-artifact from 4.1.5 to 4.1.7 by @dependabot[bot] in
+  [#127](https://github.com/dupuy/reliabot/pull/127)
+- Bump actions/download-artifact from 4.1.5 to 4.1.7 by @dependabot[bot] in
+  [#127](https://github.com/dupuy/reliabot/pull/127)
+- Bump actions/download-artifact from 4.1.5 to 4.1.7 by @dependabot[bot] in
+  [#127](https://github.com/dupuy/reliabot/pull/127)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#127](https://github.com/dupuy/reliabot/pull/127)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#127](https://github.com/dupuy/reliabot/pull/127)
+- Alexander Dupuy <33216+dupuy@users.noreply.github.com> by @dependabot[bot] in
+  [#127](https://github.com/dupuy/reliabot/pull/127)
+- Bump actions/upload-artifact from 4.3.2 to 4.3.3 by @dependabot[bot] in
+  [#125](https://github.com/dupuy/reliabot/pull/125)
+- Bump actions/upload-artifact from 4.3.2 to 4.3.3 by @dependabot[bot] in
+  [#125](https://github.com/dupuy/reliabot/pull/125)
+- Bump actions/upload-artifact from 4.3.2 to 4.3.3 by @dependabot[bot] in
+  [#125](https://github.com/dupuy/reliabot/pull/125)
+- Bump actions/upload-artifact from 4.3.2 to 4.3.3 by @dependabot[bot] in
+  [#125](https://github.com/dupuy/reliabot/pull/125)
+- Bump actions/upload-artifact from 4.3.2 to 4.3.3 by @dependabot[bot] in
+  [#125](https://github.com/dupuy/reliabot/pull/125)
+- Bump actions/upload-artifact from 4.3.2 to 4.3.3 by @dependabot[bot] in
+  [#125](https://github.com/dupuy/reliabot/pull/125)
+- Bump actions/upload-artifact from 4.3.2 to 4.3.3 by @dependabot[bot] in
+  [#125](https://github.com/dupuy/reliabot/pull/125)
+- Bump actions/upload-artifact from 4.3.2 to 4.3.3 by @dependabot[bot] in
+  [#125](https://github.com/dupuy/reliabot/pull/125)
+- Bump actions/upload-artifact from 4.3.2 to 4.3.3 by @dependabot[bot] in
+  [#125](https://github.com/dupuy/reliabot/pull/125)
+- Bump actions/upload-artifact from 4.3.2 to 4.3.3 by @dependabot[bot] in
+  [#125](https://github.com/dupuy/reliabot/pull/125)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#125](https://github.com/dupuy/reliabot/pull/125)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#125](https://github.com/dupuy/reliabot/pull/125)
+- Bump actions/checkout from 4.1.2 to 4.1.4 by @dependabot[bot] in
+  [#128](https://github.com/dupuy/reliabot/pull/128)
+- Bump actions/checkout from 4.1.2 to 4.1.4 by @dependabot[bot] in
+  [#128](https://github.com/dupuy/reliabot/pull/128)
+- Bump actions/checkout from 4.1.2 to 4.1.4 by @dependabot[bot] in
+  [#128](https://github.com/dupuy/reliabot/pull/128)
+- Bump actions/checkout from 4.1.2 to 4.1.4 by @dependabot[bot] in
+  [#128](https://github.com/dupuy/reliabot/pull/128)
+- Bump actions/checkout from 4.1.2 to 4.1.4 by @dependabot[bot] in
+  [#128](https://github.com/dupuy/reliabot/pull/128)
+- Bump actions/checkout from 4.1.2 to 4.1.4 by @dependabot[bot] in
+  [#128](https://github.com/dupuy/reliabot/pull/128)
+- Bump actions/checkout from 4.1.2 to 4.1.4 by @dependabot[bot] in
+  [#128](https://github.com/dupuy/reliabot/pull/128)
+- Bump actions/checkout from 4.1.2 to 4.1.4 by @dependabot[bot] in
+  [#128](https://github.com/dupuy/reliabot/pull/128)
+- Bump actions/checkout from 4.1.2 to 4.1.4 by @dependabot[bot] in
+  [#128](https://github.com/dupuy/reliabot/pull/128)
+- Bump actions/checkout from 4.1.2 to 4.1.4 by @dependabot[bot] in
+  [#128](https://github.com/dupuy/reliabot/pull/128)
+- Bump actions/checkout from 4.1.2 to 4.1.4 by @dependabot[bot] in
+  [#128](https://github.com/dupuy/reliabot/pull/128)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#128](https://github.com/dupuy/reliabot/pull/128)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#128](https://github.com/dupuy/reliabot/pull/128)
+- Bump github/codeql-action from 3.25.1 to 3.25.3 by @dependabot[bot] in
+  [#129](https://github.com/dupuy/reliabot/pull/129)
+- Bump github/codeql-action from 3.25.1 to 3.25.3 by @dependabot[bot] in
+  [#129](https://github.com/dupuy/reliabot/pull/129)
+- Bump github/codeql-action from 3.25.1 to 3.25.3 by @dependabot[bot] in
+  [#129](https://github.com/dupuy/reliabot/pull/129)
+- Bump github/codeql-action from 3.25.1 to 3.25.3 by @dependabot[bot] in
+  [#129](https://github.com/dupuy/reliabot/pull/129)
+- Bump github/codeql-action from 3.25.1 to 3.25.3 by @dependabot[bot] in
+  [#129](https://github.com/dupuy/reliabot/pull/129)
+- Bump github/codeql-action from 3.25.1 to 3.25.3 by @dependabot[bot] in
+  [#129](https://github.com/dupuy/reliabot/pull/129)
+- Bump github/codeql-action from 3.25.1 to 3.25.3 by @dependabot[bot] in
+  [#129](https://github.com/dupuy/reliabot/pull/129)
+- Bump github/codeql-action from 3.25.1 to 3.25.3 by @dependabot[bot] in
+  [#129](https://github.com/dupuy/reliabot/pull/129)
+- Bump github/codeql-action from 3.25.1 to 3.25.3 by @dependabot[bot] in
+  [#129](https://github.com/dupuy/reliabot/pull/129)
+- Bump github/codeql-action from 3.25.1 to 3.25.3 by @dependabot[bot] in
+  [#129](https://github.com/dupuy/reliabot/pull/129)
+- Bump github/codeql-action from 3.25.1 to 3.25.3 by @dependabot[bot] in
+  [#129](https://github.com/dupuy/reliabot/pull/129)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#129](https://github.com/dupuy/reliabot/pull/129)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#129](https://github.com/dupuy/reliabot/pull/129)
+- Alexander Dupuy <33216+dupuy@users.noreply.github.com> by @dependabot[bot] in
+  [#129](https://github.com/dupuy/reliabot/pull/129)
+- Bump tox from 4.14.2 to 4.15.0 by @dependabot[bot] in
+  [#130](https://github.com/dupuy/reliabot/pull/130)
+- Bump tox from 4.14.2 to 4.15.0 by @dependabot[bot] in
+  [#130](https://github.com/dupuy/reliabot/pull/130)
+- Bump tox from 4.14.2 to 4.15.0 by @dependabot[bot] in
+  [#130](https://github.com/dupuy/reliabot/pull/130)
+- Bump tox from 4.14.2 to 4.15.0 by @dependabot[bot] in
+  [#130](https://github.com/dupuy/reliabot/pull/130)
+- Bump tox from 4.14.2 to 4.15.0 by @dependabot[bot] in
+  [#130](https://github.com/dupuy/reliabot/pull/130)
+- Bump tox from 4.14.2 to 4.15.0 by @dependabot[bot] in
+  [#130](https://github.com/dupuy/reliabot/pull/130)
+- Bump tox from 4.14.2 to 4.15.0 by @dependabot[bot] in
+  [#130](https://github.com/dupuy/reliabot/pull/130)
+- Bump tox from 4.14.2 to 4.15.0 by @dependabot[bot] in
+  [#130](https://github.com/dupuy/reliabot/pull/130)
+- Bump tox from 4.14.2 to 4.15.0 by @dependabot[bot] in
+  [#130](https://github.com/dupuy/reliabot/pull/130)
+- Bump tox from 4.14.2 to 4.15.0 by @dependabot[bot] in
+  [#130](https://github.com/dupuy/reliabot/pull/130)
+- Bump tox from 4.14.2 to 4.15.0 by @dependabot[bot] in
+  [#130](https://github.com/dupuy/reliabot/pull/130)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#130](https://github.com/dupuy/reliabot/pull/130)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#130](https://github.com/dupuy/reliabot/pull/130)
+- Alexander Dupuy <33216+dupuy@users.noreply.github.com> by @dependabot[bot] in
+  [#130](https://github.com/dupuy/reliabot/pull/130)
+- Bump actions/dependency-review-action from 4.2.5 to 4.3.2 by @dependabot[bot]
+  in [#133](https://github.com/dupuy/reliabot/pull/133)
+- Bump actions/dependency-review-action from 4.2.5 to 4.3.2 by @dependabot[bot]
+  in [#133](https://github.com/dupuy/reliabot/pull/133)
+- Bump actions/dependency-review-action from 4.2.5 to 4.3.2 by @dependabot[bot]
+  in [#133](https://github.com/dupuy/reliabot/pull/133)
+- Bump actions/dependency-review-action from 4.2.5 to 4.3.2 by @dependabot[bot]
+  in [#133](https://github.com/dupuy/reliabot/pull/133)
+- Bump actions/dependency-review-action from 4.2.5 to 4.3.2 by @dependabot[bot]
+  in [#133](https://github.com/dupuy/reliabot/pull/133)
+- Bump actions/dependency-review-action from 4.2.5 to 4.3.2 by @dependabot[bot]
+  in [#133](https://github.com/dupuy/reliabot/pull/133)
+- Bump actions/dependency-review-action from 4.2.5 to 4.3.2 by @dependabot[bot]
+  in [#133](https://github.com/dupuy/reliabot/pull/133)
+- Bump actions/dependency-review-action from 4.2.5 to 4.3.2 by @dependabot[bot]
+  in [#133](https://github.com/dupuy/reliabot/pull/133)
+- Bump actions/dependency-review-action from 4.2.5 to 4.3.2 by @dependabot[bot]
+  in [#133](https://github.com/dupuy/reliabot/pull/133)
+- Bump actions/dependency-review-action from 4.2.5 to 4.3.2 by @dependabot[bot]
+  in [#133](https://github.com/dupuy/reliabot/pull/133)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#133](https://github.com/dupuy/reliabot/pull/133)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#133](https://github.com/dupuy/reliabot/pull/133)
+- Bump step-security/harden-runner from 2.7.0 to 2.7.1 by @dependabot[bot] in
+  [#131](https://github.com/dupuy/reliabot/pull/131)
+- Bump step-security/harden-runner from 2.7.0 to 2.7.1 by @dependabot[bot] in
+  [#131](https://github.com/dupuy/reliabot/pull/131)
+- Bump step-security/harden-runner from 2.7.0 to 2.7.1 by @dependabot[bot] in
+  [#131](https://github.com/dupuy/reliabot/pull/131)
+- Bump step-security/harden-runner from 2.7.0 to 2.7.1 by @dependabot[bot] in
+  [#131](https://github.com/dupuy/reliabot/pull/131)
+- Bump step-security/harden-runner from 2.7.0 to 2.7.1 by @dependabot[bot] in
+  [#131](https://github.com/dupuy/reliabot/pull/131)
+- Bump step-security/harden-runner from 2.7.0 to 2.7.1 by @dependabot[bot] in
+  [#131](https://github.com/dupuy/reliabot/pull/131)
+- Bump step-security/harden-runner from 2.7.0 to 2.7.1 by @dependabot[bot] in
+  [#131](https://github.com/dupuy/reliabot/pull/131)
+- Bump step-security/harden-runner from 2.7.0 to 2.7.1 by @dependabot[bot] in
+  [#131](https://github.com/dupuy/reliabot/pull/131)
+- Bump step-security/harden-runner from 2.7.0 to 2.7.1 by @dependabot[bot] in
+  [#131](https://github.com/dupuy/reliabot/pull/131)
+- Bump step-security/harden-runner from 2.7.0 to 2.7.1 by @dependabot[bot] in
+  [#131](https://github.com/dupuy/reliabot/pull/131)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#131](https://github.com/dupuy/reliabot/pull/131)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#131](https://github.com/dupuy/reliabot/pull/131)
+- Alexander Dupuy <33216+dupuy@users.noreply.github.com> by @dependabot[bot] in
+  [#131](https://github.com/dupuy/reliabot/pull/131)
+- Comment out pylint from pre-commit by @dupuy in
+  [#132](https://github.com/dupuy/reliabot/pull/132)
+- Comment out pylint from pre-commit by @dupuy in
+  [#132](https://github.com/dupuy/reliabot/pull/132)
+- Comment out pylint from pre-commit by @dupuy in
+  [#132](https://github.com/dupuy/reliabot/pull/132)
+- Bump actions/upload-artifact from 4.3.1 to 4.3.2 by @dependabot[bot] in
+  [#121](https://github.com/dupuy/reliabot/pull/121)
+- Bump actions/upload-artifact from 4.3.1 to 4.3.2 by @dependabot[bot] in
+  [#121](https://github.com/dupuy/reliabot/pull/121)
+- Bump actions/upload-artifact from 4.3.1 to 4.3.2 by @dependabot[bot] in
+  [#121](https://github.com/dupuy/reliabot/pull/121)
+- Bump actions/upload-artifact from 4.3.1 to 4.3.2 by @dependabot[bot] in
+  [#121](https://github.com/dupuy/reliabot/pull/121)
+- Bump actions/upload-artifact from 4.3.1 to 4.3.2 by @dependabot[bot] in
+  [#121](https://github.com/dupuy/reliabot/pull/121)
+- Bump actions/upload-artifact from 4.3.1 to 4.3.2 by @dependabot[bot] in
+  [#121](https://github.com/dupuy/reliabot/pull/121)
+- Bump actions/upload-artifact from 4.3.1 to 4.3.2 by @dependabot[bot] in
+  [#121](https://github.com/dupuy/reliabot/pull/121)
+- Bump actions/upload-artifact from 4.3.1 to 4.3.2 by @dependabot[bot] in
+  [#121](https://github.com/dupuy/reliabot/pull/121)
+- Bump actions/upload-artifact from 4.3.1 to 4.3.2 by @dependabot[bot] in
+  [#121](https://github.com/dupuy/reliabot/pull/121)
+- Bump actions/upload-artifact from 4.3.1 to 4.3.2 by @dependabot[bot] in
+  [#121](https://github.com/dupuy/reliabot/pull/121)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#121](https://github.com/dupuy/reliabot/pull/121)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#121](https://github.com/dupuy/reliabot/pull/121)
+- Bump actions/setup-python from 5.0.0 to 5.1.0 by @dependabot[bot] in
+  [#116](https://github.com/dupuy/reliabot/pull/116)
+- Bump actions/setup-python from 5.0.0 to 5.1.0 by @dependabot[bot] in
+  [#116](https://github.com/dupuy/reliabot/pull/116)
+- Bump actions/setup-python from 5.0.0 to 5.1.0 by @dependabot[bot] in
+  [#116](https://github.com/dupuy/reliabot/pull/116)
+- Bump actions/setup-python from 5.0.0 to 5.1.0 by @dependabot[bot] in
+  [#116](https://github.com/dupuy/reliabot/pull/116)
+- Bump actions/setup-python from 5.0.0 to 5.1.0 by @dependabot[bot] in
+  [#116](https://github.com/dupuy/reliabot/pull/116)
+- Bump actions/setup-python from 5.0.0 to 5.1.0 by @dependabot[bot] in
+  [#116](https://github.com/dupuy/reliabot/pull/116)
+- Bump actions/setup-python from 5.0.0 to 5.1.0 by @dependabot[bot] in
+  [#116](https://github.com/dupuy/reliabot/pull/116)
+- Bump actions/setup-python from 5.0.0 to 5.1.0 by @dependabot[bot] in
+  [#116](https://github.com/dupuy/reliabot/pull/116)
+- Bump actions/setup-python from 5.0.0 to 5.1.0 by @dependabot[bot] in
+  [#116](https://github.com/dupuy/reliabot/pull/116)
+- Bump actions/setup-python from 5.0.0 to 5.1.0 by @dependabot[bot] in
+  [#116](https://github.com/dupuy/reliabot/pull/116)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#116](https://github.com/dupuy/reliabot/pull/116)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#116](https://github.com/dupuy/reliabot/pull/116)
+- Bump github/codeql-action from 3.24.9 to 3.25.1 by @dependabot[bot] in
+  [#120](https://github.com/dupuy/reliabot/pull/120)
+- Bump github/codeql-action from 3.24.9 to 3.25.1 by @dependabot[bot] in
+  [#120](https://github.com/dupuy/reliabot/pull/120)
+- Bump github/codeql-action from 3.24.9 to 3.25.1 by @dependabot[bot] in
+  [#120](https://github.com/dupuy/reliabot/pull/120)
+- Bump github/codeql-action from 3.24.9 to 3.25.1 by @dependabot[bot] in
+  [#120](https://github.com/dupuy/reliabot/pull/120)
+- Bump github/codeql-action from 3.24.9 to 3.25.1 by @dependabot[bot] in
+  [#120](https://github.com/dupuy/reliabot/pull/120)
+- Bump github/codeql-action from 3.24.9 to 3.25.1 by @dependabot[bot] in
+  [#120](https://github.com/dupuy/reliabot/pull/120)
+- Bump github/codeql-action from 3.24.9 to 3.25.1 by @dependabot[bot] in
+  [#120](https://github.com/dupuy/reliabot/pull/120)
+- Bump github/codeql-action from 3.24.9 to 3.25.1 by @dependabot[bot] in
+  [#120](https://github.com/dupuy/reliabot/pull/120)
+- Bump github/codeql-action from 3.24.9 to 3.25.1 by @dependabot[bot] in
+  [#120](https://github.com/dupuy/reliabot/pull/120)
+- Bump github/codeql-action from 3.24.9 to 3.25.1 by @dependabot[bot] in
+  [#120](https://github.com/dupuy/reliabot/pull/120)
+- Bump github/codeql-action from 3.24.9 to 3.25.1 by @dependabot[bot] in
+  [#120](https://github.com/dupuy/reliabot/pull/120)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#120](https://github.com/dupuy/reliabot/pull/120)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#120](https://github.com/dupuy/reliabot/pull/120)
+- Bump actions/download-artifact from 4.1.4 to 4.1.5 by @dependabot[bot] in
+  [#122](https://github.com/dupuy/reliabot/pull/122)
+- Bump actions/download-artifact from 4.1.4 to 4.1.5 by @dependabot[bot] in
+  [#122](https://github.com/dupuy/reliabot/pull/122)
+- Bump actions/download-artifact from 4.1.4 to 4.1.5 by @dependabot[bot] in
+  [#122](https://github.com/dupuy/reliabot/pull/122)
+- Bump actions/download-artifact from 4.1.4 to 4.1.5 by @dependabot[bot] in
+  [#122](https://github.com/dupuy/reliabot/pull/122)
+- Bump actions/download-artifact from 4.1.4 to 4.1.5 by @dependabot[bot] in
+  [#122](https://github.com/dupuy/reliabot/pull/122)
+- Bump actions/download-artifact from 4.1.4 to 4.1.5 by @dependabot[bot] in
+  [#122](https://github.com/dupuy/reliabot/pull/122)
+- Bump actions/download-artifact from 4.1.4 to 4.1.5 by @dependabot[bot] in
+  [#122](https://github.com/dupuy/reliabot/pull/122)
+- Bump actions/download-artifact from 4.1.4 to 4.1.5 by @dependabot[bot] in
+  [#122](https://github.com/dupuy/reliabot/pull/122)
+- Bump actions/download-artifact from 4.1.4 to 4.1.5 by @dependabot[bot] in
+  [#122](https://github.com/dupuy/reliabot/pull/122)
+- Bump actions/download-artifact from 4.1.4 to 4.1.5 by @dependabot[bot] in
+  [#122](https://github.com/dupuy/reliabot/pull/122)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#122](https://github.com/dupuy/reliabot/pull/122)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#122](https://github.com/dupuy/reliabot/pull/122)
+- Bump actions/dependency-review-action from 4.2.4 to 4.2.5 by @dependabot[bot]
+  in [#115](https://github.com/dupuy/reliabot/pull/115)
+- Bump actions/dependency-review-action from 4.2.4 to 4.2.5 by @dependabot[bot]
+  in [#115](https://github.com/dupuy/reliabot/pull/115)
+- Bump actions/dependency-review-action from 4.2.4 to 4.2.5 by @dependabot[bot]
+  in [#115](https://github.com/dupuy/reliabot/pull/115)
+- Bump actions/dependency-review-action from 4.2.4 to 4.2.5 by @dependabot[bot]
+  in [#115](https://github.com/dupuy/reliabot/pull/115)
+- Bump actions/dependency-review-action from 4.2.4 to 4.2.5 by @dependabot[bot]
+  in [#115](https://github.com/dupuy/reliabot/pull/115)
+- Bump actions/dependency-review-action from 4.2.4 to 4.2.5 by @dependabot[bot]
+  in [#115](https://github.com/dupuy/reliabot/pull/115)
+- Bump actions/dependency-review-action from 4.2.4 to 4.2.5 by @dependabot[bot]
+  in [#115](https://github.com/dupuy/reliabot/pull/115)
+- Bump actions/dependency-review-action from 4.2.4 to 4.2.5 by @dependabot[bot]
+  in [#115](https://github.com/dupuy/reliabot/pull/115)
+- Bump actions/dependency-review-action from 4.2.4 to 4.2.5 by @dependabot[bot]
+  in [#115](https://github.com/dupuy/reliabot/pull/115)
+- Bump actions/dependency-review-action from 4.2.4 to 4.2.5 by @dependabot[bot]
+  in [#115](https://github.com/dupuy/reliabot/pull/115)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#115](https://github.com/dupuy/reliabot/pull/115)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#115](https://github.com/dupuy/reliabot/pull/115)
+- Bump actions/dependency-review-action from 4.2.3 to 4.2.4 by @dependabot[bot]
+  in [#113](https://github.com/dupuy/reliabot/pull/113)
+- Bump actions/dependency-review-action from 4.2.3 to 4.2.4 by @dependabot[bot]
+  in [#113](https://github.com/dupuy/reliabot/pull/113)
+- Bump actions/dependency-review-action from 4.2.3 to 4.2.4 by @dependabot[bot]
+  in [#113](https://github.com/dupuy/reliabot/pull/113)
+- Bump actions/dependency-review-action from 4.2.3 to 4.2.4 by @dependabot[bot]
+  in [#113](https://github.com/dupuy/reliabot/pull/113)
+- Bump actions/dependency-review-action from 4.2.3 to 4.2.4 by @dependabot[bot]
+  in [#113](https://github.com/dupuy/reliabot/pull/113)
+- Bump actions/dependency-review-action from 4.2.3 to 4.2.4 by @dependabot[bot]
+  in [#113](https://github.com/dupuy/reliabot/pull/113)
+- Bump actions/dependency-review-action from 4.2.3 to 4.2.4 by @dependabot[bot]
+  in [#113](https://github.com/dupuy/reliabot/pull/113)
+- Bump actions/dependency-review-action from 4.2.3 to 4.2.4 by @dependabot[bot]
+  in [#113](https://github.com/dupuy/reliabot/pull/113)
+- Bump actions/dependency-review-action from 4.2.3 to 4.2.4 by @dependabot[bot]
+  in [#113](https://github.com/dupuy/reliabot/pull/113)
+- Bump actions/dependency-review-action from 4.2.3 to 4.2.4 by @dependabot[bot]
+  in [#113](https://github.com/dupuy/reliabot/pull/113)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#113](https://github.com/dupuy/reliabot/pull/113)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#113](https://github.com/dupuy/reliabot/pull/113)
+- Alexander Dupuy <33216+dupuy@users.noreply.github.com> by @dependabot[bot] in
+  [#113](https://github.com/dupuy/reliabot/pull/113)
+- Bump tox from 4.14.1 to 4.14.2 by @dependabot[bot] in
+  [#114](https://github.com/dupuy/reliabot/pull/114)
+- Bump tox from 4.14.1 to 4.14.2 by @dependabot[bot] in
+  [#114](https://github.com/dupuy/reliabot/pull/114)
+- Bump tox from 4.14.1 to 4.14.2 by @dependabot[bot] in
+  [#114](https://github.com/dupuy/reliabot/pull/114)
+- Bump tox from 4.14.1 to 4.14.2 by @dependabot[bot] in
+  [#114](https://github.com/dupuy/reliabot/pull/114)
+- Bump tox from 4.14.1 to 4.14.2 by @dependabot[bot] in
+  [#114](https://github.com/dupuy/reliabot/pull/114)
+- Bump tox from 4.14.1 to 4.14.2 by @dependabot[bot] in
+  [#114](https://github.com/dupuy/reliabot/pull/114)
+- Bump tox from 4.14.1 to 4.14.2 by @dependabot[bot] in
+  [#114](https://github.com/dupuy/reliabot/pull/114)
+- Bump tox from 4.14.1 to 4.14.2 by @dependabot[bot] in
+  [#114](https://github.com/dupuy/reliabot/pull/114)
+- Bump tox from 4.14.1 to 4.14.2 by @dependabot[bot] in
+  [#114](https://github.com/dupuy/reliabot/pull/114)
+- Bump tox from 4.14.1 to 4.14.2 by @dependabot[bot] in
+  [#114](https://github.com/dupuy/reliabot/pull/114)
+- Bump tox from 4.14.1 to 4.14.2 by @dependabot[bot] in
+  [#114](https://github.com/dupuy/reliabot/pull/114)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#114](https://github.com/dupuy/reliabot/pull/114)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#114](https://github.com/dupuy/reliabot/pull/114)
+- Update action-assign-labels & its mapping) by @dupuy in
+  [#111](https://github.com/dupuy/reliabot/pull/111)
+- Bump github/codeql-action from 3.24.7 to 3.24.9 by @dependabot[bot] in
+  [#109](https://github.com/dupuy/reliabot/pull/109)
+- Bump github/codeql-action from 3.24.7 to 3.24.9 by @dependabot[bot] in
+  [#109](https://github.com/dupuy/reliabot/pull/109)
+- Bump github/codeql-action from 3.24.7 to 3.24.9 by @dependabot[bot] in
+  [#109](https://github.com/dupuy/reliabot/pull/109)
+- Bump github/codeql-action from 3.24.7 to 3.24.9 by @dependabot[bot] in
+  [#109](https://github.com/dupuy/reliabot/pull/109)
+- Bump github/codeql-action from 3.24.7 to 3.24.9 by @dependabot[bot] in
+  [#109](https://github.com/dupuy/reliabot/pull/109)
+- Bump github/codeql-action from 3.24.7 to 3.24.9 by @dependabot[bot] in
+  [#109](https://github.com/dupuy/reliabot/pull/109)
+- Bump github/codeql-action from 3.24.7 to 3.24.9 by @dependabot[bot] in
+  [#109](https://github.com/dupuy/reliabot/pull/109)
+- Bump github/codeql-action from 3.24.7 to 3.24.9 by @dependabot[bot] in
+  [#109](https://github.com/dupuy/reliabot/pull/109)
+- Bump github/codeql-action from 3.24.7 to 3.24.9 by @dependabot[bot] in
+  [#109](https://github.com/dupuy/reliabot/pull/109)
+- Bump github/codeql-action from 3.24.7 to 3.24.9 by @dependabot[bot] in
+  [#109](https://github.com/dupuy/reliabot/pull/109)
+- Bump github/codeql-action from 3.24.7 to 3.24.9 by @dependabot[bot] in
+  [#109](https://github.com/dupuy/reliabot/pull/109)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#109](https://github.com/dupuy/reliabot/pull/109)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#109](https://github.com/dupuy/reliabot/pull/109)
+- Use action-assign-labels updated to node20 by @dupuy in
+  [#110](https://github.com/dupuy/reliabot/pull/110)
+- Assign labels from conventional commit types by @dupuy in
+  [#108](https://github.com/dupuy/reliabot/pull/108)
+- Assign labels from conventional commit types by @dupuy in
+  [#108](https://github.com/dupuy/reliabot/pull/108)
+- Assign labels from conventional commit types by @dupuy in
+  [#108](https://github.com/dupuy/reliabot/pull/108)
+- Tweak stale action settings by @dupuy in
+  [#107](https://github.com/dupuy/reliabot/pull/107)
+- Bump actions/dependency-review-action from 4.1.3 to 4.2.3 by @dependabot[bot]
+  in [#106](https://github.com/dupuy/reliabot/pull/106)
+- Bump actions/dependency-review-action from 4.1.3 to 4.2.3 by @dependabot[bot]
+  in [#106](https://github.com/dupuy/reliabot/pull/106)
+- Bump actions/dependency-review-action from 4.1.3 to 4.2.3 by @dependabot[bot]
+  in [#106](https://github.com/dupuy/reliabot/pull/106)
+- Bump actions/dependency-review-action from 4.1.3 to 4.2.3 by @dependabot[bot]
+  in [#106](https://github.com/dupuy/reliabot/pull/106)
+- Bump actions/dependency-review-action from 4.1.3 to 4.2.3 by @dependabot[bot]
+  in [#106](https://github.com/dupuy/reliabot/pull/106)
+- Bump actions/dependency-review-action from 4.1.3 to 4.2.3 by @dependabot[bot]
+  in [#106](https://github.com/dupuy/reliabot/pull/106)
+- Bump actions/dependency-review-action from 4.1.3 to 4.2.3 by @dependabot[bot]
+  in [#106](https://github.com/dupuy/reliabot/pull/106)
+- Bump actions/dependency-review-action from 4.1.3 to 4.2.3 by @dependabot[bot]
+  in [#106](https://github.com/dupuy/reliabot/pull/106)
+- Bump actions/dependency-review-action from 4.1.3 to 4.2.3 by @dependabot[bot]
+  in [#106](https://github.com/dupuy/reliabot/pull/106)
+- Bump actions/dependency-review-action from 4.1.3 to 4.2.3 by @dependabot[bot]
+  in [#106](https://github.com/dupuy/reliabot/pull/106)
+- Bump actions/dependency-review-action from 4.1.3 to 4.2.3 by @dependabot[bot]
+  in [#106](https://github.com/dupuy/reliabot/pull/106)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#106](https://github.com/dupuy/reliabot/pull/106)
+- Bump actions/dependency-review-action from 4.1.3 to 4.2.3 by @dependabot[bot]
+  in [#106](https://github.com/dupuy/reliabot/pull/106)
+- Bump actions/dependency-review-action from 4.1.3 to 4.2.3 by @dependabot[bot]
+  in [#106](https://github.com/dupuy/reliabot/pull/106)
+- Dependabot[bot] <support@github.com> by @dependabot[bot] in
+  [#106](https://github.com/dupuy/reliabot/pull/106)
+- Dependabot[bot] \<49699333+dependabot[bot]@users.noreply.github.com> by
+  @dependabot[bot] in [#106](https://github.com/dupuy/reliabot/pull/106)
+- Alexander Dupuy <alex@dupuy.us> by @dependabot[bot] in
+  [#106](https://github.com/dupuy/reliabot/pull/106)
+- Use ## h2 headers, newline before long URLs by @dupuy in
+  [#103](https://github.com/dupuy/reliabot/pull/103)
+- Badges for GH issues by @dupuy in
+  [#102](https://github.com/dupuy/reliabot/pull/102)
+
+#### Fixed 🛠
+
+- #174 pyre2-updated for py313 by @dupuy in
+  [#220](https://github.com/dupuy/reliabot/pull/220)
+- #174 by @dupuy in [#220](https://github.com/dupuy/reliabot/pull/220)
+- Markdown-link-check config for StackExchange sites by @dupuy in
+  [#218](https://github.com/dupuy/reliabot/pull/218)
+- Markdown link check for StackExchange sites by @dupuy in
+  [#217](https://github.com/dupuy/reliabot/pull/217)
+- Python build GHA hardening by @dupuy in
+  [#214](https://github.com/dupuy/reliabot/pull/214)
+- Deprecated git-cliff template variables by @dupuy in
+  [#171](https://github.com/dupuy/reliabot/pull/171)
+- Ruff warning about removed check by @dupuy
+- HTTP 429 rate limit errors checking implementation link by @dupuy
+- Broken link to ruamel.yaml docs by @dupuy
+- Error from ruff pylint check by @dupuy
+- Auto-fixes from pre-commit.ci by @pre-commit-ci[bot]
+- Allow api.scorecard.dev for updated scorecard by @dupuy in
+  [#161](https://github.com/dupuy/reliabot/pull/161)
+- Allow api.deps.dev for updated scorecard by @dupuy in
+  [#160](https://github.com/dupuy/reliabot/pull/160)
+- Comment out pylint from pre-commit by @dupuy in
+  [#132](https://github.com/dupuy/reliabot/pull/132)
+
+## New Contributors
+
+- 🧑🏽‍💻 @dupuyarc made their first contribution ✨ in
+  [#191](https://github.com/dupuy/reliabot/pull/191) [0.2.5]:
+  https://github.com/dupuy/reliabot/compare/v0.2.4..v0.2.5
+
+<!-- generated by git-cliff on 2025-07-30 -->
+
 ## [0.2.4] - 2024-03-19
 
 ### Details
@@ -246,3 +2003,4 @@ releases.
 [0.2.1]: https://github.com/dupuy/reliabot/compare/v0.1.2..v0.2.1
 [0.2.2]: https://github.com/dupuy/reliabot/compare/v0.2.1..v0.2.2
 [0.2.4]: https://github.com/dupuy/reliabot/compare/v0.2.2..v0.2.4
+[0.2.5]: https://github.com/dupuy/reliabot/compare/v0.2.4..v0.2.5

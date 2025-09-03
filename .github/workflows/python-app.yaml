@@ -131,7 +131,7 @@ jobs:
             pypi.org:443
 
       - name: 'Checkout repository'
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           # The `git describe` COMMIT_TAG output requires these fetch-* options.
           fetch-depth: 0
@@ -236,7 +236,7 @@ jobs:
 
       - name: 'Checkout repository'
         if: env.pr-commit == 'true'
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           # The `git-cliff` release notes action requires these fetch-* options.
           fetch-depth: 0
@@ -318,7 +318,7 @@ jobs:
 
       - name: 'Download release artifacts'
         if: env.pr-tag == 'true'
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5.0.0
         with:
           name: '${{ env.artifact-name }}'
           path: dist/
@@ -368,7 +368,7 @@ jobs:
 
       - name: 'Download release artifacts'
         if: env.pr-tag == 'true'
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5.0.0
         with:
           name: '${{ env.artifact-name }}'
           path: dist/
@@ -407,7 +407,7 @@ jobs:
 
       - name: 'Checkout repository'
         if: env.pr-release == 'true'
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           # The Git repository is only necessary for tagging and pushing.
           fetch-depth: 1
@@ -416,7 +416,7 @@ jobs:
 
       - name: 'Download release artifacts'
         if: env.pr-release == 'true'
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5.0.0
         with:
           name: '${{ env.artifact-name }}'
           path: dist/

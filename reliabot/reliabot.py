@@ -38,7 +38,6 @@ from os.path import split
 from typing import Any
 from typing import Callable
 from typing import TextIO
-from typing import Union
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -207,7 +206,7 @@ ECOSYSTEM_RE_FILES = (
 ECOS = {k: f"(?P<{k}>{v})" for k, v in ECOS.items()}
 ECOSYSTEM_RE_PATTERN = "|".join(ECOS.values())
 
-ECOSYSTEM_REGEX: Union[re.Pattern, None] = None
+ECOSYSTEM_REGEX: re.Pattern | None = None
 try:  # It's easy to mess up these regexes. Don't let that break the self test.
     ECOSYSTEM_REGEX = re.compile(ECOSYSTEM_RE_PATTERN)
 except re.error:  # pragma: no cover
@@ -294,7 +293,7 @@ def main(optargv: list[str] | None = None) -> int:
     check = False
     modified = False
     update_status = "Updating"
-    conf: Union[CommentedMap, dict] = {}
+    conf: CommentedMap | dict = {}
 
     argv = optargv or sys.argv
     try:
@@ -732,7 +731,7 @@ def update_dependabot_config(
     return changed
 
 
-def validate_dependabot_config(config: Union[CommentedMap, dict]) -> None:
+def validate_dependabot_config(config: CommentedMap | dict) -> None:
     """Sanity check parsed Dependabot configuration.
 
     This does not attempt to fully validate the dependabot.yml schema
@@ -813,7 +812,7 @@ def create_dependabot_config(ecosystems: dict[str, set]) -> list[dict]:
 
 
 def safe_dump(
-    config: Union[CommentedMap, CommentedSeq, dict, list],
+    config: CommentedMap | CommentedSeq | dict | list,
     settings: dict[str, Any],
     config_stream: TextIO,
 ) -> None:

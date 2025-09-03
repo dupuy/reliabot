@@ -179,6 +179,11 @@ repos:
       - id: ruff
         args: [--fix]
         name: 'ruff --fix'
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.20.0
+    hooks:
+      - id: pyupgrade
+        args: [--py38-plus]
   - repo: https://github.com/asottile/reorder-python-imports
     rev: v3.15.0
     hooks:

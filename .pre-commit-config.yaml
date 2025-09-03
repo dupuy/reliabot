@@ -13,7 +13,7 @@ default_stages: [pre-commit]
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       # - id: autopep8-wrapper
       #  args: ['-i', '--ignore=E501']
@@ -37,8 +37,6 @@ repos:
       - id: end-of-file-fixer
         exclude: styles/
       - id: fix-byte-order-marker
-      - id: fix-encoding-pragma
-        args: [--remove]
       - id: forbid-submodules
       - id: mixed-line-ending
       # - id: name-tests-test
@@ -120,7 +118,7 @@ repos:
     hooks:
       - id: gitleaks
   - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
-    rev: '3.2.1'
+    rev: '3.4.0'
     hooks:
       - id: editorconfig-checker
         alias: ec
@@ -148,7 +146,7 @@ repos:
 
   # Shell
   - repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: v0.10.0.1
+    rev: v0.11.0.1
     hooks:
       - id: shellcheck
   - repo: https://github.com/scop/pre-commit-shfmt
@@ -175,7 +173,7 @@ repos:
 
   # Python
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.12.7
+    rev: v0.12.11
     hooks:
       # Run the linter.
       - id: ruff
@@ -196,7 +194,7 @@ repos:
         files: ^(?!setup.py$).*\.py$
         stages: [manual] # prevent whitespace battle with ruff --format (Black)
   - repo: https://github.com/PyCQA/prospector
-    rev: v1.17.2
+    rev: v1.17.3
     hooks:
       - id: prospector
         # Needed for pylint import checks.
@@ -238,7 +236,7 @@ repos:
     hooks:
       - id: dead
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.12.7
+    rev: v0.12.11
     hooks:
       # Run the formatter.
       - id: ruff-format

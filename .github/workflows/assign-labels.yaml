@@ -27,11 +27,6 @@ jobs:
     runs-on: ubuntu-24.04
     permissions:
       pull-requests: write
-    # Partial fix for #192, workflows in forked repos can't edit labels
-    if: >
-      github.event_name == 'pull_request' &&
-      github.repository == 'dupuy/reliabot'
-
     steps:
       - name: 'Harden runner'
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
@@ -44,7 +39,8 @@ jobs:
       - name: 'Assign labels'
         uses: dupuy/action-assign-labels@b6939985ff45d0ddb5254ead207198af4f93fba5
         with:
-          apply-changes: true
+          # Partial fix for #192, workflows in forked repos can't edit labels
+          apply-changes: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
           conventional-commits: |
             conventional-commits:
               - type: 'fix'

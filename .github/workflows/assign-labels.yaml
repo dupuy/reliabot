@@ -37,7 +37,7 @@ jobs:
             api.github.com:443
 
       - name: 'Assign labels'
-        uses: dupuy/action-assign-labels@b6939985ff45d0ddb5254ead207198af4f93fba5
+        uses: dupuy/action-assign-labels@671a4ca2da0f900464c58b8b5540a1e07133e915 # v1.5.1
         with:
           # Partial fix for #192, workflows in forked repos can't edit labels
           apply-changes: ${{ github.event.pull_request.head.repo.full_name == github.repository }}

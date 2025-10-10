@@ -260,7 +260,7 @@ jobs:
 
       - name: 'Generate release notes'
         if: env.pr-tag == 'true'
-        uses: orhun/git-cliff-action@98c93442bb05a455a77bee982867857ae748eeea # v4.5.1
+        uses: orhun/git-cliff-action@d77b37db2e3f7398432d34b72a12aa3e2ba87e51 # v4.6.0
         with:
           args: >
             '--unreleased'
@@ -270,7 +270,7 @@ jobs:
 
       - name: 'Generate "unreleased" notes'
         if: env.pr-commit == 'true' && env.pr-tag == 'false'
-        uses: orhun/git-cliff-action@98c93442bb05a455a77bee982867857ae748eeea # v4.5.1
+        uses: orhun/git-cliff-action@d77b37db2e3f7398432d34b72a12aa3e2ba87e51 # v4.6.0
         with:
           args: '--unreleased'
           config: release.toml
@@ -325,7 +325,7 @@ jobs:
 
       - name: 'Create draft release and upload artifacts'
         if: env.pr-tag == 'true'
-        uses: ncipollo/release-action@b12185d71f4641bb1b1116dacae6b74e667f86e4 # v1.19.0
+        uses: ncipollo/release-action@b7eabc95ff50cbeeedec83973935c8f306dfcd0b # v1.20.0
         with:
           allowUpdates: true
           artifactErrorsFailBuild: true
@@ -375,7 +375,7 @@ jobs:
 
       - name: 'Publish (pre-)release to TestPyPI'
         if: env.pr-tag == 'true'
-        uses: pypa/gh-action-pypi-publish@76f52bc884231f62b9a034ebfe128415bbaabdfc # v1.12.4
+        uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e # v1.13.0
 
   publish:
     runs-on: ubuntu-24.04
@@ -429,7 +429,7 @@ jobs:
 
       - name: 'Publish release to PyPI'
         if: env.pr-release == 'true'
-        uses: pypa/gh-action-pypi-publish@76f52bc884231f62b9a034ebfe128415bbaabdfc # v1.12.4
+        uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e # v1.13.0
 
   pre-release:
     runs-on: ubuntu-24.04
@@ -456,7 +456,7 @@ jobs:
 
       - name: 'Publish GitHub pre-release'
         if: env.pr-release == 'false' && env.pr-tag == 'true'
-        uses: ncipollo/release-action@b12185d71f4641bb1b1116dacae6b74e667f86e4 # v1.19.0
+        uses: ncipollo/release-action@b7eabc95ff50cbeeedec83973935c8f306dfcd0b # v1.20.0
         with:
           allowUpdates: true
           commit: '${{ github.ref }}' # This only generates a non-annotated tag.
@@ -493,7 +493,7 @@ jobs:
 
       - name: 'Publish GitHub release'
         if: env.pr-release == 'true'
-        uses: ncipollo/release-action@b12185d71f4641bb1b1116dacae6b74e667f86e4 # v1.19.0
+        uses: ncipollo/release-action@b7eabc95ff50cbeeedec83973935c8f306dfcd0b # v1.20.0
         with:
           allowUpdates: true
           # Don't set commit, publish job creates an annotated tag.

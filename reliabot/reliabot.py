@@ -36,11 +36,11 @@ from os.path import isdir
 from os.path import join
 from os.path import split
 from typing import Any
-from typing import Callable
 from typing import TextIO
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
     from collections.abc import Iterable
     from collections.abc import Iterator
 

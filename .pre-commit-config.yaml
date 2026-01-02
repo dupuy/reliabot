@@ -101,7 +101,7 @@ repos:
 
   # Global
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v4.0.0-alpha.8
+    rev: v3.1.0
     hooks:
       - id: prettier
         args: [--single-quote]
@@ -273,7 +273,7 @@ repos:
         types: [markdown]
         exclude: tests/
   - repo: https://github.com/executablebooks/mdformat
-    rev: 1.0.0
+    rev: 0.7.22
     hooks:
       - id: mdformat
         args:

@@ -121,7 +121,7 @@ jobs:
 
     steps:
       - name: 'Harden runner'
-        uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           disable-sudo: true
           egress-policy: audit
@@ -131,7 +131,7 @@ jobs:
             pypi.org:443
 
       - name: 'Checkout repository'
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           # The `git describe` COMMIT_TAG output requires these fetch-* options.
           fetch-depth: 0
@@ -184,7 +184,7 @@ jobs:
 
       - name: 'Set up Python'
         if: steps.computed.outputs.pr-commit == 'true'
-        uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6.0.0
+        uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6.1.0
         with:
           python-version: '${{ matrix.python-version }}'
           cache: 'poetry'
@@ -222,7 +222,7 @@ jobs:
     steps:
       - name: 'Harden runner'
         if: env.pr-commit == 'true'
-        uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -236,7 +236,7 @@ jobs:
 
       - name: 'Checkout repository'
         if: env.pr-commit == 'true'
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           # The `git-cliff` release notes action requires these fetch-* options.
           fetch-depth: 0
@@ -249,7 +249,7 @@ jobs:
 
       - name: 'Set up Python'
         if: env.pr-commit == 'true'
-        uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6.0.0
+        uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6.1.0
         with:
           python-version: '>=3.9 <3.14'
           cache: 'poetry'
@@ -278,7 +278,7 @@ jobs:
 
       - name: 'Upload distribution package as an artifact'
         if: github.repository == 'dupuy/reliabot' && env.pr-tag == 'true'
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           if-no-files-found: error
           name: '${{ env.artifact-name }}'
@@ -308,7 +308,7 @@ jobs:
     steps:
       - name: 'Harden runner'
         if: env.pr-tag == 'true'
-        uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -318,7 +318,7 @@ jobs:
 
       - name: 'Download release artifacts'
         if: env.pr-tag == 'true'
-        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           name: '${{ env.artifact-name }}'
           path: dist/
@@ -359,7 +359,7 @@ jobs:
     steps:
       - name: 'Harden runner'
         if: env.pr-tag == 'true'
-        uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           disable-sudo: true
           egress-policy: audit
@@ -368,7 +368,7 @@ jobs:
 
       - name: 'Download release artifacts'
         if: env.pr-tag == 'true'
-        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           name: '${{ env.artifact-name }}'
           path: dist/
@@ -397,7 +397,7 @@ jobs:
     steps:
       - name: 'Harden runner'
         if: env.pr-release == 'true'
-        uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           disable-sudo: true
           egress-policy: audit
@@ -407,7 +407,7 @@ jobs:
 
       - name: 'Checkout repository'
         if: env.pr-release == 'true'
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           # The Git repository is only necessary for tagging and pushing.
           fetch-depth: 1
@@ -416,7 +416,7 @@ jobs:
 
       - name: 'Download release artifacts'
         if: env.pr-release == 'true'
-        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           name: '${{ env.artifact-name }}'
           path: dist/
@@ -447,7 +447,7 @@ jobs:
     steps:
       - name: 'Harden runner'
         if: env.pr-release == 'false' && env.pr-tag == 'true'
-        uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -484,7 +484,7 @@ jobs:
     steps:
       - name: 'Harden runner'
         if: env.pr-release == 'true'
-        uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           disable-sudo: true
           egress-policy: block

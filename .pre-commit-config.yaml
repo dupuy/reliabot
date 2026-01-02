@@ -250,6 +250,8 @@ repos:
     rev: 2.2.1
     hooks:
       - id: poetry-lock
+      # NOTE: poetry-check complains about tools.poetry settings that can't
+      # be fixed until the project switches to poetry 2.0. Ignore for now.
       - id: poetry-check
 
   # Poetry 2.0 removed poetry-export hook - see README.md in this repo

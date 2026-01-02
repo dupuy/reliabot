@@ -10,7 +10,7 @@ assignees: ''
 > https://github.com/dupuy/reliabot/issues?q=is%3Aissue+sort%3Acomments-desc
 
 > If you find one, please add a comment in that issue. For more help, see \
-> https://github.com/dupuy/reliabot/blob/main/CONTRIBUTING.md##suggesting-enhancements.
+> https://github.com/dupuy/reliabot/blob/main/CONTRIBUTING.md#suggesting-enhancements.
 
 ## _If the enhancement is:_ Related to a problem
 

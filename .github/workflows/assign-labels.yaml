@@ -27,10 +27,9 @@ jobs:
     runs-on: ubuntu-24.04
     permissions:
       pull-requests: write
-
     steps:
       - name: 'Harden runner'
-        uses: step-security/harden-runner@0080882f6c36860b6ba35c610c98ce87d4e2f26f # v2.10.2
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -38,9 +37,10 @@ jobs:
             api.github.com:443
 
       - name: 'Assign labels'
-        uses: dupuy/action-assign-labels@b6939985ff45d0ddb5254ead207198af4f93fba5
+        uses: dupuy/action-assign-labels@671a4ca2da0f900464c58b8b5540a1e07133e915 # v1.5.1
         with:
-          apply-changes: true
+          # Partial fix for #192, workflows in forked repos can't edit labels
+          apply-changes: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
           conventional-commits: |
             conventional-commits:
               - type: 'fix'

@@ -28,7 +28,7 @@ repository. This is especially helpful for [Terraform][1] “Infrastructure as
 Code” repositories or any sort of "mono-repo" with many folders that may
 require version updates.
 
-> [_Quis renovatores ipsos renovat?_][2] :octocat:🤖🧑🏽‍🔧
+> [_Quis renovatores ipsos renovat?_][2] :octocat::dependabot:🧑🏽‍🔧
 
 <!-- mdformat-toc start --slug=github --no-anchors --maxlevel=3 --minlevel=2 -->
 
@@ -148,21 +148,16 @@ warning messages, by installing a Python RE2 regular expression package. These
 require installation of the C++ RE2 library (run `brew install re2`, or use
 Linux/BSD tools to install the `re2` package).
 
-> ⚠️The `re2-wheels` extra (which depends on [pyre2-updated][7]) only works for
-> Python 3.7 to 3.12. If you have to use another Python version and the `pyre2`
-> extra doesn't work, use the [`--re` option][8] to turn off warnings about
-> failure to load `re2`.
-
-```shell
-pip3 install 'reliabot[re2-wheels]'
-```
-
-Alternately, you can try the original `pyre2` to build from source. This
-requires you to have installed a C++ compiler, header files, and libraries.
-
 ```shell
 pip3 install 'reliabot[re2]'
 ```
+
+> ⚠️The `re2` extra (which depends on [pyre2-updated][7]) only works for Python
+> 3.10 to 3.13. If you have to use another Python version, use the
+> [`--re` option][8] to turn off warnings about failure to load `re2`.
+
+> Note: this extra was previously known as `re2-wheels` and that name is also
+> maintained for compatibility, but the shorter name is now preferred.
 
 Once installed, you can add the Python binary directory to your `PATH`.
 

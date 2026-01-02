@@ -38,7 +38,6 @@ import argparse
 import re
 import sys
 import warnings
-from typing import Optional
 from typing import TextIO
 
 # The regex for finding reference links in the text. Don't find
@@ -104,7 +103,7 @@ def tidy(text: str) -> str:
     return link.sub(refrepl, text) + "\n"
 
 
-def tidy_file(input_file: TextIO, output_file: Optional[TextIO]) -> bool:
+def tidy_file(input_file: TextIO, output_file: TextIO | None = None) -> bool:
     """Tidy a file, returning True if the output is identical."""
     original = input_file.read()
     tidied = tidy(original)

@@ -36,13 +36,11 @@ from os.path import isdir
 from os.path import join
 from os.path import split
 from typing import Any
-from typing import Callable
-from typing import Optional
 from typing import TextIO
-from typing import Union
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
     from collections.abc import Iterable
     from collections.abc import Iterator
 
@@ -92,7 +90,7 @@ def error(message: str, *, debug_hint: bool = True) -> None:
         sys.exit(int(Err.INTERNAL))
 
 
-def dedup_warn(message: str, key: Optional[str] = None) -> None:
+def dedup_warn(message: str, key: str | None = None) -> None:
     """Print warning to stderr if non-empty key has not been warned before.
 
     These stderr messages for end-users do not use Python Warnings, which are
@@ -208,7 +206,7 @@ ECOSYSTEM_RE_FILES = (
 ECOS = {k: f"(?P<{k}>{v})" for k, v in ECOS.items()}
 ECOSYSTEM_RE_PATTERN = "|".join(ECOS.values())
 
-ECOSYSTEM_REGEX: Union[re.Pattern, None] = None
+ECOSYSTEM_REGEX: re.Pattern | None = None
 try:  # It's easy to mess up these regexes. Don't let that break the self test.
     ECOSYSTEM_REGEX = re.compile(ECOSYSTEM_RE_PATTERN)
 except re.error:  # pragma: no cover
@@ -263,7 +261,7 @@ WARN_KEYS: set[str] = set()
 
 
 # pylint: disable=too-many-locals
-def main(optargv: Optional[list[str]] = None) -> int:
+def main(optargv: list[str] | None = None) -> int:
     """Create or update Dependabot configuration in a Git repo.
 
     This function parses arguments and options and handles exceptions,
@@ -295,7 +293,7 @@ def main(optargv: Optional[list[str]] = None) -> int:
     check = False
     modified = False
     update_status = "Updating"
-    conf: Union[CommentedMap, dict] = {}
+    conf: CommentedMap | dict = {}
 
     argv = optargv or sys.argv
     try:
@@ -733,7 +731,7 @@ def update_dependabot_config(
     return changed
 
 
-def validate_dependabot_config(config: Union[CommentedMap, dict]) -> None:
+def validate_dependabot_config(config: CommentedMap | dict) -> None:
     """Sanity check parsed Dependabot configuration.
 
     This does not attempt to fully validate the dependabot.yml schema
@@ -814,7 +812,7 @@ def create_dependabot_config(ecosystems: dict[str, set]) -> list[dict]:
 
 
 def safe_dump(
-    config: Union[CommentedMap, CommentedSeq, dict, list],
+    config: CommentedMap | CommentedSeq | dict | list,
     settings: dict[str, Any],
     config_stream: TextIO,
 ) -> None:
@@ -1054,7 +1052,7 @@ def self_test() -> int:
         os.environ["PYTHONWARNINGS"] = "default"  # Also affect subprocesses
 
     # pylint: disable=import-outside-toplevel,redefined-outer-name
-    import doctest
+    import doctest  # noqa: PLC0415
 
     flags = DOCTEST_OPTION_FLAGS
     mod = None

@@ -13,7 +13,7 @@ default_stages: [pre-commit]
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       # - id: autopep8-wrapper
       #  args: ['-i', '--ignore=E501']
@@ -37,8 +37,6 @@ repos:
       - id: end-of-file-fixer
         exclude: styles/
       - id: fix-byte-order-marker
-      - id: fix-encoding-pragma
-        args: [--remove]
       - id: forbid-submodules
       - id: mixed-line-ending
       # - id: name-tests-test
@@ -84,6 +82,8 @@ repos:
         args: [--update]
         entry: reliabot/reliabot.py
         language: python
+        # Can't use 3.13 yet - https://github.com/dupuy/reliabot/issues/174
+        language_version: python3.12
         name: maintain dependabot configuration
         pass_filenames: false
       - id: reliabot-pre-commit-files
@@ -94,6 +94,8 @@ repos:
         entry: reliabot/reliabot.py
         files: ^(reliabot/reliabot[.]py|[.]pre-commit-(config|hooks)[.]py)$
         language: python
+        # Can't use 3.13 yet - https://github.com/dupuy/reliabot/issues/174
+        language_version: python3.12
         name: maintain pre-commit files configuration
         pass_filenames: false
 
@@ -106,19 +108,24 @@ repos:
         exclude: testdir/github/action[.]yml|styles/
         exclude_types: [markdown]
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.3.0
+    rev: v2.4.1
     hooks:
       - id: codespell
         args: [-L, 'pullrequest,pullrequests']
         exclude: styles/
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.22.1
+    rev: v8.30.0
     hooks:
       - id: gitleaks
+  - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
+    rev: '3.6.0'
+    hooks:
+      - id: editorconfig-checker
+        alias: ec
 
   # YAML
   - repo: https://github.com/adrienverge/yamllint
-    rev: v1.35.1
+    rev: v1.37.1
     hooks:
       - id: yamllint
         args:
@@ -139,11 +146,11 @@ repos:
 
   # Shell
   - repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: v0.10.0.1
+    rev: v0.11.0.1
     hooks:
       - id: shellcheck
   - repo: https://github.com/scop/pre-commit-shfmt
-    rev: v3.10.0-2
+    rev: v3.12.0-2
     hooks:
       # Choose one of:
       #- id: shfmt-docker # Docker image (requires Docker to run)
@@ -166,14 +173,19 @@ repos:
 
   # Python
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.8.6
+    rev: v0.14.7
     hooks:
       # Run the linter.
       - id: ruff
         args: [--fix]
         name: 'ruff --fix'
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.21.2
+    hooks:
+      - id: pyupgrade
+        args: [--py310-plus]
   - repo: https://github.com/asottile/reorder-python-imports
-    rev: v3.14.0
+    rev: v3.16.0
     hooks:
       - id: reorder-python-imports
         args:
@@ -187,7 +199,7 @@ repos:
         files: ^(?!setup.py$).*\.py$
         stages: [manual] # prevent whitespace battle with ruff --format (Black)
   - repo: https://github.com/PyCQA/prospector
-    rev: v1.13.3
+    rev: v1.17.3
     hooks:
       - id: prospector
         # Needed for pylint import checks.
@@ -202,13 +214,13 @@ repos:
           # - --tool=pylint # comment out if you get "pylint: astroid-error ..."
           - --tool=dodgy
   - repo: https://github.com/PyCQA/bandit
-    rev: 1.8.0
+    rev: 1.9.2
     hooks:
       - id: bandit
         args: [-c, pyproject.toml]
         additional_dependencies: ['bandit[toml]']
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.14.1
+    rev: v1.19.0
     hooks:
       - id: mypy
   - repo: https://github.com/pre-commit/pygrep-hooks
@@ -225,20 +237,27 @@ repos:
       # - id: rst-inline-touching-normal
       - id: text-unicode-replacement-char
   - repo: https://github.com/asottile/dead
-    rev: v1.5.2
+    rev: v2.1.0
     hooks:
       - id: dead
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.8.6
+    rev: v0.14.7
     hooks:
       # Run the formatter.
       - id: ruff-format
   - repo: https://github.com/python-poetry/poetry
     # see https://python-poetry.org/docs/master/pre-commit-hooks/#faq
-    rev: 1.8.0
+    rev: 2.2.1
     hooks:
       - id: poetry-lock
+      # NOTE: poetry-check complains about tools.poetry settings that can't
+      # be fixed until the project switches to poetry 2.0. Ignore for now.
       - id: poetry-check
+
+  # Poetry 2.0 removed poetry-export hook - see README.md in this repo
+  - repo: https://github.com/python-poetry/poetry-plugin-export
+    rev: 1.9.0
+    hooks:
       - id: poetry-export
         args:
           - --format=requirements.txt
@@ -256,7 +275,7 @@ repos:
         types: [markdown]
         exclude: tests/
   - repo: https://github.com/executablebooks/mdformat
-    rev: 0.7.21
+    rev: 0.7.22
     hooks:
       - id: mdformat
         args:
@@ -281,14 +300,8 @@ repos:
         args: [--style=.mdl-style.rb]
         exclude: tests/
 
-  - repo: https://github.com/mineiros-io/pre-commit-hooks
-    rev: v0.5.1
-    hooks:
-      - id: markdown-link-check
-        exclude: tests/
-
   - repo: https://github.com/errata-ai/vale
-    rev: v3.9.3
+    rev: v3.13.0
     hooks:
       - id: vale
         exclude: LICENSE|humans\.txt|requirements.*|styles/
@@ -366,6 +379,16 @@ repos:
         language: pygrep
         entry: ^\s+:(returns\s[^:]*|(param|raises|var)(\s+[^:\s]+\s[^:]*)?):\s
         types: [python]
+      - id: markdown-link-check
+        name: Check links in Markdown sources
+        # Uses Node.js https://github.com/tcort/markdown-link-check
+        # Hook adapted from https://github.com/mineiros-io/pre-commit-hooks/
+        description: |
+          Checks hyperlinks in a markdown text to see if they're still valid.
+        entry: markdown-link-check.sh
+        language: script
+        types: [markdown]
+        exclude: tests/
 ci:
   autofix_commit_msg: |
     fix: auto-fixes from pre-commit.ci

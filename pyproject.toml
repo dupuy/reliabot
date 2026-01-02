@@ -146,16 +146,16 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.8"  # 3.8 end-of-life 2024-10
+python = "^3.10"  # 3.9 end-of-life 2025-11
 
 "ruamel.yaml" = "^0.18.16"
 
 # pyre2 only has wheels for Python 3.6-3.9, otherwise needs a full compiler
 # and for more recent Python, build from GitHub, not PyPI.
-pyre2 = { version = "^0.3.6", optional = true }
+# NOTE: this is no longer supported as Python >= 3.10 is now required
+#pyre2 = { version = "^0.3.6", optional = true }
 pyre2-updated = [
-  { version = "0.3.8", python = "<3.9", optional = true },
-  { version = "^0.3.9", python = ">=3.9", optional = true },
+  { version = "^0.3.9", python = ">=3.10", optional = true },
 ]
 
 [tool.poetry.group.testing]
@@ -165,7 +165,9 @@ optional = true
 tox = "^4.25.0"
 
 [tool.poetry.extras]
-re2 = ["pyre2"]
+# NOTE: Original pyre2 no longer supported as Python >= 3.10 is now required
+re2 = ["pyre2-updated"]
+# Provided for backward compatibility, please use "re2" extra
 re2-wheels = ["pyre2-updated"]
 
 # Uncomment when ready to require poetry >= 2.0

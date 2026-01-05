@@ -148,7 +148,7 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.10"  # 3.9 end-of-life 2025-11
 
-"ruamel.yaml" = "^0.18.16"
+"ruamel.yaml" = "^0.19.1"
 
 # pyre2 only has wheels for Python 3.6-3.9, otherwise needs a full compiler
 # and for more recent Python, build from GitHub, not PyPI.

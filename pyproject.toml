@@ -162,7 +162,7 @@ pyre2-updated = [
 optional = true
 
 [tool.poetry.group.testing.dependencies]
-tox = "^4.33.0"
+tox = "^4.34.0"
 
 [tool.poetry.extras]
 # NOTE: Original pyre2 no longer supported as Python >= 3.10 is now required

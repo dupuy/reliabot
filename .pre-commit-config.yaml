@@ -330,17 +330,18 @@ repos:
   #         - --args=--concise-output
   #         - --args=--exclude-downloaded-modules
 
-  # Cloudformation
+  # CloudFormation
   # - repo: https://github.com/awslabs/cfn-python-lint
   #   rev: v0.44.7
   #   hooks:
   #     - id: cfn-python-lint
 
   # Docker
-  # - repo: https://github.com/hadolint/hadolint
-  #   rev: v1.22.1
-  #   hooks:
-  #     - id: hadolint
+  - repo: https://github.com/hadolint/hadolint
+    rev: v1.22.1
+    hooks:
+      - id: hadolint
+        args: ['--failure-threshold=info']
 
   # Git commit messages
   # - repo: https://github.com/commitizen-tools/commitizen

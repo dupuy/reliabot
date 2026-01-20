@@ -16,12 +16,16 @@ updates:
     groups:
       gh-actions-infrastructure:
         patterns:
-          - 'actions/*'
-          - 'github/codeql-action/*'
-          - 'ossf/*'
-          - 'step-security/*'
+          - actions/*
+          - github/codeql-action/*
+          - ossf/*
+          - step-security/*
       gh-actions-releases:
         patterns:
-          - 'ncipollo/release-action'
-          - 'orhun/git-cliff-action'
-          - 'pypa/*'
+          - ncipollo/release-action
+          - orhun/git-cliff-action
+          - pypa/*
+  - directory: /fuzz
+    package-ecosystem: docker
+    schedule:
+      interval: monthly

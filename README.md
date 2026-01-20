@@ -389,11 +389,13 @@ If any indentation setting appears more than once, Reliabot uses the last one.
 > with a YAML formatter. This is one reason YAML formatters in your
 > `.pre-commit-config.yaml` should come _after_ Reliabot.
 
-If you need more control of the formatting of your `.pre‑commit-config.yaml`
-configuration file, this is best done by configuring pre-commit to use a
-formatter like [prettier][15], the [Golang version of `yamlfmt`][16], or the
-[Python version of `yamlfmt`][17] (which also uses `ruamel.yaml` and its
-undocumented configuration settings for formatting).
+If you need more control of the formatting of `.pre‑commit-config.yaml`, it's
+best to configure pre-commit to use a YAML formatter like one of these:
+
+- [prettier][15]
+- [Golang `yamlfmt`][16]
+- [Python `yamlfmt`][17] (also uses `ruamel.yaml` and its configuration
+  settings).
 
 > ⛔️**Warning**: Some combinations of indentation values can generate invalid
 > YAML output that `ruamel.yaml` can't parse. Reliabot checks that it can parse

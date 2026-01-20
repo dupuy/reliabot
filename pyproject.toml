@@ -158,11 +158,23 @@ pyre2-updated = [
   { version = "^0.3.9", python = ">=3.10", optional = true },
 ]
 
+[tool.poetry.group.dev]
+optional = true
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.14.13"
+
+[tool.poetry.group.fuzz]
+optional = true
+
+[tool.poetry.group.fuzz.dependencies]
+atheris = "^3.0.0"
+
 [tool.poetry.group.testing]
 optional = true
 
 [tool.poetry.group.testing.dependencies]
-tox = "^4.34.0"
+tox = "^4.34.1"
 
 [tool.poetry.extras]
 # NOTE: Original pyre2 no longer supported as Python >= 3.10 is now required
@@ -172,7 +184,7 @@ re2-wheels = ["pyre2-updated"]
 
 # Uncomment when ready to require poetry >= 2.0
 # poetry-plugin-export isn't installed by default in poetry >= 2.0
-# Unfortunately this requires manual install with one of:
+# Unfortunately this requires manual installation with one of:
 # - poetry self install poetry-plugin-export
 # - pip install poetry-plugin-export
 # - pipx inject poetry poetry-plugin-export
@@ -204,7 +216,7 @@ show-fixes = true
 docstring-code-format = true
 
 [tool.ruff.lint]
-# Allow en-dash (U+2013), which could be confused for "-".
+# Allow en-dash (U+2013), which could be confused for -.
 allowed-confusables = ["–"]
 
 # Enabling flake8 -builtins (A), -annotations (ANN), -bugbear (B),

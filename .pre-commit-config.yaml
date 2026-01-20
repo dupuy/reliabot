@@ -400,5 +400,6 @@ ci:
   autoupdate_schedule: monthly
   skip:
     - gitlint-ci
+    - hadolint
     - markdown-link-check
     - poetry-lock

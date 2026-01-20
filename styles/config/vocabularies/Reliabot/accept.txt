@@ -1,7 +1,10 @@
+Atheris
 BSD
 CFG
+Dockerfile
 INI
 Keybase
+LLVM
 Makefile
 PEP
 Pylint
@@ -21,9 +24,11 @@ doctest
 doctests
 dotfiles
 formatters
+fuzzer
 gitleaks
 gitlint
 ipsos
+libFuzzer
 markdownlint
 mdformat
 renovatores

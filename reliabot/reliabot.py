@@ -124,8 +124,10 @@ else:
         RE2 = True
     except ImportError:
         dedup_warn(f"Can't import 're2', falling back to 're'.{RE_WARNING}")
+        re = None
     else:  # Generate fallback warning if re2 package can't handle regexp
-        re.set_fallback_notification(re.FALLBACK_WARNING)
+        if re is not None:
+            re.set_fallback_notification(re.FALLBACK_WARNING)
 
 if not RE2:
     import re
@@ -157,6 +159,8 @@ else:
     from ruamel.yaml.comments import CommentedMap
     from ruamel.yaml.comments import CommentedSeq
     from ruamel.yaml.parser import ParserError
+    from ruamel.yaml.reader import ReaderError
+    from ruamel.yaml.error import YAMLError
 
 DOT_YAML = r"[.]ya?ml"
 DOT_YAML_REGEX = re.compile(rf"{DOT_YAML}$")  # used for search, not full match
@@ -330,6 +334,27 @@ def main(optargv: list[str] | None = None) -> int:
                 raise
             update_status = "Creating"
             new = True
+        except (ReaderError, YAMLError) as ruamel_err:
+            # ReaderError occurs for empty (or short?) strings
+            # YAMLError covers many invalid YAML cases
+            dedup_warn(ruamel_err.args[0])
+            return Err.CONFIG
+        except AssertionError:
+            # AssertionError raised when unable to move old comment
+            dedup_warn("YAML parser unable to track comments for this file")
+            return Err.CONFIG
+        except IndexError:
+            # IndexError raised from an empty string for processing version
+            dedup_warn("Configuration parse error (bad YAML version?)")
+            return Err.CONFIG
+        except RecursionError:
+            # RecursionError can occur when there is an anchor loop
+            dedup_warn("Configuration parse error (YAML anchor loop?)")
+            return Err.CONFIG
+        except TypeError:
+            # TypeError occurs if top-level is unhashable, like CommentedSeq
+            dedup_warn("Configuration parse error (bad top level?)")
+            return Err.CONFIG
 
         # TODO(once 3.8 is EOL): EMITTER_SETTINGS | EXCLUSIONS
         settings = extract_settings(conf, {**EMITTER_SETTINGS, **EXCLUSIONS})

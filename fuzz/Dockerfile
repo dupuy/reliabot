@@ -3,16 +3,16 @@
 
 # Debian 12 (Bookworm) has Python 3.11, while 13 (Trixie) has Python 3.13,
 # unsupported by Atheris as of January 2026.
-FROM debian:12-slim
+FROM debian:12.13-slim
 
 SHELL ["/bin/bash", "-eu", "-o", "pipefail", "-c"]
 
 # Install system packages needed to build Atheris (and Clang) from source
 RUN apt-get update \
     && apt-get upgrade --assume-yes --no-install-recommends \
-    binutils \
-    build-essential \
-    cmake \
+    binutils=2.40-2 \
+    build-essential=12.9 \
+    cmake=3.25.1-1 \
     git=1:2.39.* \
     python3-dev=3.11.* \
     python3-full=3.11.* \
@@ -31,6 +31,13 @@ WORKDIR $APP_DIR
 ENV VIRTUAL_ENV="/opt/venv"
 RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+ARG TARGETARCH
+ENV ARCH_amd64="x86_64"
+ENV SUFFIX_amd64="-${ARCH_amd64}-linux-gnu.tar.xz"
+ENV ARCH_arm64="aarch64"
+ENV SUFFIX_arm64="-${ARCH_arm64}-linux-gnu.tar.xz"
+# TODO: select CLANG_URL and CLANG_CHECKSUM values based on TARGETARCH
 
 ARG CLANG_URL=https://github.com/llvm/llvm-project/releases/download/llvmorg-17.0.6/clang+llvm-17.0.6-aarch64-linux-gnu.tar.xz
 ARG CLANG_CHECKSUM=6dd62762285326f223f40b8e4f2864b5c372de3f7de0731cb7cd55ca5287b75a

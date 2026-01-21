@@ -334,7 +334,8 @@ def main(optargv: list[str] | None = None) -> int:
                 raise
             update_status = "Creating"
             new = True
-        except (ReaderError, YAMLError) as ruamel_err:
+        except (NotImplementedError, ReaderError, YAMLError) as ruamel_err:
+            # NotImplementedError occurs for comment handling corner cases
             # ReaderError occurs for empty (or short?) strings
             # YAMLError covers many invalid YAML cases
             dedup_warn(ruamel_err.args[0])

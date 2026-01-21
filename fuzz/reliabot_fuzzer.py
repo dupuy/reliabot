@@ -51,6 +51,9 @@ def test_one_input(data: bytes) -> None:
     except (AssertionError, IndexError, RecursionError, TypeError):
         # "Unexpected" errors due to ruamel.yaml bugs, now handled
         return
+    except NotImplementedError:
+        # Expected errors due to ruamel.yaml "limitations", now handled
+        return
     except Exception:
         # Unexpected errors in YAML parsing
         raise

@@ -125,7 +125,7 @@ repos:
 
   # YAML
   - repo: https://github.com/adrienverge/yamllint
-    rev: v1.37.1
+    rev: v1.38.0
     hooks:
       - id: yamllint
         args:
@@ -153,8 +153,8 @@ repos:
     rev: v3.12.0-2
     hooks:
       # Choose one of:
-      #- id: shfmt-docker # Docker image (requires Docker to run)
-      #- id: shfmt-src # build from source (requires/installs Go to build)
+      # - id: shfmt-docker # Docker image (requires Docker to run)
+      # - id: shfmt-src # build from source (requires/installs Go to build)
       - id: shfmt # prebuilt upstream executable
         args: [-i, '2', -ci]
 
@@ -173,7 +173,7 @@ repos:
 
   # Python
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.10
+    rev: v0.14.13
     hooks:
       # Run the linter.
       - id: ruff
@@ -214,7 +214,7 @@ repos:
           # - --tool=pylint # comment out if you get "pylint: astroid-error ..."
           - --tool=dodgy
   - repo: https://github.com/PyCQA/bandit
-    rev: 1.9.2
+    rev: '1.9.3'
     hooks:
       - id: bandit
         args: [-c, pyproject.toml]
@@ -241,13 +241,13 @@ repos:
     hooks:
       - id: dead
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.10
+    rev: v0.14.13
     hooks:
       # Run the formatter.
       - id: ruff-format
   - repo: https://github.com/python-poetry/poetry
     # see https://python-poetry.org/docs/master/pre-commit-hooks/#faq
-    rev: 2.2.1
+    rev: '2.3.1'
     hooks:
       - id: poetry-lock
       # NOTE: poetry-check complains about tools.poetry settings that can't
@@ -256,7 +256,7 @@ repos:
 
   # Poetry 2.0 removed poetry-export hook - see README.md in this repo
   - repo: https://github.com/python-poetry/poetry-plugin-export
-    rev: 1.9.0
+    rev: '1.10.0'
     hooks:
       - id: poetry-export
         args:
@@ -275,7 +275,7 @@ repos:
         types: [markdown]
         exclude: tests/
   - repo: https://github.com/executablebooks/mdformat
-    rev: 0.7.22
+    rev: '1.0.0'
     hooks:
       - id: mdformat
         args:
@@ -288,13 +288,11 @@ repos:
           - mdformat-config # json, toml, yaml
           - mdformat-frontmatter # for Markdown & YAML
           - mdformat-gfm # GitHub-flavored Markdown
-          - mdformat-tables # GitHub-flavored Markdown tables
           - mdformat-toc # generate table of contents
-          - setuptools # ModuleNotFoundError: No module named 'pkg_resources'
         exclude: styles/|tests/
 
   - repo: https://github.com/markdownlint/markdownlint
-    rev: v0.12.0
+    rev: v0.13.0
     hooks:
       - id: markdownlint
         args: [--style=.mdl-style.rb]
@@ -338,7 +336,7 @@ repos:
 
   # Docker
   - repo: https://github.com/hadolint/hadolint
-    rev: v1.22.1
+    rev: v2.14.0
     hooks:
       - id: hadolint
         args: ['--failure-threshold=info']
@@ -360,6 +358,17 @@ repos:
         stages: [manual, pre-commit]
 
   # Pre-commit
+  - repo: https://gitlab.com/vojko.pribudic.foss/pre-commit-update
+    rev: v0.9.0
+    hooks:
+      - id: pre-commit-update
+        files: .pre-commit-config.yaml
+        stages: [manual, pre-commit]
+        args:
+          - '--dry-run'
+          - '--keep=markdownlint' # Install too slow for pre-commit.ci
+          - '--verbose'
+          - '--warnings'
   - repo: meta
     hooks:
       - id: check-hooks-apply

@@ -198,6 +198,16 @@ reliabot = 'reliabot.reliabot:main'
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/dupuy/reliabot/issues"
 
+[tool.pre-commit-update]
+keep = ["markdownlint"]  # Compiling for install too slow for pre-commit.ci
+verbose = true
+warnings = true
+
+[tool.pre-commit-update.yaml]
+mapping = 4
+offset = 2
+sequence = 4
+
 [tool.ruff]
 line-length = 79
 

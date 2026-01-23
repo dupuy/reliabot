@@ -48,6 +48,9 @@ def test_one_input(data: bytes) -> None:
     except (ReaderError, YAMLError):
         # Expected errors for invalid YAML
         return
+    except ValueError:
+        # Expected error for invalid numerics (".")
+        return
     except (AssertionError, IndexError, RecursionError, TypeError):
         # "Unexpected" errors due to ruamel.yaml bugs, now handled
         return

@@ -162,7 +162,7 @@ pyre2-updated = [
 optional = true
 
 [tool.poetry.group.dev.dependencies]
-ruff = "^0.14.13"
+ruff = "^0.14.14"
 
 [tool.poetry.group.fuzz]
 optional = true

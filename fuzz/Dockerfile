@@ -89,5 +89,7 @@ RUN poetry install --with fuzz
 ENV ASAN_OPTIONS="allocator_may_return_null=1,detect_leaks=0,external_symbolizer_path=$CLANG_DIR/bin/llvm-symbolizer"
 
 COPY reliabot_fuzzer.py reliabot_fuzzer.py
+COPY reliabot.dict reliabot.dict
+COPY corpus corpus
 
-ENTRYPOINT ["python3", "reliabot_fuzzer.py"]
+ENTRYPOINT ["python3", "reliabot_fuzzer.py", "-dict=reliabot.dict", "corpus"]

@@ -6,7 +6,6 @@ Requires Python 3.11—3.12
 
 import sys
 import atheris
-import logging
 
 
 # Import Reliabot modules
@@ -27,18 +26,7 @@ def test_one_input(data: bytes) -> None:
     """Fuzz One Input."""
     fdp = atheris.FuzzedDataProvider(data)
 
-    # 1. Test Regex Matching with random string
-    # noinspection PyBroadException
-    try:
-        random_filename = fdp.ConsumeString(100)
-        if reliabot.ECOSYSTEM_REGEX:
-            reliabot.ECOSYSTEM_REGEX.fullmatch(random_filename)
-    except Exception:
-        # Regex errors should not happen if the regex is compiled correctly.
-        logging.error("Unexpected regex exception: %s", sys.exc_info())
-        # Continue testing for YAML parsing and validation errors
-
-    # 2. Test YAML parsing and validation
+    # 1. Test YAML parsing and validation
     remaining_bytes = fdp.ConsumeBytes(sys.maxsize)
 
     yaml = YAML(pure=reliabot.PURE)
@@ -49,7 +37,7 @@ def test_one_input(data: bytes) -> None:
         # Expected errors for invalid YAML
         return
     except ValueError:
-        # Expected error for invalid numerics (".")
+        # Expected error for invalid numerics ('.')
         return
     except (AssertionError, IndexError, RecursionError, TypeError):
         # "Unexpected" errors due to ruamel.yaml bugs, now handled
@@ -61,14 +49,27 @@ def test_one_input(data: bytes) -> None:
         # Unexpected errors in YAML parsing
         raise
 
+    # 2. Test Dependabot configuration validation
     if isinstance(config, (dict, reliabot.CommentedMap)):
         try:
             reliabot.validate_dependabot_config(config)
         except ValueError:
             # Expected validation errors
-            pass
+            return
         except Exception:
             raise
+
+        # 3. Test Dependabot configuration update
+        try:
+            ecos = {"/": {"npm"}}
+            reliabot.update_dependabot_config(config, ecos, keep_all)
+        except Exception:
+            raise
+
+
+def keep_all(_: str) -> bool:
+    """Keep all configuration."""
+    return True
 
 
 if __name__ == "__main__":

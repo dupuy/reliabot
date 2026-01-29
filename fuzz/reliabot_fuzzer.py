@@ -31,8 +31,9 @@ def test_one_input(data: bytes) -> None:
 
     yaml = YAML(pure=reliabot.PURE)
     try:
-        # We stick to the pure python parser as used in reliabot
-        config = yaml.load(remaining_bytes)
+        with reliabot.time_limit(30.0):
+            # We stick to the pure python parser as used in reliabot
+            config = yaml.load(remaining_bytes)
     except (ReaderError, YAMLError):
         # Expected errors for invalid YAML
         return
@@ -52,17 +53,33 @@ def test_one_input(data: bytes) -> None:
     # 2. Test Dependabot configuration validation
     if isinstance(config, (dict, reliabot.CommentedMap)):
         try:
-            reliabot.validate_dependabot_config(config)
+            with reliabot.time_limit(5.0):
+                reliabot.validate_dependabot_config(config)
         except ValueError:
             # Expected validation errors
             return
         except Exception:
             raise
 
-        # 3. Test Dependabot configuration update
+        # 3. Test Dependabot settings extraction from comments
         try:
-            ecos = {"/": {"npm"}}
-            reliabot.update_dependabot_config(config, ecos, keep_all)
+            settings = reliabot.extract_settings(
+                config, reliabot.EMITTER_SETTINGS | reliabot.EXCLUSIONS
+            )
+        except Exception:
+            raise
+
+        # 4. Test exclusions configuration
+        try:
+            reliabot.configure_exclusions(settings)
+        except Exception:
+            raise
+
+        # 5. Test Dependabot configuration update
+        try:
+            with reliabot.time_limit(10.0):
+                ecos = {"/": {"npm"}}
+                reliabot.update_dependabot_config(config, ecos, keep_all)
         except Exception:
             raise
 

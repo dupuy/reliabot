@@ -244,8 +244,8 @@ the `--self-test` argument:
 reliabot$ reliabot/reliabot.py --self-test 2>/dev/null | tail -5
    1 tests in __main__.usage
    4 tests in __main__.validate_dependabot_config
-147 tests in 41 items.
-147 passed and 0 failed.
+149 tests in 43 items.
+149 passed and 0 failed.
 Test passed.
 ```
 

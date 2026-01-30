@@ -122,6 +122,8 @@ repos:
     hooks:
       - id: editorconfig-checker
         alias: ec
+        # editorconfig Python installer relies on old setuptools API
+        language_version: '3.11'
 
   # YAML
   - repo: https://github.com/adrienverge/yamllint
@@ -149,6 +151,8 @@ repos:
     rev: v0.11.0.1
     hooks:
       - id: shellcheck
+        # shellcheck Python installer relies on old setuptools API
+        language_version: '3.11'
   - repo: https://github.com/scop/pre-commit-shfmt
     rev: v3.12.0-2
     hooks:
@@ -157,6 +161,8 @@ repos:
       # - id: shfmt-src # build from source (requires/installs Go to build)
       - id: shfmt # prebuilt upstream executable
         args: [-i, '2', -ci]
+        # shellfmt Python installer relies on old setuptools API
+        language_version: '3.11'
 
   # Go
   # - repo: https://github.com/syntaqx/git-hooks

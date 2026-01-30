@@ -107,7 +107,9 @@ updates:
 ```
 
 Here is the console output from running Reliabot to update an existing
-configuration in its own source sub-folder (copied from the root folder):
+configuration in its own source sub-folder (copied from the root folder). The
+`github-actions` and `docker` entries are removed because the `/.github` and
+`/fuzz` directories are not present in the copy.
 
 ```console
 reliabot$ rm -fr reliabot/.github && mkdir -p reliabot/.github reliabot/.git
@@ -116,6 +118,7 @@ reliabot$ grep -v keep= .github/dependabot.yml >reliabot/.github/dependabot.yml
 
 reliabot$ ./reliabot/reliabot.py reliabot
 Removed obsolete 'github-actions' entry in '/'
+Removed obsolete 'docker' entry in '/fuzz'
 Updating 'reliabot/.github/dependabot.yml'...
 reliabot$ cat -n reliabot/.github/dependabot.yml
  1	---
@@ -127,7 +130,7 @@ reliabot$ cat -n reliabot/.github/dependabot.yml
  7	  - directory: /
  8	    package-ecosystem: pip
  9	    schedule:
- 10	        interval: daily
+ 10	        interval: weekly
 ```
 
 ## Installation

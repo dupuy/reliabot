@@ -21,28 +21,22 @@ in the `testdir` hierarchy that cannot be added to the Git repository:
 
 from __future__ import annotations
 
+import _thread
+import contextlib
 import os
 import subprocess
 import sys
+import threading
 import traceback
 import warnings
 from collections import defaultdict
 from enum import IntEnum
-from io import SEEK_SET
-from io import StringIO
-from os.path import basename
-from os.path import exists
-from os.path import isdir
-from os.path import join
-from os.path import split
-from typing import Any
-from typing import TextIO
-from typing import TYPE_CHECKING
+from io import SEEK_SET, StringIO
+from os.path import basename, exists, isdir, join, split
+from typing import Any, TextIO, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
-    from collections.abc import Iterable
-    from collections.abc import Iterator
+    from collections.abc import Callable, Iterable, Iterator
 
 
 class Err(IntEnum):
@@ -53,6 +47,10 @@ class Err(IntEnum):
     CONFIG = 3  # Invalid Dependabot (or pre-commit) configuration in file.
     UPDATED = 4  # Dependabot configuration was or would be modified.
     INTERNAL = 9  # You found a bug in this program!
+
+
+class TimeLimitError(Exception):
+    """Exception raised when a time limit is exceeded."""
 
 
 def usage() -> None:
@@ -103,6 +101,47 @@ def dedup_warn(message: str, key: str | None = None) -> None:
         print(message, file=sys.stderr)
         if key:
             WARN_KEYS.add(key)
+
+
+@contextlib.contextmanager
+def time_limit(seconds: float) -> Iterator[None]:
+    """Context manager to raise TimeLimitError after *seconds* seconds.
+
+    For portability, uses _thread.interrupt_main() to raise KeyboardInterrupt,
+    rather than using POSIX signals, so only works in the main thread.
+
+    Timeouts may be blocked in certain system calls or other situations, see
+    https://github.com/python/cpython/issues/80719 for one example.
+
+    TODO: use https://pypi.org/project/stopit/ to support non-main thread
+
+    :param seconds: number of seconds after which to raise TimeLimitError.
+
+    >>> import time
+    >>> try:
+    ...     with time_limit(0.2):
+    ...         # Busy loop to ensure interruption
+    ...         end = time.time() + 1.0
+    ...         while time.time() < end:
+    ...             pass  # busy loop since may not interrupt sleep() call
+    ... except TimeLimitError:
+    ...     print("Timed out!")
+    Timed out!
+    """
+    if threading.current_thread() != threading.main_thread():
+        not_main_thread = "Timelimit context manager only works in main thread"
+        raise NotImplementedError(not_main_thread)
+    timer = threading.Timer(seconds, _thread.interrupt_main)
+    timer.start()
+    try:
+        yield
+    except KeyboardInterrupt:
+        if not timer.is_alive():
+            msg = f"Time limit of {seconds} seconds exceeded."
+            raise TimeLimitError(msg) from None
+        raise
+    finally:
+        timer.cancel()
 
 
 RE2 = False
@@ -156,11 +195,10 @@ except ModuleNotFoundError as module_not_found:
         debug_hint=False,
     )
 else:
-    from ruamel.yaml.comments import CommentedMap
-    from ruamel.yaml.comments import CommentedSeq
+    from ruamel.yaml.comments import CommentedMap, CommentedSeq
+    from ruamel.yaml.error import YAMLError
     from ruamel.yaml.parser import ParserError
     from ruamel.yaml.reader import ReaderError
-    from ruamel.yaml.error import YAMLError
 
 DOT_YAML = r"[.]ya?ml"
 DOT_YAML_REGEX = re.compile(rf"{DOT_YAML}$")  # used for search, not full match
@@ -234,7 +272,7 @@ GITHUB_ACTIONS = b"github-actions"
 GITHUB_DEPENDABOT = join(GITHUB, DEPENDABOT_CONFIG)
 GITHUB_WORKFLOWS = join(GITHUB, b"workflows")
 
-GIT_CMD = "/usr/bin/git"
+GIT_CMD = "/usr/bin/git" if os.name == "posix" else "git"
 GIT_DIR = b".git"
 GIT_LS = [GIT_CMD, "ls-files"]
 
@@ -310,6 +348,9 @@ def main(optargv: list[str] | None = None) -> int:
             return OPT_USES_MAP[argv[1]]()
         elif argv[1].startswith("-"):
             dedup_warn(f"Unknown option '{argv[1]}'", argv[1])
+            if "_" in argv[1]:  # this is an easy error to make and hard to see
+                use_dashes = argv[1].replace("_", "-")
+                dedup_warn(f"  Did you mean '{use_dashes}'?", use_dashes)
             usage()
 
         if len(argv) != 2:
@@ -359,8 +400,7 @@ def main(optargv: list[str] | None = None) -> int:
             dedup_warn("Configuration parse error (bad top level?)")
             return Err.CONFIG
 
-        # TODO(once 3.8 is EOL): EMITTER_SETTINGS | EXCLUSIONS
-        settings = extract_settings(conf, {**EMITTER_SETTINGS, **EXCLUSIONS})
+        settings = extract_settings(conf, EMITTER_SETTINGS | EXCLUSIONS)
 
         exclude = configure_exclusions(settings)
 
@@ -434,7 +474,13 @@ def load_dependabot_config(config_yml: bytes) -> CommentedMap:
     {'version': 2, 'updates': [{'package-ecosystem': ...
     """
     with open(config_yml, encoding="utf-8") as dependabot_file:
-        config = YAML(pure=PURE).load(dependabot_file)
+        try:
+            with time_limit(15.0):
+                config = YAML(pure=PURE).load(dependabot_file)
+        except TimeLimitError:
+            # decode bytes filename for f-string
+            msg = f"Configuration parse timed out for '{fsdecode(config_yml)}'"
+            raise ValueError(msg) from None
     if not isinstance(config, (CommentedMap, dict)):
         msg = f"'{dependabot_file}' is a {type(config)}, not a map"
         raise ValueError(msg)

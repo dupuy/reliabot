@@ -173,7 +173,7 @@ repos:
 
   # Python
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.14
+    rev: v0.14.13
     hooks:
       # Run the linter.
       - id: ruff
@@ -241,7 +241,7 @@ repos:
     hooks:
       - id: dead
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.14
+    rev: v0.14.13
     hooks:
       # Run the formatter.
       - id: ruff-format

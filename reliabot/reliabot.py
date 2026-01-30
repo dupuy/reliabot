@@ -24,6 +24,7 @@ from __future__ import annotations
 import _thread
 import contextlib
 import os
+import signal
 import subprocess
 import sys
 import threading
@@ -37,6 +38,7 @@ from typing import Any, TextIO, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterable, Iterator
+    from types import FrameType
 
 
 class Err(IntEnum):
@@ -107,13 +109,12 @@ def dedup_warn(message: str, key: str | None = None) -> None:
 def time_limit(seconds: float) -> Iterator[None]:
     """Context manager to raise TimeLimitError after *seconds* seconds.
 
-    For portability, uses _thread.interrupt_main() to raise KeyboardInterrupt,
-    rather than using POSIX signals, so only works in the main thread.
+    For portability, uses signal.setitimer() and signal.SIGALRM on POSIX systems,
+    and _thread.interrupt_main() to raise KeyboardInterrupt on others.
+    Because of this, it only works in the main thread.
 
     Timeouts may be blocked in certain system calls or other situations, see
     https://github.com/python/cpython/issues/80719 for one example.
-
-    TODO: use https://pypi.org/project/stopit/ to support non-main thread
 
     :param seconds: number of seconds after which to raise TimeLimitError.
 
@@ -128,20 +129,36 @@ def time_limit(seconds: float) -> Iterator[None]:
     ...     print("Timed out!")
     Timed out!
     """
+    # TODO: use https://pypi.org/project/stopit/ to support non-main thread
     if threading.current_thread() != threading.main_thread():
         not_main_thread = "Timelimit context manager only works in main thread"
         raise NotImplementedError(not_main_thread)
-    timer = threading.Timer(seconds, _thread.interrupt_main)
-    timer.start()
-    try:
-        yield
-    except KeyboardInterrupt:
-        if not timer.is_alive():
-            msg = f"Time limit of {seconds} seconds exceeded."
-            raise TimeLimitError(msg) from None
-        raise
-    finally:
-        timer.cancel()
+
+    timeout_error = f"Exceeded time limit of {seconds} seconds"
+    if hasattr(signal, "setitimer"):
+
+        def handler(_signum: int, _frame: FrameType | None) -> None:
+            raise TimeLimitError(timeout_error)
+
+        old_handler = signal.signal(signal.SIGALRM, handler)
+        signal.setitimer(signal.ITIMER_REAL, seconds)
+        try:
+            yield
+        finally:
+            signal.setitimer(signal.ITIMER_REAL, 0)
+            signal.signal(signal.SIGALRM, old_handler)
+
+    else:
+        timer = threading.Timer(seconds, _thread.interrupt_main)
+        timer.start()
+        try:
+            yield
+        except KeyboardInterrupt:
+            if not timer.is_alive():
+                raise TimeLimitError(timeout_error) from None
+            raise
+        finally:
+            timer.cancel()
 
 
 RE2 = False

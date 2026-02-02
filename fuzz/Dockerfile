@@ -3,7 +3,8 @@
 
 # Debian 12 (Bookworm) has Python 3.11, while 13 (Trixie) has Python 3.13,
 # unsupported by Atheris as of January 2026.
-FROM debian:12.13-slim
+# Pinned to debian:12.13-slim
+FROM debian@sha256:56ff6d36d4eb3db13a741b342ec466f121480b5edded42e4b7ee850ce7a418ee
 
 SHELL ["/bin/bash", "-eu", "-o", "pipefail", "-c"]
 
@@ -33,21 +34,27 @@ RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 ARG TARGETARCH
-ENV ARCH_amd64="x86_64"
-ENV SUFFIX_amd64="-${ARCH_amd64}-linux-gnu.tar.xz"
-ENV ARCH_arm64="aarch64"
-ENV SUFFIX_arm64="-${ARCH_arm64}-linux-gnu.tar.xz"
-# TODO: select CLANG_URL and CLANG_CHECKSUM values based on TARGETARCH
-
-ARG CLANG_URL=https://github.com/llvm/llvm-project/releases/download/llvmorg-17.0.6/clang+llvm-17.0.6-aarch64-linux-gnu.tar.xz
-ARG CLANG_CHECKSUM=6dd62762285326f223f40b8e4f2864b5c372de3f7de0731cb7cd55ca5287b75a
+ARG CLANG_VERSION=17.0.6
+ARG CLANG_URL_amd64=https://github.com/llvm/llvm-project/releases/download/llvmorg-${CLANG_VERSION}/clang+llvm-${CLANG_VERSION}-x86_64-linux-gnu-ubuntu-22.04.tar.xz
+ARG CLANG_CHECKSUM_amd64=884ee67d647d77e58740c1e645649e29ae9e8a6fe87c1376be0f3a30f3cc9ab3
+ARG CLANG_URL_arm64=https://github.com/llvm/llvm-project/releases/download/llvmorg-${CLANG_VERSION}/clang+llvm-${CLANG_VERSION}-aarch64-linux-gnu.tar.xz
+ARG CLANG_CHECKSUM_arm64=6dd62762285326f223f40b8e4f2864b5c372de3f7de0731cb7cd55ca5287b75a
 ENV CLANG_FILE=clang.tar.xz
 
 # Note that **two** spaces between checksum and file are significant:
 # "a line with: checksum, a space, a character indicating input mode
 # ('*' for binary, ' ' for text or where binary is insignificant),
 # and name for each FILE".
-RUN wget -q -O "$CLANG_FILE" "$CLANG_URL" && \
+RUN if [ "$TARGETARCH" = "amd64" ]; then \
+    CLANG_URL=$CLANG_URL_amd64; \
+    CLANG_CHECKSUM=$CLANG_CHECKSUM_amd64; \
+    elif [ "$TARGETARCH" = "arm64" ]; then \
+    CLANG_URL=$CLANG_URL_arm64; \
+    CLANG_CHECKSUM=$CLANG_CHECKSUM_arm64; \
+    else \
+    echo "Unsupported architecture: $TARGETARCH" && exit 1; \
+    fi && \
+    wget -q -O "$CLANG_FILE" "$CLANG_URL" && \
     echo "$CLANG_CHECKSUM  $CLANG_FILE" | sha256sum --check - && \
     tar xf "$CLANG_FILE" -C "$CLANG_DIR" --strip-components 1 && \
     rm $CLANG_FILE

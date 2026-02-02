@@ -252,7 +252,7 @@ repos:
       # Run the formatter.
       - id: ruff-format
   - repo: https://github.com/python-poetry/poetry
-    # see https://python-poetry.org/docs/master/pre-commit-hooks/#faq
+    # see https://python-poetry.org/docs/pre-commit-hooks/#faq
     rev: '2.3.1'
     hooks:
       - id: poetry-lock
@@ -295,7 +295,7 @@ repos:
           - mdformat-frontmatter # for Markdown & YAML
           - mdformat-gfm # GitHub-flavored Markdown
           - mdformat-toc # generate table of contents
-        exclude: styles/|tests/
+        exclude: docs/CHANGELOG-.*|styles/|tests/
 
   - repo: https://github.com/markdownlint/markdownlint
     rev: v0.13.0

@@ -101,7 +101,7 @@ repos:
 
   # Global
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v3.1.0
+    rev: v4.0.0-alpha.8
     hooks:
       - id: prettier
         args: [--single-quote]
@@ -253,7 +253,7 @@ repos:
       - id: ruff-format
   - repo: https://github.com/python-poetry/poetry
     # see https://python-poetry.org/docs/master/pre-commit-hooks/#faq
-    rev: '2.3.1'
+    rev: '2.3.2'
     hooks:
       - id: poetry-lock
       # NOTE: poetry-check complains about tools.poetry settings that can't
@@ -298,7 +298,7 @@ repos:
         exclude: styles/|tests/
 
   - repo: https://github.com/markdownlint/markdownlint
-    rev: v0.13.0
+    rev: v0.15.0
     hooks:
       - id: markdownlint
         args: [--style=.mdl-style.rb]

@@ -70,7 +70,7 @@ major minor patch prerelease release: has-git-cliff has-poetry
 	sed '/^# C/,/^releases/d' "$${CHANGELOG}" >>"$${CHANGELOG_TMP}" && \
 	echo "[$${RELEASE#v}]: $(COMPARE)/$${LAST}..$${RELEASE}"           \
 	  >>"$${CHANGELOG_TMP}" &&                                         \
-	mv "$${CHANGELOG_TMP}" "$${CHANGELOG}" &&                          \
+	uniq <"$${CHANGELOG_TMP}" >"$${CHANGELOG}" &&                          \
 	ln -sf "$${CHANGELOG}" CHANGELOG.md
 	git add docs/CHANGELOG-*.md
 	-pre-commit run mdformat poetry-lock

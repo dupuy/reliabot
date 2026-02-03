@@ -119,15 +119,13 @@ def time_limit(seconds: float) -> Iterator[None]:
     :param seconds: number of seconds after which to raise TimeLimitError.
 
     >>> import time
-    >>> try:
-    ...     with time_limit(0.2):
-    ...         # Busy loop to ensure interruption
-    ...         end = time.time() + 1.0
-    ...         while time.time() < end:
-    ...             pass  # busy loop since may not interrupt sleep() call
-    ... except TimeLimitError:
-    ...     print("Timed out!")
-    Timed out!
+    >>> with time_limit(0.2):  # doctest: +IGNORE_EXCEPTION_DETAIL
+    ...     # Busy loop to ensure interruption
+    ...     end = time.time() + 1.0
+    ...     while time.time() < end:
+    ...         pass  # busy loop since may not interrupt sleep() call
+    Traceback (most recent call last):
+    TimeLimitError: ...
     """
     # TODO: use https://pypi.org/project/stopit/ to support non-main thread
     if threading.current_thread() != threading.main_thread():

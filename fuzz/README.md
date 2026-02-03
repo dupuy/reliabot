@@ -49,6 +49,7 @@ Since Atheris requires a specific Clang setup, using Docker may be easier.
    docker buildx build \
        --tag reliabot-fuzz \
        --attest type=provenance,mode=max,version=v1 \
+       --platform linux/amd64,linux/arm64 \
        fuzz
    ```
 

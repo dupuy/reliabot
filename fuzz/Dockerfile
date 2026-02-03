@@ -59,9 +59,13 @@ RUN if [ "$TARGETARCH" = "amd64" ]; then \
     tar xf "$CLANG_FILE" -C "$CLANG_DIR" --strip-components 1 && \
     rm $CLANG_FILE
 
+COPY requirements.txt requirements.txt
+
 # https://github.com/google/atheris#building-from-source
-RUN LIBFUZZER_LIB=$($CLANG_DIR/bin/clang -print-file-name=libclang_rt.fuzzer_no_main.a) \
-    python3 -m pip install --no-cache-dir --no-binary atheris atheris==3.0.0
+RUN LIBFUZZER_LIB=$($CLANG_DIR/bin/clang \
+        -print-file-name=libclang_rt.fuzzer_no_main.a) \
+      python3 -m pip install --no-binary=atheris --no-cache-dir --no-deps \
+        --require-hashes -r requirements.txt
 
 # https://github.com/google/atheris/blob/master/native_extension_fuzzing.md#step-1-compiling-your-extension
 ENV CC="$CLANG_DIR/bin/clang"
@@ -69,9 +73,6 @@ ENV CFLAGS="-fsanitize=address,undefined,fuzzer-no-link"
 ENV CXX="$CLANG_DIR/bin/clang++"
 ENV CXXFLAGS="-fsanitize=address,undefined,fuzzer-no-link"
 ENV LDSHARED="$CLANG_DIR/bin/clang -shared"
-
-# Install poetry for further operations
-RUN python3 -m pip install --no-cache-dir poetry==2.3.0
 
 ARG OWNER=github.com/dupuy
 ARG REPO=reliabot
@@ -84,7 +85,7 @@ RUN git clone \
     https://${OWNER}/${REPO}.git
 
 WORKDIR ${APP_DIR}/${REPO}
-RUN poetry install --with fuzz
+RUN pip install --no-cache-dir --no-deps .
 
 # Allow Atheris to find fuzzer sanitizer shared libs
 # https://github.com/google/atheris/blob/master/native_extension_fuzzing.md#option-a-sanitizerlibfuzzer-preloads

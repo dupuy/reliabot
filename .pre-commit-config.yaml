@@ -253,7 +253,7 @@ repos:
       - id: ruff-format
   - repo: https://github.com/python-poetry/poetry
     # see https://python-poetry.org/docs/pre-commit-hooks/#faq
-    rev: '2.3.1'
+    rev: '2.3.2'
     hooks:
       - id: poetry-lock
       # NOTE: poetry-check complains about tools.poetry settings that can't

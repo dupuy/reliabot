@@ -290,6 +290,7 @@ jobs:
 
     # No draft for push; that uses artifact and draft release from pull_request.
     if: >
+      false &&
       github.event_name == 'pull_request' &&
       github.repository == 'dupuy/reliabot'
     env:

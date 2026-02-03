@@ -29,3 +29,7 @@ updates:
     package-ecosystem: docker
     schedule:
       interval: monthly
+  - directory: /fuzz
+    package-ecosystem: pip
+    schedule:
+      interval: monthly

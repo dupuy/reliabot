@@ -1,0 +1,7 @@
+# Input for pip-compile to generate hashed requirements
+
+# For fuzzing
+atheris==3.0.0
+
+# From ../reliabot/requirements.txt
+ruamel-yaml==0.19.1

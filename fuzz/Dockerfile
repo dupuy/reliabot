@@ -4,7 +4,7 @@
 # Debian 12 (Bookworm) has Python 3.11, while 13 (Trixie) has Python 3.13,
 # unsupported by Atheris as of January 2026.
 # Pinned to debian:12.13-slim
-FROM debian@sha256:56ff6d36d4eb3db13a741b342ec466f121480b5edded42e4b7ee850ce7a418ee
+FROM debian@sha256:5cf544fad978371b3df255b61e209b373583cb88b733475c86e49faa15ac2104
 
 SHELL ["/bin/bash", "-eu", "-o", "pipefail", "-c"]
 

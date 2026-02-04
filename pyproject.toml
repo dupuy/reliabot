@@ -205,7 +205,7 @@ verbose = true
 warnings = true
 
 [tool.pre-commit-update.yaml]
-mapping = 4
+mapping = 2
 offset = 2
 sequence = 4
 

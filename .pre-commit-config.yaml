@@ -54,26 +54,26 @@ repos:
     hooks:
       # prettier-ignore
       - files: >-
-            (?x)(^|/)(
-              gem(s[.]rb|file)|[\w.-]*[.]gemspec|
-              cargo[.]toml|
-              composer[.]json|
-              (?i:[\w.-]*dockerfile[\w.-]*|values[\w.-]*[.]ya?ml)|
-              elm(-package)?[.]json|
-              action[.]yml|
-              [.]gitmodules|
-              go[.]mod|
-              build[.]gradle([.]kts)?|
-              mix[.]exs|
-              pom[.]xml|
-              package[.]json|
-              nuget[.]config|
-              requirements[.]txt|pyproject[.]toml|
-              pubspec[.]yaml|
-              \w[\w.-]*[.](?:hcl|tf)|
-              [.]github/workflows/[^/]*[.]ya?ml|
-              [.]github/dependabot[.]yml
-              )$
+          (?x)(^|/)(
+            gem(s[.]rb|file)|[\w.-]*[.]gemspec|
+            cargo[.]toml|
+            composer[.]json|
+            (?i:[\w.-]*dockerfile[\w.-]*|values[\w.-]*[.]ya?ml)|
+            elm(-package)?[.]json|
+            action[.]yml|
+            [.]gitmodules|
+            go[.]mod|
+            build[.]gradle([.]kts)?|
+            mix[.]exs|
+            pom[.]xml|
+            package[.]json|
+            nuget[.]config|
+            requirements[.]txt|pyproject[.]toml|
+            pubspec[.]yaml|
+            \w[\w.-]*[.](?:hcl|tf)|
+            [.]github/workflows/[^/]*[.]ya?ml|
+            [.]github/dependabot[.]yml
+            )$
         id: reliabot
         additional_dependencies:
           - ruamel.yaml
@@ -370,7 +370,6 @@ repos:
         files: .pre-commit-config.yaml
         stages: [manual, pre-commit]
         args:
-          - '--dry-run'
           - '--keep=markdownlint' # Install too slow for pre-commit.ci
           - '--verbose'
           - '--warnings'
@@ -386,7 +385,8 @@ repos:
       - id: check-docstring-keywords
         name: Check docstring keywords
         language: pygrep
-        entry: ^\s+:((arg(ument)?|[ci]var|except(ion)?|raise)|(return|(r|var)?type):)\s
+        entry: >-
+          ^\s+:((arg(ument)?|[ci]var|except(ion)?|raise)|(return|(r|var)?type):)\s
         types: [python]
       # No parameter for returns, exactly 1 for param, raises and var.
       - id: check-docstring-keyword-usage

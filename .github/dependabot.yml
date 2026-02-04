@@ -1,5 +1,5 @@
 ---
-# reliabot: mapping=4 offset=2 sequence=4
+# reliabot: mapping=2 offset=2 sequence=4
 # reliabot: keep=. # this is mostly for test coverage (as is ./ in next)
 # reliabot: ignore=./reliabot # already tracked in repository root
 # reliabot: ignore=testdir/

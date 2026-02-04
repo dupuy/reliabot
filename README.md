@@ -336,7 +336,7 @@ modifying `ruamel.yaml`’s `mapping`, `offset`, and `sequence` settings:
 
 ```
 ---
-# reliabot: mapping=4
+# reliabot: mapping=2
 # reliabot: offset=2 sequence=4
 ```
 
@@ -395,7 +395,7 @@ If any indentation setting appears more than once, Reliabot uses the last one.
 If you need more control of the formatting of `.pre‑commit-config.yaml`, it's
 best to configure pre-commit to use a YAML formatter like one of these:
 
-- [prettier][15]
+- [prettier][15] (use mapping=2 offset=2 sequence=4 for compatibility)
 - [Golang `yamlfmt`][16]
 - [Python `yamlfmt`][17] (also uses `ruamel.yaml` and its configuration
   settings).
@@ -420,14 +420,14 @@ Reliabot adds this line to `dependabot.yml` if you leave it out—if that's a
 problem, you can have Reliabot remove it instead, by adding a Reliabot comment
 like the following at the start of `dependabot.yml`:
 
-Reliabot always removes YAML “document end” lines with three dots (`...`) at
-the end of a `dependabot.yml` file as these files have no reason to use one.
-
 ```
 # reliabot: yaml-start=off
 ```
 
 If the YAML start setting appears more than once, Reliabot uses the last one.
+
+Reliabot always removes YAML “document end” lines with three dots (`...`) at
+the end of a `dependabot.yml` file as these files have no reason to use one.
 
 ### YAML version
 

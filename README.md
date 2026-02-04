@@ -107,9 +107,9 @@ updates:
 ```
 
 Here is the console output from running Reliabot to update an existing
-configuration in its own source sub-folder (copied from the root folder). The
-`github-actions` and `docker` entries are removed because the `/.github` and
-`/fuzz` directories are not present in the copy.
+configuration in a sub-folder of its own source (copied from the root folder).
+Reliabot removes the `github-actions` and `docker` entries because the
+`/.github` and `/fuzz` directories are missing from the copy.
 
 ```console
 reliabot$ rm -fr reliabot/.github && mkdir -p reliabot/.github reliabot/.git

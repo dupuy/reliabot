@@ -1,6 +1,7 @@
 Atheris
 BSD
 CFG
+Codacy
 Dockerfile
 INI
 Keybase

@@ -40,9 +40,6 @@ jobs:
       - name: 'Run tests with coverage'
         run: 'poetry run tox -e py'
 
-      - name: 'Generate XML Cobertura coverage'
-        run: 'coverage xml -o cobertura.xml'
-
       - name: 'Run codacy-coverage-reporter'
         uses: codacy/codacy-coverage-reporter-action@89d6c85cfafaec52c72b6c5e8b2878d33104c699 # v1.3.0
         with:

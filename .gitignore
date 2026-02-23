@@ -14,6 +14,7 @@ dist/
 .coverage
 .mypy.cache/
 .tox/
+cobertura.xml
 *.md.sh
 
 # MacOS

@@ -16,9 +16,9 @@
 # m shell-compatible name to protect against a compromised action or workflow
 # exploiting this environment variable by overriding the poetry-computed value.
 #
-# THe TESTS job uses `git describe` to compute another variable (COMMIT_TAG)
+# The TESTS job uses `git describe` to compute another variable (COMMIT_TAG)
 # that is not an output. Its value can be the current VERSION_TAG ("v1.2.3") or
-# a previous VERSION_TAG followed by '-', the number of commits made since, and
+# a previous VERSION_TAG followed by '-', the number of further commits, and
 # a short commit hash, like this: 'v1.2.3-13-ca11ab1e'. The latter indicates an
 # "interim" (untagged) commit, and can be distinguished from a pre-release tag
 # like `v1.2.3-rc.5' by the presence of a second '-'.

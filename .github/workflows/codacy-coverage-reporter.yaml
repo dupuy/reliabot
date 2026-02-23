@@ -3,6 +3,10 @@
 name: 'Codacy Coverage Reporter'
 on: [push]
 
+# Declare default permissions as read only.
+permissions:
+  contents: read
+
 jobs:
   codacy-coverage-reporter:
     runs-on: ubuntu-24.04

@@ -1,0 +1,47 @@
+# Source repository: https://github.com/codacy/codacy-coverage-reporter-action/blob/master/README.md#uploading-coverage-to-codacy
+
+name: 'Codacy Coverage Reporter'
+on: [push]
+
+jobs:
+  codacy-coverage-reporter:
+    runs-on: ubuntu-24.04
+    name: codacy-coverage-reporter
+    steps:
+      - name: 'Harden runner'
+        uses: step-security/harden-runner@5ef0c079ce82195b2a36a210272d6b661572d83e # v2.14.2
+        with:
+          disable-sudo: true
+          egress-policy: audit
+          allowed-endpoints: >
+            github.com:443
+
+      - name: 'Checkout repository'
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: 'Install Poetry'
+        run: 'pipx install poetry'
+
+      - name: 'Set up Python'
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: '3.12'
+          cache: 'poetry'
+
+      - name: 'Install dependencies with extras'
+        run: 'poetry install --extras re2 --with testing'
+
+      - name: 'Run tests with coverage'
+        run: 'poetry run tox -e py'
+
+      - name: 'Generate XML Cobertura coverage'
+        run: 'coverage xml -o cobertura.xml'
+
+      - name: 'Run codacy-coverage-reporter'
+        uses: codacy/codacy-coverage-reporter-action@89d6c85cfafaec52c72b6c5e8b2878d33104c699 # v1.3.0
+        with:
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          language: Python
+          coverage-reports: 'cobertura.xml'

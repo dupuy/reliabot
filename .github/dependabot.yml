@@ -8,7 +8,7 @@ updates:
   - directory: /
     package-ecosystem: pip
     schedule:
-      interval: weekly
+      interval: monthly
   - directory: /
     package-ecosystem: github-actions
     schedule:

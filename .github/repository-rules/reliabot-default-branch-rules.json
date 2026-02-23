@@ -60,6 +60,10 @@
           {
             "context": "pre-commit.ci - pr",
             "integration_id": 68672
+          },
+          {
+            "context": "Codacy Static Code Analysis",
+            "integration_id": 56611
           }
         ]
       }

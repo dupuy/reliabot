@@ -1,3 +1,4 @@
+---
 # See https://pre-commit.com/ - to use these pre-commit (and commit-msg) hooks:
 #   $ brew install pre-commit  OR  $ pip install pre-commit
 # Then, in this repository:
@@ -104,7 +105,7 @@ repos:
     hooks:
       - id: prettier
         args: [--single-quote]
-        exclude: testdir/github/action[.]yml|styles/
+        exclude: fuzz/corpus|styles/|testdir/github/action[.]yml
         exclude_types: [markdown]
   - repo: https://github.com/codespell-project/codespell
     rev: v2.4.1
@@ -143,7 +144,7 @@ repos:
                 truthy: { check-keys: false}
               }
             }
-        exclude: styles|testdir/github/action[.]yml
+        exclude: fuzz/corpus|styles/|testdir/github/action[.]yml
 
   # Shell
   - repo: https://github.com/shellcheck-py/shellcheck-py

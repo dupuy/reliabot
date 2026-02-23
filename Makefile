@@ -1,5 +1,5 @@
-TARGETS := all build clean devtools major minor patch prerelease release \
-	    tests uninstall uninstall-pipx update words
+TARGETS := all build clean corpus devtools major minor patch \
+	    prerelease release tests uninstall uninstall-pipx update words
 TOOLS := git-cliff poetry tox vale
 TOOL_DIR := ${HOME}/.local/bin
 
@@ -14,6 +14,7 @@ _:
 	$(echo) "- $(ALL)"
 	$(echo) "- $(BUILD)"
 	$(echo) "- $(CLEAN)"
+	$(echo) "- $(CORPUS)"
 	$(echo) "- $(DEVTOOLS)"
 	$(echo) "- $(MAJOR)"
 	$(echo) "- $(MINOR)"
@@ -39,6 +40,21 @@ build:
 CLEAN= clean - Remove (generated) files ignored by Git
 clean:
 	git clean -diX
+
+CORPUS= corpus - update fuzzing corpus
+FUZZ=fuzz/corpus/
+corpus: $(FUZZ)github.dependabot.yml $(FUZZ)pre-commit-config.yaml \
+	$(FUZZ)testdir.configured.github.dependabot.yml \
+	$(FUZZ)testdir.github.action.yml
+$(FUZZ)github.dependabot.yml: .github/dependabot.yml
+	cp $< $@
+$(FUZZ)pre-commit-config.yaml: .pre-commit-config.yaml
+	cp $< $@
+$(FUZZ)testdir.configured.github.dependabot.yml: \
+	 testdir/configured/.github/dependabot.yml
+	cp $< $@
+$(FUZZ)testdir.github.action.yml: testdir/github/action.yml
+	cp $< $@
 
 DEVTOOLS= devtools - Install all development and documentation tools
 devtools: $(TOOLS)

@@ -1,10 +1,9 @@
+[![Codacy coverage](https://app.codacy.com/project/badge/Coverage/4668d53bee4f45c394437197d2e20c01)](https://app.codacy.com/gh/dupuy/reliabot/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
 [![Codacy grade](https://app.codacy.com/project/badge/Grade/4668d53bee4f45c394437197d2e20c01)](https://app.codacy.com/gh/dupuy/reliabot/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![CodeQL status](https://github.com/dupuy/reliabot/workflows/CodeQL/badge.svg)](https://github.com/dupuy/reliabot/security/)
 [![OpenSSF scorecard](https://api.securityscorecards.dev/projects/github.com/dupuy/reliabot/badge)](https://securityscorecards.dev/viewer/?uri=github.com/dupuy/reliabot)
-[![OpenSSF best practices](https://www.bestpractices.dev/projects/8459/badge)](https://www.bestpractices.dev/projects/8459)
 \
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/dupuy/reliabot/main.svg)](https://results.pre-commit.ci/latest/github/dupuy/reliabot/main)
-[![pre-commit enabled](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/dupuy/reliabot.svg)](http://isitmaintained.com/project/dupuy/reliabot "Average time to resolve an issue")
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/dupuy/reliabot.svg)](http://isitmaintained.com/project/dupuy/reliabot "Percentage of issues still open")
 \

@@ -1,7 +1,9 @@
 # Source repository: https://github.com/codacy/codacy-coverage-reporter-action/blob/master/README.md#uploading-coverage-to-codacy
 
 name: 'Codacy Coverage Reporter'
-on: [push]
+on:
+  - pull_request_target
+  - push
 
 # Declare default permissions as read only.
 permissions:
@@ -11,6 +13,8 @@ jobs:
   codacy-coverage-reporter:
     runs-on: ubuntu-24.04
     name: codacy-coverage-reporter
+    # Only run on primary fork, since this requires a Codacy project token
+    if: github.repository == 'dupuy/reliabot'
     steps:
       - name: 'Harden runner'
         uses: step-security/harden-runner@5ef0c079ce82195b2a36a210272d6b661572d83e # v2.14.2

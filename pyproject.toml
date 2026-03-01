@@ -175,7 +175,7 @@ atheris = "^3.0.0"
 optional = true
 
 [tool.poetry.group.testing.dependencies]
-tox = "^4.44.0"
+tox = "^4.46.3"
 
 [tool.poetry.extras]
 # NOTE: Original pyre2 no longer supported as Python >= 3.10 is now required

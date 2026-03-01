@@ -1,4 +1,3 @@
----
 # See https://pre-commit.com/ - to use these pre-commit (and commit-msg) hooks:
 #   $ brew install pre-commit  OR  $ pip install pre-commit
 # Then, in this repository:
@@ -179,7 +178,7 @@ repos:
 
   # Python
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.2
+    rev: v0.15.4
     hooks:
       # Run the linter.
       - id: ruff
@@ -220,7 +219,7 @@ repos:
           # - --tool=pylint # comment out if you get "pylint: astroid-error ..."
           - --tool=dodgy
   - repo: https://github.com/PyCQA/bandit
-    rev: '1.9.3'
+    rev: '1.9.4'
     hooks:
       - id: bandit
         args: [-c, pyproject.toml]
@@ -247,7 +246,7 @@ repos:
     hooks:
       - id: dead
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.2
+    rev: v0.15.4
     hooks:
       # Run the formatter.
       - id: ruff-format

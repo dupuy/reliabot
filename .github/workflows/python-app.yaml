@@ -325,7 +325,7 @@ jobs:
 
       - name: 'Create draft release and upload artifacts'
         if: env.pr-tag == 'true'
-        uses: ncipollo/release-action@b7eabc95ff50cbeeedec83973935c8f306dfcd0b # v1.20.0
+        uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
         with:
           allowUpdates: true
           artifactErrorsFailBuild: true
@@ -455,7 +455,7 @@ jobs:
 
       - name: 'Publish GitHub pre-release'
         if: env.pr-release == 'false' && env.pr-tag == 'true'
-        uses: ncipollo/release-action@b7eabc95ff50cbeeedec83973935c8f306dfcd0b # v1.20.0
+        uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
         with:
           allowUpdates: true
           commit: '${{ github.ref }}' # This only generates a non-annotated tag.
@@ -491,7 +491,7 @@ jobs:
 
       - name: 'Publish GitHub release'
         if: env.pr-release == 'true'
-        uses: ncipollo/release-action@b7eabc95ff50cbeeedec83973935c8f306dfcd0b # v1.20.0
+        uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
         with:
           allowUpdates: true
           # Don't set commit, publish job creates an annotated tag.

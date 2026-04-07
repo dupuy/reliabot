@@ -302,7 +302,8 @@ jobs:
     needs:
       - build
       - tests
-    # Only contents:read permission is needed to upload artifacts, not contents:write
+    permissions:
+      contents: write # Needed to create and update GitHub releases
 
     steps:
       - name: 'Harden runner'
@@ -439,7 +440,8 @@ jobs:
       pr-tag: ${{ needs.tests.outputs.pr-tag }}
     needs:
       - tests
-    # Only contents:read permission is needed to upload artifacts, not contents:write
+    permissions:
+      contents: write # Needed to create and update GitHub releases
 
     steps:
       - name: 'Harden runner'
@@ -475,7 +477,8 @@ jobs:
       pr-tag: ${{ needs.tests.outputs.pr-tag }}
     needs:
       - tests
-    # Only contents:read permission is needed to upload artifacts, not contents:write
+    permissions:
+      contents: write # Needed to create and update GitHub releases
 
     steps:
       - name: 'Harden runner'

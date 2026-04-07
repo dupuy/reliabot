@@ -6,6 +6,52 @@ It uses the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format,
 and follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html) for
 releases.
 
+### Details
+
+#### Added 🚀
+- Add Codacy coverage badge by @dupuyarc in [#308](https://github.com/dupuy/reliabot/pull/308)
+- Wrap up coverage reporter by @dupuyarc in [#304](https://github.com/dupuy/reliabot/pull/304)
+- Write` is not needed to upload artifacts by @dupuyarc
+- Add codacy coverage reporter by @dupuyarc in [#302](https://github.com/dupuy/reliabot/pull/302)
+- Require Codacy checks in repo rules by @dupuyarc in [#301](https://github.com/dupuy/reliabot/pull/301)
+- Add Makefile target to copy corpus files by @dupuyarc
+- Update for tests with new Python versions by @dupuyarc in [#276](https://github.com/dupuy/reliabot/pull/276)
+- Provide a corpus and fuzzer dictionary for Atheris fuzzing by @dupuyarc in [#275](https://github.com/dupuy/reliabot/pull/275)
+- Atheris fuzzing by @dupuyarc in [#261](https://github.com/dupuy/reliabot/pull/261)
+
+#### Changed 🔄
+- Alpha order pip-compile option args by @dupuyarc in [#310](https://github.com/dupuy/reliabot/pull/310)
+- Only run Codacy coverage for main repo by @dupuyarc in [#309](https://github.com/dupuy/reliabot/pull/309)
+- Port address by @dupuyarc in [#307](https://github.com/dupuy/reliabot/pull/307)
+- Update pre-commit on PyPI updates by @dupuyarc
+- Switch to repository rules for branch protection by @dupuyarc in [#292](https://github.com/dupuy/reliabot/pull/292)
+- Condense and augment badges in README.md by @dupuyarc in [#290](https://github.com/dupuy/reliabot/pull/290)
+- Align dependabot.yml indent settings with prettier by @dupuyarc in [#289](https://github.com/dupuy/reliabot/pull/289)
+- Try to get the python-app workflow going again by @dupuyarc in [#286](https://github.com/dupuy/reliabot/pull/286)
+- Multi-arch build with pinned hashes for Docker by @dupuyarc in [#282](https://github.com/dupuy/reliabot/pull/282)
+- Multi-architecture Dockerfile (ARM64 & AMD64) by @dupuyarc in [#279](https://github.com/dupuy/reliabot/pull/279)
+- Update for tests with new Python versions by @dupuyarc in [#276](https://github.com/dupuy/reliabot/pull/276)
+- Handle ValueError from ruamel.yaml by @dupuyarc in [#272](https://github.com/dupuy/reliabot/pull/272)
+- Make dependabot pip updates weekly by @dupuyarc in [#269](https://github.com/dupuy/reliabot/pull/269)
+- Really add pre-commit-update check by @dupuyarc in [#268](https://github.com/dupuy/reliabot/pull/268
+
+
+#### Fixed 🛠
+- Disable pre-commit.ci autoupdate by @dupuyarc in [#326](https://github.com/dupuy/reliabot/pull/326)
+- Only run Codacy coverage for main repo by @dupuyarc in [#309](https://github.com/dupuy/reliabot/pull/309)
+- Port address by @dupuyarc in [#307](https://github.com/dupuy/reliabot/pull/307)
+- Extra egress for coverage by @dupuyarc in [#306](https://github.com/dupuy/reliabot/pull/306)
+- Run fuzzer as non-root in container by @dupuyarc in [#305](https://github.com/dupuy/reliabot/pull/305)
+- GH Actions schema warning by @dupuyarc in [#303](https://github.com/dupuy/reliabot/pull/303)
+- Generate coverage XML data with tox by @dupuyarc
+- Token permission errors by @dupuyarc
+- Align dependabot.yml indent settings with prettier by @dupuyarc in [#289](https://github.com/dupuy/reliabot/pull/289)
+- Try to get the python-app workflow going again by @dupuyarc in [#286](https://github.com/dupuy/reliabot/pull/286)
+- Update for tests with new Python versions by @dupuyarc in [#276](https://github.com/dupuy/reliabot/pull/276)
+- Handle ValueError from ruamel.yaml by @dupuyarc in [#272](https://github.com/dupuy/reliabot/pull/272)
+- Handle NotImplementedError from ruamel.yaml by @dupuyarc in [#271](https://github.com/dupuy/reliabot/pull/271)
+- Pin Docker base image and apt pkgs by @dupuyarc in [#266](https://github.com/dupuy/reliabot/pull/266)
+
 ## [0.3.0] - 2026-01-02
 
 ### Details

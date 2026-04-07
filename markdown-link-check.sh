@@ -33,6 +33,11 @@ cat >"$TMP_CONFIG" <<EOF
       }
     }
   ],
+  "ignorePatterns": [
+    {
+      "pattern": "^mailto:"
+    }
+  ],
   "replacementPatterns": [
     {
       "pattern": "^/",

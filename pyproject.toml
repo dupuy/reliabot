@@ -92,9 +92,20 @@ split_commits = true
 commit_preprocessors = [
     # remove issue numbers from commits
     { pattern = '\((\w+\s)?#([0-9]+)\)', replace = "" },
+    { pattern = "^---.*$", replace = "" },
+    { pattern = "^[.][.][.].*$", replace = "" },
+    { pattern = "^- .*$", replace = "" },
+    { pattern = "^ by @.*$", replace = "" },
+    { pattern = "^[*] .*$", replace = "" },
+    { pattern = "^[Bb]ump.*$", replace = "" },
+    { pattern = "Dependabot.*$", replace = "" },
+    { pattern = "^dependency.*$", replace = "" },
+    { pattern = "^[Uu]pdate.*$", replace = "" },
 ]
 # regex for parsing and grouping commits
 commit_parsers = [
+    { message = "^chore", scope = "deps", skip = "true" },
+    { message = "^chore", scope = "deps-dev", skip = "true" },
     { message = "^.*: add", group = "Added 🚀" },
     { message = "^.*: support", group = "Added 🚀" },
     { message = "^.*: remove", group = "Removed 🗑️" },

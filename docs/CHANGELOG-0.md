@@ -6,6 +6,74 @@ It uses the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format,
 and follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html) for
 releases.
 
+## [0.3.2] - 2026-04-07
+### Details
+
+#### Added 🚀
+- Add Codacy coverage badge by @dupuyarc in [#308](https://github.com/dupuy/reliabot/pull/308)
+- Add codacy coverage reporter by @dupuyarc in [#302](https://github.com/dupuy/reliabot/pull/302)
+- Add Makefile target to copy corpus files by @dupuyarc
+- Update for tests with new Python versions by @dupuyarc in [#276](https://github.com/dupuy/reliabot/pull/276)
+
+#### Changed 🔄
+- Disable pre-commit.ci autoupdate by @dupuyarc in [#326](https://github.com/dupuy/reliabot/pull/326)
+- Ruff 0.15.4 update by @dupuyarc in [#315](https://github.com/dupuy/reliabot/pull/315)
+- * chore(deps-dev): bump ruff from 0.15.2 to 0.15.4 by @dupuyarc in [#315](https://github.com/dupuy/reliabot/pull/315)
+- Bumps [ruff](https://github.com/astral-sh/ruff) from 0.15.2 to 0.15.4. by @dupuyarc in [#315](https://github.com/dupuy/reliabot/pull/315)
+-  by @dupuyarc in [#315](https://github.com/dupuy/reliabot/pull/315)
+- Updated-dependencies: by @dupuyarc in [#315](https://github.com/dupuy/reliabot/pull/315)
+-  by @dupuyarc in [#315](https://github.com/dupuy/reliabot/pull/315)
+- dependency-version: 0.15.4 by @dupuyarc in [#315](https://github.com/dupuy/reliabot/pull/315)
+- dependency-type: direct:development by @dupuyarc in [#315](https://github.com/dupuy/reliabot/pull/315)
+- update-type: version-update:semver-patch by @dupuyarc in [#315](https://github.com/dupuy/reliabot/pull/315)
+- ... by @dupuyarc in [#315](https://github.com/dupuy/reliabot/pull/315)
+- Dependabot[bot] <support@github.com> by @dupuyarc in [#315](https://github.com/dupuy/reliabot/pull/315)
+- * chore: pre-commit-update by @dupuyarc in [#315](https://github.com/dupuy/reliabot/pull/315)
+-  by @dupuyarc in [#315](https://github.com/dupuy/reliabot/pull/315)
+- Dependabot[bot] <support@github.com> by @dupuyarc in [#315](https://github.com/dupuy/reliabot/pull/315)
+- Dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com> by @dupuyarc in [#315](https://github.com/dupuy/reliabot/pull/315)
+- Only run Codacy coverage for main repo by @dupuyarc in [#309](https://github.com/dupuy/reliabot/pull/309)
+- Port address by @dupuyarc in [#307](https://github.com/dupuy/reliabot/pull/307)
+- Wrap up coverage reporter by @dupuyarc in [#304](https://github.com/dupuy/reliabot/pull/304)
+- Write` is not needed to upload artificts by @dupuyarc
+- Add codacy coverage reporter by @dupuyarc in [#302](https://github.com/dupuy/reliabot/pull/302)
+- Add Makefile target to copy corpus files by @dupuyarc
+- Update pre-commit on PyPI updates by @dupuyarc
+- Switch to repository rules for branch protection by @dupuyarc in [#292](https://github.com/dupuy/reliabot/pull/292)
+- Condense and augment badges in README.md by @dupuyarc in [#290](https://github.com/dupuy/reliabot/pull/290)
+- Pre-commit-ci[bot] <66853113+pre-commit-ci[bot]@users.noreply.github.com> by @dupuyarc in [#290](https://github.com/dupuy/reliabot/pull/290)
+- Align dependabot.yml indent settings with prettier by @dupuyarc in [#289](https://github.com/dupuy/reliabot/pull/289)
+- Try to get the python-app workflow going again by @dupuyarc in [#286](https://github.com/dupuy/reliabot/pull/286)
+- Multi-arch build with pinned hashes for Docker by @dupuyarc in [#282](https://github.com/dupuy/reliabot/pull/282)
+- Multi-architecture Dockerfile (ARM64 & AMD64) by @dupuyarc in [#279](https://github.com/dupuy/reliabot/pull/279)
+- Update for tests with new Python versions by @dupuyarc in [#276](https://github.com/dupuy/reliabot/pull/276)
+- Provide a corpus and fuzzer dictionary for Atheris fuzzing by @dupuyarc in [#275](https://github.com/dupuy/reliabot/pull/275)
+- Handle ValueError from ruamel.yaml by @dupuyarc in [#272](https://github.com/dupuy/reliabot/pull/272)
+- Really add pre-commit-update check by @dupuyarc in [#268](https://github.com/dupuy/reliabot/pull/268)
+- Pin Docker base image and apt pkgs by @dupuyarc in [#266](https://github.com/dupuy/reliabot/pull/266)
+- Pre-commit-update by @dupuyarc in [#265](https://github.com/dupuy/reliabot/pull/265)
+- Atheris fuzzing by @dupuyarc in [#261](https://github.com/dupuy/reliabot/pull/261)
+
+#### Fixed 🛠
+- Disable pre-commit.ci autoupdate by @dupuyarc in [#326](https://github.com/dupuy/reliabot/pull/326)
+- Only run Codacy coverage for main repo by @dupuyarc in [#309](https://github.com/dupuy/reliabot/pull/309)
+- Port address by @dupuyarc in [#307](https://github.com/dupuy/reliabot/pull/307)
+- Extra egress for coverage by @dupuyarc in [#306](https://github.com/dupuy/reliabot/pull/306)
+- Run fuzzer as non-root in container by @dupuyarc in [#305](https://github.com/dupuy/reliabot/pull/305)
+- GH Actions schema warning by @dupuyarc in [#303](https://github.com/dupuy/reliabot/pull/303)
+- Generate coverage XML data with tox by @dupuyarc
+- Token permission errors by @dupuyarc
+- Align dependabot.yml indent settings with prettier by @dupuyarc in [#289](https://github.com/dupuy/reliabot/pull/289)
+- Try to get the python-app workflow going again by @dupuyarc in [#286](https://github.com/dupuy/reliabot/pull/286)
+- Update for tests with new Python versions by @dupuyarc in [#276](https://github.com/dupuy/reliabot/pull/276)
+- Handle ValueError from ruamel.yaml by @dupuyarc in [#272](https://github.com/dupuy/reliabot/pull/272)
+- Handle NotImplementedError from ruamel.yaml by @dupuyarc in [#271](https://github.com/dupuy/reliabot/pull/271)
+- Pin Docker base image and apt pkgs by @dupuyarc in [#266](https://github.com/dupuy/reliabot/pull/266)
+
+[0.3.2]: https://github.com/dupuy/reliabot/compare/v0.3.0..v0.3.2
+
+<!-- generated by git-cliff on 2026-04-07 -->
+
 ## [0.3.0] - 2026-01-02
 
 ### Details
@@ -479,3 +547,4 @@ releases.
 [0.2.4]: https://github.com/dupuy/reliabot/compare/v0.2.2..v0.2.4
 [0.2.5]: https://github.com/dupuy/reliabot/compare/v0.2.4..v0.2.5
 [0.3.0]: https://github.com/dupuy/reliabot/compare/v0.2.5..v0.3.0
+[0.3.2]: https://github.com/dupuy/reliabot/compare/v0.3.0..v0.3.2

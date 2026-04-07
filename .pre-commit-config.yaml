@@ -307,7 +307,7 @@ repos:
     rev: v3.14.1
     hooks:
       - id: vale
-        exclude: LICENSE|humans\.txt|requirements.*|styles/
+        exclude: CHANGELOG*|LICENSE|humans\.txt|requirements.*|styles/
         types_or:
           - asciidoc
           - html

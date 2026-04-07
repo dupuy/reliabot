@@ -92,9 +92,12 @@ split_commits = true
 commit_preprocessors = [
     # remove issue numbers from commits
     { pattern = '\((\w+\s)?#([0-9]+)\)', replace = "" },
+    { pattern = "^-.*$", replace = "" },
 ]
 # regex for parsing and grouping commits
 commit_parsers = [
+    { message = "^chore", scope = "deps", skip = "true" },
+    { scope = "deps-dev", skip = "true" },
     { message = "^.*: add", group = "Added 🚀" },
     { message = "^.*: support", group = "Added 🚀" },
     { message = "^.*: remove", group = "Removed 🗑️" },
@@ -119,7 +122,7 @@ sort_commits = "newest"
 
 [tool.poetry]
 name = "reliabot"
-version = "0.3.0"
+version = "0.3.2"
 description = "Maintain GitHub Dependabot configuration."
 license = "MIT"
 authors = ["Alexander Dupuy <alex@dupuy.us>"]

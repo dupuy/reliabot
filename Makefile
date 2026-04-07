@@ -82,11 +82,10 @@ major minor patch prerelease release: has-git-cliff has-poetry
 	LAST=`git describe | sed 's/-.*//'` &&                             \
 	git checkout -b "release-$${RELEASE}"; mkdir -p docs &&            \
 	git-cliff --config=pyproject.toml --tag "$${RELEASE}" $${LAST}..   \
-	  >"$${CHANGELOG_TMP}" &&                                          \
+	  | uniq >"$${CHANGELOG_TMP}" &&                                   \
 	sed '/^# C/,/^releases/d' "$${CHANGELOG}" >>"$${CHANGELOG_TMP}" && \
 	echo "[$${RELEASE#v}]: $(COMPARE)/$${LAST}..$${RELEASE}"           \
-	  >>"$${CHANGELOG_TMP}" &&                                         \
-	uniq <"$${CHANGELOG_TMP}" >"$${CHANGELOG}" &&                          \
+	  >>"$${CHANGELOG}" &&                                             \
 	ln -sf "$${CHANGELOG}" CHANGELOG.md
 	git add docs/CHANGELOG-*.md
 	-pre-commit run poetry-lock

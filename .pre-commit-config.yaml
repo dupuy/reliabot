@@ -178,7 +178,7 @@ repos:
 
   # Python
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.8
+    rev: v0.15.9
     hooks:
       # Run the linter.
       - id: ruff
@@ -246,7 +246,7 @@ repos:
     hooks:
       - id: dead
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.8
+    rev: v0.15.9
     hooks:
       # Run the formatter.
       - id: ruff-format
@@ -405,13 +405,14 @@ repos:
         types: [markdown]
         exclude: tests/
 ci:
-  autofix_commit_msg: |
-    fix: auto-fixes from pre-commit.ci
-
-    Configured by .pre-commit-config.yaml
-    Checks run by https://pre-commit.ci
-  autoupdate_commit_msg: 'chore: pre-commit.ci autoupdate'
-  autoupdate_schedule: monthly
+  #  pre-commit.ci autoupdate not as good as pre-commit-update
+  #  autofix_commit_msg: |
+  #    fix: auto-fixes from pre-commit.ci
+  #
+  #    Configured by .pre-commit-config.yaml
+  #    Checks run by https://pre-commit.ci
+  #  autoupdate_commit_msg: 'chore: pre-commit.ci autoupdate'
+  #  autoupdate_schedule: monthly
   skip:
     - gitlint-ci
     - hadolint

@@ -153,7 +153,7 @@ repos:
         # shellcheck Python installer relies on old setuptools API
         language_version: '3.11'
   - repo: https://github.com/scop/pre-commit-shfmt
-    rev: v3.13.0-1
+    rev: v3.13.1-1
     hooks:
       # Choose one of:
       # - id: shfmt-docker # Docker image (requires Docker to run)
@@ -178,7 +178,7 @@ repos:
 
   # Python
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.9
+    rev: v0.15.10
     hooks:
       # Run the linter.
       - id: ruff
@@ -225,7 +225,7 @@ repos:
         args: [-c, pyproject.toml]
         additional_dependencies: ['bandit[toml]']
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.20.0
+    rev: v1.20.1
     hooks:
       - id: mypy
   - repo: https://github.com/pre-commit/pygrep-hooks
@@ -246,13 +246,13 @@ repos:
     hooks:
       - id: dead
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.9
+    rev: v0.15.10
     hooks:
       # Run the formatter.
       - id: ruff-format
   - repo: https://github.com/python-poetry/poetry
     # see https://python-poetry.org/docs/pre-commit-hooks/#faq
-    rev: '2.3.3'
+    rev: '2.3.4'
     hooks:
       - id: poetry-lock
       # NOTE: poetry-check complains about tools.poetry settings that can't
@@ -405,14 +405,16 @@ repos:
         types: [markdown]
         exclude: tests/
 ci:
+  autofix_commit_msg: |
+    fix: auto-fixes from pre-commit.ci
+
+    Configured by .pre-commit-config.yaml
+    Checks run by https://pre-commit.ci
+  autofix_prs: true # this is what is really useful about pre-commit.ci
   #  pre-commit.ci autoupdate not as good as pre-commit-update
-  #  autofix_commit_msg: |
-  #    fix: auto-fixes from pre-commit.ci
-  #
-  #    Configured by .pre-commit-config.yaml
-  #    Checks run by https://pre-commit.ci
-  #  autoupdate_commit_msg: 'chore: pre-commit.ci autoupdate'
-  #  autoupdate_schedule: monthly
+  autoupdate_commit_msg: 'chore: close this PR, run pre-commit-update'
+  autoupdate_schedule: 'quarterly' # ideally: 'never'
+  # Checks to disable on pre-commit.ci (sadly, not autoupdate)
   skip:
     - gitlint-ci
     - hadolint

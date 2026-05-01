@@ -260,7 +260,7 @@ jobs:
 
       - name: 'Generate release notes'
         if: env.pr-tag == 'true'
-        uses: orhun/git-cliff-action@c93ef52f3d0ddcdcc9bd5447d98d458a11cd4f72 # v4.7.1
+        uses: orhun/git-cliff-action@f50e11560dce63f7c33227798f90b924471a88b5 # v4.8.0
         with:
           args: >
             '--unreleased'
@@ -270,7 +270,7 @@ jobs:
 
       - name: 'Generate "unreleased" notes'
         if: env.pr-commit == 'true' && env.pr-tag == 'false'
-        uses: orhun/git-cliff-action@c93ef52f3d0ddcdcc9bd5447d98d458a11cd4f72 # v4.7.1
+        uses: orhun/git-cliff-action@f50e11560dce63f7c33227798f90b924471a88b5 # v4.8.0
         with:
           args: '--unreleased'
           config: release.toml
@@ -373,7 +373,7 @@ jobs:
 
       - name: 'Publish (pre-)release to TestPyPI'
         if: env.pr-tag == 'true'
-        uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e # v1.13.0
+        uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b # v1.14.0
 
   publish:
     runs-on: ubuntu-24.04
@@ -427,7 +427,7 @@ jobs:
 
       - name: 'Publish release to PyPI'
         if: env.pr-release == 'true'
-        uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e # v1.13.0
+        uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b # v1.14.0
 
   pre-release:
     runs-on: ubuntu-24.04

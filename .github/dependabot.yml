@@ -9,6 +9,10 @@ updates:
     package-ecosystem: pip
     schedule:
       interval: monthly
+    groups:
+      python-tools:
+        - ruff
+        - tox
   - directory: /
     package-ecosystem: github-actions
     schedule:
@@ -17,7 +21,7 @@ updates:
       gh-actions-infrastructure:
         patterns:
           - actions/*
-          - github/codeql-action/*
+          - github/*
           - ossf/*
           - step-security/*
       gh-actions-releases:

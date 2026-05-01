@@ -215,6 +215,7 @@ jobs:
       pr-commit: ${{ needs.tests.outputs.pr-commit }}
       pr-release: ${{ needs.tests.outputs.pr-release }}
       pr-tag: ${{ needs.tests.outputs.pr-tag }}
+      release-name: ${{ needs.tests.outputs.release-name }}
     needs:
       - tests
     # Only contents:read permission is needed to upload artifacts, not contents:write
@@ -276,6 +277,19 @@ jobs:
           config: release.toml
           version: 'v2.9.1'
 
+      - name: 'Generate metadata for privileged tasks'
+        if: env.pr-tag == 'true'
+        run: |
+          cat <<EOF > dist/metadata.json
+          {
+            "VERSION_TAG": "${{ env.VERSION_TAG }}",
+            "artifact-name": "${{ env.artifact-name }}",
+            "pr-release": "${{ env.pr-release }}",
+            "pr-tag": "${{ env.pr-tag }}",
+            "release-name": "${{ env.release-name }}"
+          }
+          EOF
+
       - name: 'Upload distribution package as an artifact'
         if: github.repository == 'dupuy/reliabot' && env.pr-tag == 'true'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -285,95 +299,6 @@ jobs:
           overwrite: true
           path: 'dist/*'
           retention-days: 90 # stale + close + 13 <= artifact retention (90 max)
-
-  draft-release:
-    runs-on: ubuntu-24.04
-
-    # No draft for push; that uses artifact and draft release from pull_request.
-    if: >
-      github.event_name == 'pull_request' &&
-      github.repository == 'dupuy/reliabot'
-    env:
-      VERSION_TAG: ${{ needs.tests.outputs.VERSION_TAG }}
-      artifact-name: ${{ needs.tests.outputs.artifact-name }}
-      pr-release: ${{ needs.tests.outputs.pr-release }}
-      pr-tag: ${{ needs.tests.outputs.pr-tag }}
-      release-name: ${{ needs.tests.outputs.release-name }}
-    needs:
-      - build
-      - tests
-    # Only contents:read permission is needed to upload artifacts, not contents:write
-
-    steps:
-      - name: 'Harden runner'
-        if: env.pr-tag == 'true'
-        uses: step-security/harden-runner@8d3c67de8e2fe68ef647c8db1e6a09f647780f40 # v2.19.0
-        with:
-          disable-sudo: true
-          egress-policy: block
-          allowed-endpoints: >
-            api.github.com:443
-            uploads.github.com:443
-
-      - name: 'Download release artifacts'
-        if: env.pr-tag == 'true'
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
-        with:
-          name: '${{ env.artifact-name }}'
-          path: dist/
-
-      - name: 'Create draft release and upload artifacts'
-        if: env.pr-tag == 'true'
-        uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
-        with:
-          allowUpdates: true
-          artifactErrorsFailBuild: true
-          artifacts: dist/*
-          bodyFile: '${{ env.OUTPUT }}'
-          draft: true
-          name: '${{ env.release-name }}'
-          prerelease: "${{ env.pr-release && 'false' || 'true' }}"
-          tag: '${{ env.VERSION_TAG }}'
-          updateOnlyUnreleased: true
-
-  test-publish:
-    runs-on: ubuntu-24.04
-
-    if: >
-      github.event_name == 'pull_request' &&
-      github.repository == 'dupuy/reliabot'
-    env:
-      artifact-name: ${{ needs.tests.outputs.artifact-name }}
-      pr-tag: ${{ needs.tests.outputs.pr-tag }}
-    needs:
-      - build
-      - tests
-    environment:
-      name: test-pypi
-      url: https://test.pypi.org/p/reliabot
-    permissions:
-      id-token: write # IMPORTANT: trusted publishing requires this permission
-
-    steps:
-      - name: 'Harden runner'
-        if: env.pr-tag == 'true'
-        uses: step-security/harden-runner@8d3c67de8e2fe68ef647c8db1e6a09f647780f40 # v2.19.0
-        with:
-          disable-sudo: true
-          egress-policy: audit
-          allowed-endpoints: >
-            upload.pypi.org:443
-
-      - name: 'Download release artifacts'
-        if: env.pr-tag == 'true'
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
-        with:
-          name: '${{ env.artifact-name }}'
-          path: dist/
-
-      - name: 'Publish (pre-)release to TestPyPI'
-        if: env.pr-tag == 'true'
-        uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b # v1.14.0
 
   publish:
     runs-on: ubuntu-24.04

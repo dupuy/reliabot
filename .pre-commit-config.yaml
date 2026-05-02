@@ -8,6 +8,9 @@
 # and tests should always be run before merging.
 #
 # reliabot: mapping=2 offset=2 sequence=4 width=75
+default_install_hook_types:
+  - pre-commit
+  - commit-msg
 default_stages: [pre-commit]
 
 repos:
@@ -345,20 +348,12 @@ repos:
         args: ['--failure-threshold=info']
 
   # Git commit messages
-  # - repo: https://github.com/commitizen-tools/commitizen
-  #   rev: v2.14.2
-  #   hooks:
-  #     - id: commitizen
-  #       stages: [commit-msg]
-  - repo: https://github.com/jorisroovers/gitlint
-    rev: v0.19.1
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v4.4.0
     hooks:
-      - id: gitlint
-        name: gitlint (commit-msg)
+      - id: conventional-pre-commit
         stages: [commit-msg]
-      - id: gitlint-ci
-        name: gitlint-ci (pre-commit)
-        stages: [manual, pre-commit]
+        args: [--strict, --verbose]
 
   # Pre-commit
   - repo: https://gitlab.com/vojko.pribudic.foss/pre-commit-update
@@ -414,7 +409,6 @@ ci:
   autoupdate_schedule: 'quarterly' # ideally: 'never'
   # Checks to disable on pre-commit.ci (sadly, not autoupdate)
   skip:
-    - gitlint-ci
     - hadolint
     - markdown-link-check
     - poetry-lock

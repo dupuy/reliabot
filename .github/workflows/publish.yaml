@@ -39,8 +39,12 @@ jobs:
           egress-policy: audit
           allowed-endpoints: >
             api.github.com:443
+            fulcio.sigstore.dev:443
             github.com:443
+            oauth2.sigstore.dev:443
             objects.githubusercontent.com:443
+            rekor.sigstore.dev:443
+            sigstore-tuf-root.storage.googleapis.com:443
             upload.pypi.org:443
             uploads.github.com:443
 
@@ -96,6 +100,7 @@ jobs:
         if: steps.metadata.outputs.skip == 'false' && steps.metadata.outputs.PR_TAG == 'true'
         uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b # v1.14.0
         with:
+          attestations: true
           packages-dir: 'test_pypi_dist/'
           repository-url: https://test.pypi.org/legacy/
 
@@ -123,8 +128,12 @@ jobs:
           egress-policy: audit
           allowed-endpoints: >
             api.github.com:443
+            fulcio.sigstore.dev:443
             github.com:443
+            oauth2.sigstore.dev:443
             objects.githubusercontent.com:443
+            rekor.sigstore.dev:443
+            sigstore-tuf-root.storage.googleapis.com:443
             upload.pypi.org:443
             uploads.github.com:443
 
@@ -172,6 +181,7 @@ jobs:
         if: steps.metadata.outputs.skip == 'false' && steps.metadata.outputs.PR_TAG == 'true'
         uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b # v1.14.0
         with:
+          attestations: true
           packages-dir: 'pypi_dist/'
 
       - name: 'Create and push tag'

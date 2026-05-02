@@ -62,24 +62,7 @@
 # prevents push workflow failures. The pull_request workflow runs on "reopen"
 # or "ready for review" events, recreating expired artifacts before any "push".
 
-# The DRAFT-RELEASE job creates a draft GitHub release (or pre-release, if the
-# version tag contains a '-').
-
-# The TEST-PUBLISH job publishes the Python package from the uploaded build
-# artifact to TestPyPI; it does this for both pre-release and release builds.
-
-# The jobs that run on push events are different for pre-releases and releases:
-
-# The PRE-RELEASE job removes the draft status from the GitHub release, and
-# creates and pushes a corresponding non-annotated tag for the pre-release.
-#
-# The PUBLISH job runs for release versions and publishes the Python package
-# from the uploaded build artifact to PyPI. It also creates and pushes an
-# annotated tag for the release.
-
-# The RELEASE job only removes the draft status from the GitHub release,
-
-name: 'Test, build, release, upload, publish, and tag Python Poetry app'
+name: 'Test, build, release, and upload Python Poetry app'
 
 env:
   OUTPUT: dist/release-notes.md # from release.toml
@@ -93,6 +76,8 @@ on:
       - ready_for_review
       - reopened
       - synchronize
+
+# Declare default permissions as read only.
 permissions:
   contents: read
 

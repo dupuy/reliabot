@@ -39,8 +39,12 @@ jobs:
           egress-policy: audit
           allowed-endpoints: >
             api.github.com:443
+            fulcio.sigstore.dev:443
             github.com:443
+            oauth2.sigstore.dev:443
             objects.githubusercontent.com:443
+            rekor.sigstore.dev:443
+            sigstore-tuf-root.storage.googleapis.com:443
             upload.pypi.org:443
             uploads.github.com:443
 
@@ -85,11 +89,19 @@ jobs:
           tag: '${{ steps.metadata.outputs.VERSION_TAG }}'
           updateOnlyUnreleased: true
 
+      - name: 'Prepare packages for TestPyPI'
+        if: steps.metadata.outputs.skip == 'false' && steps.metadata.outputs.PR_TAG == 'true'
+        run: |
+          mkdir -p test_pypi_dist
+          cp ${{ steps.metadata.outputs.ARTIFACT_DIR }}/*.tar.gz test_pypi_dist/
+          cp ${{ steps.metadata.outputs.ARTIFACT_DIR }}/*.whl test_pypi_dist/
+
       - name: 'Publish to TestPyPI'
         if: steps.metadata.outputs.skip == 'false' && steps.metadata.outputs.PR_TAG == 'true'
         uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b # v1.14.0
         with:
-          packages-dir: '${{ steps.metadata.outputs.ARTIFACT_DIR }}/'
+          attestations: true
+          packages-dir: 'test_pypi_dist/'
           repository-url: https://test.pypi.org/legacy/
 
   pypi-release:
@@ -116,8 +128,12 @@ jobs:
           egress-policy: audit
           allowed-endpoints: >
             api.github.com:443
+            fulcio.sigstore.dev:443
             github.com:443
+            oauth2.sigstore.dev:443
             objects.githubusercontent.com:443
+            rekor.sigstore.dev:443
+            sigstore-tuf-root.storage.googleapis.com:443
             upload.pypi.org:443
             uploads.github.com:443
 
@@ -154,11 +170,19 @@ jobs:
 
           echo "skip=false" >> "$GITHUB_OUTPUT"
 
+      - name: 'Prepare packages for PyPI'
+        if: steps.metadata.outputs.skip == 'false' && steps.metadata.outputs.PR_TAG == 'true'
+        run: |
+          mkdir -p pypi_dist
+          cp ${{ steps.metadata.outputs.ARTIFACT_DIR }}/*.tar.gz pypi_dist/
+          cp ${{ steps.metadata.outputs.ARTIFACT_DIR }}/*.whl pypi_dist/
+
       - name: 'Publish to PyPI'
         if: steps.metadata.outputs.skip == 'false' && steps.metadata.outputs.PR_TAG == 'true'
         uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b # v1.14.0
         with:
-          packages-dir: '${{ steps.metadata.outputs.ARTIFACT_DIR }}/'
+          attestations: true
+          packages-dir: 'pypi_dist/'
 
       - name: 'Create and push tag'
         if: steps.metadata.outputs.skip == 'false' && steps.metadata.outputs.PR_TAG == 'true'
@@ -179,6 +203,8 @@ jobs:
         uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
         with:
           allowUpdates: true
+          # Re-upload artifacts to ensure signatures are present in the final release
+          artifacts: '${{ steps.metadata.outputs.ARTIFACT_DIR }}/*'
           draft: false
           name: '${{ steps.metadata.outputs.RELEASE_NAME }}'
           prerelease: "${{ steps.metadata.outputs.PR_RELEASE == 'true' && 'false' || 'true' }}"

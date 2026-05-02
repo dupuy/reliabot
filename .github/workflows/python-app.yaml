@@ -205,7 +205,9 @@ jobs:
       release-name: ${{ needs.tests.outputs.release-name }}
     needs:
       - tests
-    # Only contents:read permission is needed to upload artifacts, not contents:write
+    permissions:
+      id-token: write # IMPORTANT: trusted signing requires this permission
+      contents: read
 
     steps:
       - name: 'Harden runner'
@@ -217,10 +219,14 @@ jobs:
           allowed-endpoints: >
             api.github.com:443
             files.pythonhosted.org:443
+            fulcio.sigstore.dev:443
             github.com:443
+            oauth2.sigstore.dev:443
             objects.githubusercontent.com:443
             pypi.org:443
+            rekor.sigstore.dev:443
             release-assets.githubusercontent.com:443
+            sigstore-tuf-root.storage.googleapis.com:443
 
       - name: 'Checkout repository'
         if: env.pr-commit == 'true'
@@ -245,6 +251,14 @@ jobs:
       - name: 'Build distribution packages'
         if: env.pr-commit == 'true'
         run: 'poetry build'
+
+      - name: 'Sign built artifacts'
+        if: env.pr-commit == 'true'
+        uses: sigstore/gh-action-sigstore-python@f514d4670c5765796c8105741630c79e657c9636 # v3.0.0
+        with:
+          inputs: >
+            dist/*.tar.gz
+            dist/*.whl
 
       - name: 'Generate release notes'
         if: env.pr-tag == 'true'

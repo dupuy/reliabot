@@ -214,7 +214,7 @@ jobs:
         uses: step-security/harden-runner@8d3c67de8e2fe68ef647c8db1e6a09f647780f40 # v2.19.0
         with:
           disable-sudo: true
-          egress-policy: block
+          egress-policy: audit
           allowed-endpoints: >
             api.github.com:443
             files.pythonhosted.org:443
@@ -222,6 +222,8 @@ jobs:
             objects.githubusercontent.com:443
             pypi.org:443
             release-assets.githubusercontent.com:443
+            syft-releases.anchore.io:443
+            toolbox-data.stepsecurity.io:443
 
       - name: 'Checkout repository'
         if: env.pr-commit == 'true'
@@ -246,6 +248,14 @@ jobs:
       - name: 'Build distribution packages'
         if: env.pr-commit == 'true'
         run: 'poetry build'
+
+      - name: 'Generate SBOM'
+        if: env.pr-commit == 'true'
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
+        with:
+          path: ./
+          output-file: dist/reliabot.spdx.json
+          format: spdx-json
 
       - name: 'Generate release notes'
         if: env.pr-tag == 'true'

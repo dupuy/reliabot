@@ -96,7 +96,6 @@ jobs:
         with:
           subject-path: '${{ steps.metadata.outputs.ARTIFACT_DIR }}/*'
           sbom-path: '${{ steps.metadata.outputs.ARTIFACT_DIR }}/reliabot.spdx.json'
-          predicate-type: spdx
 
       - name: 'Create draft release'
         if: steps.metadata.outputs.skip == 'false' && steps.metadata.outputs.PR_TAG == 'true'
@@ -214,7 +213,6 @@ jobs:
         with:
           subject-path: '${{ steps.metadata.outputs.ARTIFACT_DIR }}/*'
           sbom-path: '${{ steps.metadata.outputs.ARTIFACT_DIR }}/reliabot.spdx.json'
-          predicate-type: spdx
 
       - name: 'Prepare packages for PyPI'
         if: steps.metadata.outputs.skip == 'false' && steps.metadata.outputs.PR_TAG == 'true'

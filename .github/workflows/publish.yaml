@@ -29,7 +29,8 @@ jobs:
       url: https://test.pypi.org/p/reliabot
 
     permissions:
-      id-token: write # IMPORTANT: trusted publishing requires this permission
+      id-token: write # Trusted publishing requires this permission
+      attestations: write
 
     steps:
       - name: 'Harden runner'
@@ -38,13 +39,18 @@ jobs:
           disable-sudo: true
           egress-policy: audit
           allowed-endpoints: >
+            actions.githubusercontent.com:443
             api.github.com:443
-            #fulcio.sigstore.dev:443
+            fulcio.sigstore.dev:443
+            ghcr.io:443
             github.com:443
-            #oauth2.sigstore.dev:443
             objects.githubusercontent.com:443
-            #rekor.sigstore.dev:443
-            #sigstore-tuf-root.storage.googleapis.com:443
+            pkg-containers.githubusercontent.com:443
+            rekor.sigstore.dev:443
+            releases.astral.sh:443
+            sigstore-tuf-root.storage.googleapis.com:443
+            timestamp.sigstore.dev:443
+            tuf-repo-cdn.sigstore.dev:443
             upload.pypi.org:443
             uploads.github.com:443
 
@@ -82,6 +88,15 @@ jobs:
           inputs: >
             ${{ steps.metadata.outputs.ARTIFACT_DIR }}/*.tar.gz
             ${{ steps.metadata.outputs.ARTIFACT_DIR }}/*.whl
+            ${{ steps.metadata.outputs.ARTIFACT_DIR }}/reliabot.spdx.json
+
+      - name: 'Attest SBOM'
+        if: steps.metadata.outputs.skip == 'false' && steps.metadata.outputs.PR_TAG == 'true'
+        uses: actions/attest@59d89421af93a897026c735860bf21b6eb4f7b26 # v4.1.0
+        with:
+          subject-path: '${{ steps.metadata.outputs.ARTIFACT_DIR }}/*'
+          sbom-path: '${{ steps.metadata.outputs.ARTIFACT_DIR }}/reliabot.spdx.json'
+          predicate-type: spdx
 
       - name: 'Create draft release'
         if: steps.metadata.outputs.skip == 'false' && steps.metadata.outputs.PR_TAG == 'true'
@@ -125,7 +140,8 @@ jobs:
       url: https://pypi.org/p/reliabot
 
     permissions:
-      id-token: write # IMPORTANT: trusted publishing requires this permission
+      id-token: write # Trusted publishing requires this permission
+      attestations: write
       contents: write # Needed for annotated tag push
 
     steps:
@@ -135,13 +151,18 @@ jobs:
           disable-sudo: true
           egress-policy: audit
           allowed-endpoints: >
+            actions.githubusercontent.com:443
             api.github.com:443
-            #fulcio.sigstore.dev:443
+            fulcio.sigstore.dev:443
+            ghcr.io:443
             github.com:443
-            #oauth2.sigstore.dev:443
             objects.githubusercontent.com:443
-            #rekor.sigstore.dev:443
-            #sigstore-tuf-root.storage.googleapis.com:443
+            pkg-containers.githubusercontent.com:443
+            rekor.sigstore.dev:443
+            releases.astral.sh:443
+            sigstore-tuf-root.storage.googleapis.com:443
+            timestamp.sigstore.dev:443
+            tuf-repo-cdn.sigstore.dev:443
             upload.pypi.org:443
             uploads.github.com:443
 
@@ -185,6 +206,15 @@ jobs:
           inputs: >
             ${{ steps.metadata.outputs.ARTIFACT_DIR }}/*.tar.gz
             ${{ steps.metadata.outputs.ARTIFACT_DIR }}/*.whl
+            ${{ steps.metadata.outputs.ARTIFACT_DIR }}/reliabot.spdx.json
+
+      - name: 'Attest SBOM'
+        if: steps.metadata.outputs.skip == 'false' && steps.metadata.outputs.PR_TAG == 'true'
+        uses: actions/attest@59d89421af93a897026c735860bf21b6eb4f7b26 # v4.1.0
+        with:
+          subject-path: '${{ steps.metadata.outputs.ARTIFACT_DIR }}/*'
+          sbom-path: '${{ steps.metadata.outputs.ARTIFACT_DIR }}/reliabot.spdx.json'
+          predicate-type: spdx
 
       - name: 'Prepare packages for PyPI'
         if: steps.metadata.outputs.skip == 'false' && steps.metadata.outputs.PR_TAG == 'true'

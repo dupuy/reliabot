@@ -13,7 +13,7 @@
 # substitution that would be vulnerable to shell meta-characters in the value.
 # Although TESTS uses `poetry version` to get this value from 'pyproject.toml',
 # and poetry rejects metacharacters in the version, it's still worth having
-# m shell-compatible name to protect against a compromised action or workflow
+# a shell-compatible name to protect against a compromised action or workflow
 # exploiting this environment variable by overriding the poetry-computed value.
 #
 # The TESTS job uses `git describe` to compute another variable (COMMIT_TAG)

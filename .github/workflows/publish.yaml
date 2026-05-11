@@ -16,13 +16,57 @@ permissions:
   contents: read
 
 jobs:
-  test-release:
+  prepare:
     runs-on: ubuntu-24.04
-    # Security: only run if the triggering workflow succeeded and it was a PR.
+    # Security: only run if the triggering workflow succeeded and it was a push.
     if: >
-      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.event == 'push' &&
       github.event.workflow_run.conclusion == 'success' &&
       github.repository == 'dupuy/reliabot'
+
+    outputs:
+      pr-release: ${{ steps.metadata.outputs.PR_RELEASE }}
+      pr-tag: ${{ steps.metadata.outputs.PR_TAG }}
+      skip: ${{ steps.metadata.outputs.skip }}
+
+    steps:
+      - name: 'Harden runner'
+        uses: step-security/harden-runner@8d3c67de8e2fe68ef647c8db1e6a09f647780f40 # v2.19.0
+        with:
+          disable-sudo: true
+          egress-policy: audit
+          allowed-endpoints: >
+            api.github.com:443
+            github.com:443
+            objects.githubusercontent.com:443
+
+      - name: 'Download artifacts'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh run download ${{ github.event.workflow_run.id }} --dir artifacts
+
+      - name: 'Load metadata'
+        id: metadata
+        run: |
+          METADATA_FILE=$(find artifacts -name metadata.json | head -n 1)
+          if [ -z "$METADATA_FILE" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Extract values using jq and set as outputs
+          echo "skip=false" >> "$GITHUB_OUTPUT"
+          echo "PR_RELEASE=$(jq -r '.["pr-release"]' "$METADATA_FILE")" >> "$GITHUB_OUTPUT"
+          echo "PR_TAG=$(jq -r '.["pr-tag"]' "$METADATA_FILE")" >> "$GITHUB_OUTPUT"
+  test-release:
+    runs-on: ubuntu-24.04
+    needs: prepare
+    # Only run if prepare succeeded and it's a pre-release (pr-release is false)
+    if: >
+      needs.prepare.outputs.skip == 'false' &&
+      needs.prepare.outputs.pr-tag == 'true' &&
+      needs.prepare.outputs.pr-release == 'false'
 
     environment:
       name: test-pypi
@@ -128,11 +172,12 @@ jobs:
 
   pypi-release:
     runs-on: ubuntu-24.04
-    # Security: only run if the triggering workflow succeeded and it was a push to main.
+    needs: prepare
+    # Only run if prepare succeeded and it's a full release (pr-release is true)
     if: >
-      github.event.workflow_run.event == 'push' &&
-      github.event.workflow_run.conclusion == 'success' &&
-      github.repository == 'dupuy/reliabot'
+      needs.prepare.outputs.skip == 'false' &&
+      needs.prepare.outputs.pr-tag == 'true' &&
+      needs.prepare.outputs.pr-release == 'true'
 
     environment:
       name: pypi

@@ -519,6 +519,3 @@ releases.
 [0.3.0]: https://github.com/dupuy/reliabot/compare/v0.2.5..v0.3.0
 [0.3.1]: https://github.com/dupuy/reliabot/compare/v0.3.0..v0.3.1
 [0.4.0]: https://github.com/dupuy/reliabot/compare/v0.3.0..v0.4.0
-[0.4.1-alpha.0]: https://github.com/dupuy/reliabot/compare/v0.3.0..v0.4.1-alpha.0
-[0.4.1-alpha.1]: https://github.com/dupuy/reliabot/compare/v0.3.0..v0.4.1-alpha.1
-[0.4.1-alpha.2]: https://github.com/dupuy/reliabot/compare/v0.3.0..v0.4.1-alpha.2

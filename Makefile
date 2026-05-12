@@ -1,7 +1,7 @@
 TARGETS := all build clean corpus devtools major minor patch \
 	    prerelease release tests uninstall uninstall-pipx update words
 TOOLS := git-cliff poetry tox vale
-TOOL_DIR := ${HOME}/.local/bin
+TOOL_DIR := $${HOME}/.local/bin
 
 .PHONY: $(TARGETS) $(TOOLS) $(addprefix has-,$(TOOLS))
 
@@ -69,6 +69,8 @@ VERSION_TAG=poetry version --short | $(PR_MAKE_TAG)
 MAJOR_VERSION=poetry version --short | sed -n -e '{s/\..*//p;q;}'
 COMPARE=https://github.com/dupuy/reliabot/compare
 major minor patch prerelease release: has-git-cliff has-poetry
+	git fetch origin
+	git fetch upstream # needed to get tags from primary fork
 	git checkout main
 	@case $@ in                                                           \
 	  release)                                                            \
@@ -78,34 +80,43 @@ major minor patch prerelease release: has-git-cliff has-poetry
 	esac; poetry version "$${VERSION#v}"
 	@RELEASE="`$(VERSION_TAG)`" &&                                     \
 	CHANGELOG="docs/CHANGELOG-`$(MAJOR_VERSION)`.md" &&                \
-	CHANGELOG_TMP="docs/changelog-$$$$~" &&                            \
-	LAST=`git describe | sed 's/-.*//'` &&                             \
+	CHANGELOG_TMP="docs/changelog-$${PPID}~" &&                        \
+	NOTES_TMP="docs/notes-$${PPID}~" &&                                \
+	LAST=`git describe --always --abbrev=0` &&                         \
 	git checkout -b "release-$${RELEASE}"; mkdir -p docs &&            \
 	git-cliff --config=pyproject.toml --tag "$${RELEASE}" $${LAST}..   \
-	  | uniq >"$${CHANGELOG_TMP}" &&                                   \
+	  | uniq >"$${NOTES_TMP}" &&                                       \
+	cat "$${NOTES_TMP}" >"$${CHANGELOG_TMP}" &&                        \
 	sed '/^# C/,/^releases/d' "$${CHANGELOG}" >>"$${CHANGELOG_TMP}" && \
+	mv "$${CHANGELOG_TMP}" "$${CHANGELOG}" &&                          \
 	echo "[$${RELEASE#v}]: $(COMPARE)/$${LAST}..$${RELEASE}"           \
 	  >>"$${CHANGELOG}" &&                                             \
 	ln -sf "$${CHANGELOG}" CHANGELOG.md
 	git add docs/CHANGELOG-*.md
 	-pre-commit run poetry-lock
-	git add pyproject.toml CHANGELOG.md docs/CHANGELOG-*.md poetry.lock
-	TITLE="chore(release): reliabot `$(VERSION_TAG)`" &&                   \
-	SKIP=codespell,markdown-link-check,vale git commit -m "$${TITLE}" &&   \
-	RELEASE="`git branch --show-current`" &&                               \
-	git push --set-upstream origin "$${RELEASE}" &&                        \
-	if which gh >/dev/null 2>&1; then                                      \
-	  gh pr create --fill-verbose --title="$${TITLE}";                     \
-	else                                                                   \
-	  URL=`git config remote.origin.url` &&                                \
-	  BASE=`expr $${URL} : '.*github\.com.\(.*\)\.git'` &&                 \
-	  echo "PR: https://github.com/$${BASE}/compare/$${RELEASE}?expand=1"; \
-	fi
+	git add pyproject.toml poetry.lock .pre-commit-config.yaml \
+	  CHANGELOG.md docs/CHANGELOG-*.md
+	@TITLE="chore(release): reliabot `$(VERSION_TAG)`" &&              \
+	NOTES_TMP="docs/notes-$${PPID}~" &&                                \
+	echo "$${TITLE}" > "$${NOTES_TMP}.commit" &&                       \
+	echo "" >> "$${NOTES_TMP}.commit" &&                               \
+	cat "$${NOTES_TMP}" >> "$${NOTES_TMP}.commit" &&                   \
+	SKIP=codespell,markdown-link-check,vale                            \
+	  git commit -F "$${NOTES_TMP}.commit" &&                          \
+	RELEASE_BRANCH="`git branch --show-current`" &&                    \
+	git push --set-upstream origin "$${RELEASE_BRANCH}" &&             \
+	if which gh >/dev/null 2>&1; then                                  \
+	  gh pr create --title="$${TITLE}" --body-file="$${NOTES_TMP}";    \
+	else                                                               \
+	  URL=`git config remote.origin.url` &&                            \
+	  BASE=`expr $${URL} : '.*github\.com.\(.*\)\.git'` &&             \
+	  echo "PR: https://github.com/$${BASE}/compare/$${RELEASE_BRANCH}?expand=1"; \
+	fi; rm -f "$${NOTES_TMP}" "$${NOTES_TMP}.commit"
 
-PIPX=${TOOL_DIR}/pipx
+PIPX=$(TOOL_DIR)/pipx
 POETRY= poetry - Install poetry if necessary
 
-$(addprefix has-,${TOOLS}):
+$(addprefix has-,$(TOOLS)):
 	@TOOL_NAME=$(subst has-,,$@); which $(subst has-,,$@) || { \
 	  echo "'$${TOOL_NAME}' not found in \$$PATH"; \
 	  printf "Install '$${TOOL_NAME}' with system (brew, choco, etc.)"; \
@@ -113,19 +124,19 @@ $(addprefix has-,${TOOLS}):
 	}
 
 
-$(TOOLS): ${TOOL_DIR}/pipx
-	${TOOL_DIR}/pipx install --force $@
-	${TOOL_DIR}/pipx ensurepath
+$(TOOLS): $(TOOL_DIR)/pipx
+	$(TOOL_DIR)/pipx install --force $@
+	$(TOOL_DIR)/pipx ensurepath
 	@# vale self-downloads on first install
 	@PATH=$(TOOL_DIR):$$PATH; \
 	 case $@ in vale) vale sync || pipx uninstall $@;; esac
 
-${TOOL_DIR}/pipx:
+$(TOOL_DIR)/pipx:
 	python3 -m pip install --upgrade --user pip
 	python3 -m pip install --upgrade --user certifi pipx
 	python3 -m pipx install --force pipx
 	yes | python3 -m pip uninstall pipx
-	${TOOL_DIR}/pipx ensurepath
+	$(TOOL_DIR)/pipx ensurepath
 
 TESTS= tests - Run full test suite
 tests: has-tox
@@ -158,5 +169,5 @@ WORDS= words - Check documentation words for style
 words: has-vale $(VALE_STYLES)
 	vale ./*.md .github/ISSUE_TEMPLATE/*.md
 
-$(addprefix %/,${PACKAGES}): %
-	${MAKE} sync
+$(addprefix %/,$(VALE_PKGS)): %
+	vale sync

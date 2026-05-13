@@ -10,6 +10,8 @@
 name: 'Assign labels to PRs from conventional commit titles'
 
 on:
+  # Need pull_request_target to modify labels on PRs from forks.
+  # It's safe if workflow doesn't run code from PR or use shared cache
   pull_request_target:
     branches: ['main']
     types:
@@ -26,7 +28,8 @@ jobs:
   assign-labels:
     runs-on: ubuntu-24.04
     permissions:
-      pull-requests: write
+      pull-requests: write # needed to modify PR labels
+      # DO NOT ADD MORE PERMISSIONS or use shared cache
     steps:
       - name: 'Harden runner'
         uses: step-security/harden-runner@8d3c67de8e2fe68ef647c8db1e6a09f647780f40 # v2.19.0
@@ -37,6 +40,7 @@ jobs:
             api.github.com:443
 
       - name: 'Assign labels'
+        # Review changes to this workflow and the actions it uses very carefully
         uses: dupuy/action-assign-labels@671a4ca2da0f900464c58b8b5540a1e07133e915 # v1.5.1
         with:
           apply-changes: true

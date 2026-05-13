@@ -2,6 +2,9 @@
 
 name: 'Codacy Coverage Reporter'
 on:
+  # Need pull_request_target to access CODACY_PROJECT_TOKEN secret.
+  # It's safe if workflow doesn't put secrets in environment variables,
+  # grant any write access, or use shared cache.
   - pull_request_target
   - push
 

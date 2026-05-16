@@ -179,7 +179,7 @@ repos:
 
   # Python
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.12
+    rev: v0.15.13
     hooks:
       # Run the linter.
       - id: ruff
@@ -226,7 +226,7 @@ repos:
         args: [-c, pyproject.toml]
         additional_dependencies: ['bandit[toml]']
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.20.2
+    rev: v2.1.0
     hooks:
       - id: mypy
   - repo: https://github.com/pre-commit/pygrep-hooks
@@ -247,13 +247,13 @@ repos:
     hooks:
       - id: dead
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.12
+    rev: v0.15.13
     hooks:
       # Run the formatter.
       - id: ruff-format
   - repo: https://github.com/python-poetry/poetry
     # see https://python-poetry.org/docs/pre-commit-hooks/#faq
-    rev: '2.4.0'
+    rev: '2.4.1'
     hooks:
       - id: poetry-lock
       # NOTE: poetry-check complains about tools.poetry settings that can't
@@ -305,7 +305,7 @@ repos:
         exclude: tests/
 
   - repo: https://github.com/errata-ai/vale
-    rev: v3.14.1
+    rev: v3.14.2
     hooks:
       - id: vale
         exclude: CHANGELOG*|LICENSE|humans\.txt|requirements.*|styles/

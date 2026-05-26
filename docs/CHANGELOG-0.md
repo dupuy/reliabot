@@ -10,10 +10,6 @@ releases.
 ### Details
 
 #### Changed 🔄
-- Remove stray punctuation by @dupuyarc in [#366](https://github.com/dupuy/reliabot/pull/366)
-- Remove unsafe pull_request_target workflow by @dupuyarc in [#363](https://github.com/dupuy/reliabot/pull/363)
-- Adjust release commit messages by @dupuyarc in [#365](https://github.com/dupuy/reliabot/pull/365)
-- Fetch release tags, CHANGELOG+commit msg by @dupuyarc in [#361](https://github.com/dupuy/reliabot/pull/361)
 - Generate and attest SBOM for releases by @dupuyarc in [#353](https://github.com/dupuy/reliabot/pull/353)
 
 #### Fixed 🛠
@@ -21,7 +17,6 @@ releases.
 - Fetch release tags, CHANGELOG+commit msg by @dupuyarc in [#361](https://github.com/dupuy/reliabot/pull/361)
 
 #### Removed 🗑️
-- Remove stray punctuation by @dupuyarc in [#366](https://github.com/dupuy/reliabot/pull/366)
 - Remove unsafe pull_request_target workflow by @dupuyarc in [#363](https://github.com/dupuy/reliabot/pull/363)
 
 [0.5.0]: https://github.com/dupuy/reliabot/compare/v0.4.0..v0.5.0

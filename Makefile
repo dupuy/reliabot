@@ -99,7 +99,7 @@ major minor patch prerelease release: has-git-cliff has-poetry
 	@TITLE="chore(release): reliabot `$(VERSION_TAG)`" &&                \
 	NOTES_TMP="docs/notes-$${PPID}~" &&                                  \
 	echo "$${TITLE}" > "$${NOTES_TMP}.msg" &&                            \
-	sed '/^# /,/^### /d' "$${NOTES_TMP}" >> "$${NOTES_TMP}.msg" &&.      \
+	sed '/^# /,/^### /d' "$${NOTES_TMP}" >> "$${NOTES_TMP}.msg" &&       \
 	SKIP=codespell,markdown-link-check,vale                              \
 	  git commit -F "$${NOTES_TMP}.msg" &&                               \
 	RELEASE_BRANCH="`git branch --show-current`" &&                      \

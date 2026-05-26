@@ -2,8 +2,10 @@
 
 name: 'Codacy Coverage Reporter'
 on:
-  - pull_request_target
-  - push
+  workflow_run:
+    workflows: ['Run tests with coverage']
+    types:
+      - completed
 
 # Declare default permissions as read only.
 permissions:
@@ -13,8 +15,13 @@ jobs:
   codacy-coverage-reporter:
     runs-on: ubuntu-24.04
     name: codacy-coverage-reporter
+    permissions:
+      contents: read
+      actions: read # Needed to download artifacts
     # Only run on primary fork, since this requires a Codacy project token
-    if: github.repository == 'dupuy/reliabot'
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      github.repository == 'dupuy/reliabot'
     steps:
       - name: 'Harden runner'
         uses: step-security/harden-runner@8d3c67de8e2fe68ef647c8db1e6a09f647780f40 # v2.19.0
@@ -24,31 +31,21 @@ jobs:
           allowed-endpoints: >
             api.codacy.com:443
             artifacts.codacy.com:443
-            files.pythonhosted.org:443
             github.com:443
-            pypi.org:443
-            raw.githubusercontent.com:443
-            release-assets.githubusercontent.com:443
+            objects.githubusercontent.com:443
 
       - name: 'Checkout repository'
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
+          repository: ${{ github.event.workflow_run.head_repository.full_name }}
+          ref: ${{ github.event.workflow_run.head_sha }}
           persist-credentials: false
 
-      - name: 'Install Poetry'
-        run: 'pipx install poetry'
-
-      - name: 'Set up Python'
-        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
-        with:
-          python-version: '3.12'
-          cache: 'poetry'
-
-      - name: 'Install dependencies with extras'
-        run: 'poetry install --extras re2 --with testing'
-
-      - name: 'Run tests with coverage'
-        run: 'poetry run tox -e py'
+      - name: 'Download coverage report'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh run download ${{ github.event.workflow_run.id }} --name coverage-report
 
       - name: 'Run codacy-coverage-reporter'
         uses: codacy/codacy-coverage-reporter-action@89d6c85cfafaec52c72b6c5e8b2878d33104c699 # v1.3.0

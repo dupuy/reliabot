@@ -18,6 +18,9 @@ permissions:
 jobs:
   prepare:
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: read # Needed to download artifacts
     # Security: only run if the triggering workflow succeeded and it was a push.
     if: >
       github.event.workflow_run.event == 'push' &&
@@ -34,7 +37,7 @@ jobs:
         uses: step-security/harden-runner@8d3c67de8e2fe68ef647c8db1e6a09f647780f40 # v2.19.0
         with:
           disable-sudo: true
-          egress-policy: audit
+          egress-policy: block
           allowed-endpoints: >
             api.github.com:443
             github.com:443
@@ -75,13 +78,15 @@ jobs:
     permissions:
       id-token: write # Trusted publishing requires this permission
       attestations: write
+      contents: read
+      actions: read # Needed to download artifacts
 
     steps:
       - name: 'Harden runner'
         uses: step-security/harden-runner@8d3c67de8e2fe68ef647c8db1e6a09f647780f40 # v2.19.0
         with:
           disable-sudo: true
-          egress-policy: audit
+          egress-policy: block
           allowed-endpoints: >
             actions.githubusercontent.com:443
             api.github.com:443
@@ -187,13 +192,14 @@ jobs:
       id-token: write # Trusted publishing requires this permission
       attestations: write
       contents: write # Needed for annotated tag push
+      actions: read # Needed to download artifacts
 
     steps:
       - name: 'Harden runner'
         uses: step-security/harden-runner@8d3c67de8e2fe68ef647c8db1e6a09f647780f40 # v2.19.0
         with:
           disable-sudo: true
-          egress-policy: audit
+          egress-policy: block
           allowed-endpoints: >
             actions.githubusercontent.com:443
             api.github.com:443

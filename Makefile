@@ -72,6 +72,8 @@ major minor patch prerelease release: has-git-cliff has-poetry
 	git fetch origin
 	git fetch upstream # needed to get tags from primary fork
 	git checkout main
+	pre-commit-update
+	git add .pre-commit-config.yaml
 	@case $@ in                                                           \
 	  release)                                                            \
 	    VERSION=`git-cliff -c bump.toml --bumped-version | sed 's/-.*//'` \
@@ -92,10 +94,9 @@ major minor patch prerelease release: has-git-cliff has-poetry
 	echo "[$${RELEASE#v}]: $(COMPARE)/$${LAST}..$${RELEASE}"           \
 	  >>"$${CHANGELOG}" &&                                             \
 	ln -sf "$${CHANGELOG}" CHANGELOG.md
-	git add docs/CHANGELOG-*.md
-	-pre-commit run poetry-lock
-	git add pyproject.toml poetry.lock .pre-commit-config.yaml \
-	  CHANGELOG.md docs/CHANGELOG-*.md
+	git add docs/CHANGELOG-*.md CHANGELOG.md
+	pre-commit run poetry-lock
+	git add poetry.lock
 	@TITLE="chore(release): reliabot `$(VERSION_TAG)`" &&                \
 	NOTES_TMP="docs/notes-$${PPID}~" &&                                  \
 	echo "$${TITLE}" > "$${NOTES_TMP}.msg" &&                            \

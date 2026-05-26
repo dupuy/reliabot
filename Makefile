@@ -96,22 +96,21 @@ major minor patch prerelease release: has-git-cliff has-poetry
 	-pre-commit run poetry-lock
 	git add pyproject.toml poetry.lock .pre-commit-config.yaml \
 	  CHANGELOG.md docs/CHANGELOG-*.md
-	@TITLE="chore(release): reliabot `$(VERSION_TAG)`" &&              \
-	NOTES_TMP="docs/notes-$${PPID}~" &&                                \
-	echo "$${TITLE}" > "$${NOTES_TMP}.commit" &&                       \
-	echo "" >> "$${NOTES_TMP}.commit" &&                               \
-	cat "$${NOTES_TMP}" >> "$${NOTES_TMP}.commit" &&                   \
-	SKIP=codespell,markdown-link-check,vale                            \
-	  git commit -F "$${NOTES_TMP}.commit" &&                          \
-	RELEASE_BRANCH="`git branch --show-current`" &&                    \
-	git push --set-upstream origin "$${RELEASE_BRANCH}" &&             \
-	if which gh >/dev/null 2>&1; then                                  \
-	  gh pr create --title="$${TITLE}" --body-file="$${NOTES_TMP}";    \
-	else                                                               \
-	  URL=`git config remote.origin.url` &&                            \
-	  BASE=`expr $${URL} : '.*github\.com.\(.*\)\.git'` &&             \
-	  echo "PR: https://github.com/$${BASE}/compare/$${RELEASE_BRANCH}?expand=1"; \
-	fi; rm -f "$${NOTES_TMP}" "$${NOTES_TMP}.commit"
+	@TITLE="chore(release): reliabot `$(VERSION_TAG)`" &&                \
+	NOTES_TMP="docs/notes-$${PPID}~" &&                                  \
+	echo "$${TITLE}" > "$${NOTES_TMP}.msg" &&                            \
+	sed '/^# /,/^### /d' "$${NOTES_TMP}" >> "$${NOTES_TMP}.msg" &&.      \
+	SKIP=codespell,markdown-link-check,vale                              \
+	  git commit -F "$${NOTES_TMP}.msg" &&                               \
+	RELEASE_BRANCH="`git branch --show-current`" &&                      \
+	git push --set-upstream origin "$${RELEASE_BRANCH}" &&               \
+	if which gh >/dev/null 2>&1; then                                    \
+	  gh pr create --title="$${TITLE}" --body-file="$${NOTES_TMP}.msg";  \
+	else                                                                 \
+	  URL=`git config remote.origin.url` &&                              \
+	  BASE=`expr $${URL} : '.*github\.com.\(.*\)\.git'` &&               \
+	  echo "PR: https://github.com/$${BASE}/compare/$${RELEASE_BRANCH}"; \
+	fi; rm -f "$${NOTES_TMP}" "$${NOTES_TMP}.msg"
 
 PIPX=$(TOOL_DIR)/pipx
 POETRY= poetry - Install poetry if necessary

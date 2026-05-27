@@ -118,10 +118,11 @@ reliabot$ grep -v keep= .github/dependabot.yml >reliabot/.github/dependabot.yml
 reliabot$ ./reliabot/reliabot.py reliabot
 Removed obsolete 'github-actions' entry in '/'
 Removed obsolete 'docker' entry in '/fuzz'
+Removed obsolete 'pip' entry in '/fuzz'
 Updating 'reliabot/.github/dependabot.yml'...
 reliabot$ cat -n reliabot/.github/dependabot.yml
  1	---
- 2	# reliabot: mapping=4 offset=2 sequence=4
+ 2	# reliabot: mapping=2 offset=2 sequence=4
  3	# reliabot: ignore=./reliabot # already tracked in repository root
  4	# reliabot: ignore=testdir/
  5	version: 2
@@ -129,7 +130,11 @@ reliabot$ cat -n reliabot/.github/dependabot.yml
  7	  - directory: /
  8	    package-ecosystem: pip
  9	    schedule:
- 10	        interval: weekly
+ 10	      interval: monthly
+ 11	    groups:
+ 12	      python-tools:
+ 13	        - ruff
+ 14	        - tox
 ```
 
 ## Installation

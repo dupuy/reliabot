@@ -211,6 +211,7 @@ your system, and then enable it for your local copy of the Reliabot repository:
 ```console
 $ cd reliabot && pre-commit install
 pre-commit installed at .git/hooks/pre-commit
+pre-commit installed at .git/hooks/commit-msg
 ```
 
 If you don't (or can't) install pre-commit on your system (say, if you're using

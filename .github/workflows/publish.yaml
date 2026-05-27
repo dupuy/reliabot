@@ -40,8 +40,6 @@ jobs:
           egress-policy: block
           allowed-endpoints: >
             api.github.com:443
-            github.com:443
-            objects.githubusercontent.com:443
 
       - name: 'Download artifacts'
         env:
@@ -63,6 +61,7 @@ jobs:
           echo "skip=false" >> "$GITHUB_OUTPUT"
           echo "PR_RELEASE=$(jq -r '.["pr-release"]' "$METADATA_FILE")" >> "$GITHUB_OUTPUT"
           echo "PR_TAG=$(jq -r '.["pr-tag"]' "$METADATA_FILE")" >> "$GITHUB_OUTPUT"
+
   test-release:
     runs-on: ubuntu-24.04
     needs: prepare
@@ -89,7 +88,6 @@ jobs:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
-            actions.githubusercontent.com:443
             api.github.com:443
             fulcio.sigstore.dev:443
             ghcr.io:443
@@ -202,7 +200,6 @@ jobs:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
-            actions.githubusercontent.com:443
             api.github.com:443
             fulcio.sigstore.dev:443
             ghcr.io:443

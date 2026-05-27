@@ -204,6 +204,7 @@ jobs:
             files.pythonhosted.org:443
             fulcio.sigstore.dev:443
             ghcr.io:443
+            github.com:443
             pkg-containers.githubusercontent.com:443
             pypi.org:443
             rekor.sigstore.dev:443

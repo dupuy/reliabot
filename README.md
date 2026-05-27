@@ -35,6 +35,7 @@ require version updates.
   - [Examples](#examples)
 - [Installation](#installation)
   - [From PyPI for direct use](#from-pypi-for-direct-use)
+  - [As an executable script](#as-an-executable-script)
   - [As a `pre-commit` hook](#as-a-pre-commit-hook)
 - [Pre-commit hook](#pre-commit-hook)
   - [Using with other pre-commit checks](#using-with-other-pre-commit-checks)
@@ -107,8 +108,8 @@ updates:
 
 Here is the console output from running Reliabot to update an existing
 configuration in a sub-folder of its own source (copied from the root folder).
-Reliabot removes the `github-actions` and `docker` entries because the
-`/.github` and `/fuzz` directories are missing from the copy.
+Reliabot removes the `github-actions`, `docker`, and one `pip` entry because
+the `/.github` and `/fuzz` directories are missing from the copy.
 
 ```console
 reliabot$ rm -fr reliabot/.github && mkdir -p reliabot/.github reliabot/.git
@@ -142,10 +143,10 @@ reliabot$ cat -n reliabot/.github/dependabot.yml
 ### From PyPI for direct use
 
 Use `pip3` to install the `reliabot` Python script on your system or
-virtualenv.
+virtualenv. (Omit `-q` to see progress and warnings.)
 
-```shell
-pip3 install reliabot
+```console
+reliabot$ pip3 install -q reliabot
 ```
 
 #### Installing with RE2
@@ -155,8 +156,8 @@ warning messages, by installing a Python RE2 regular expression package. These
 require installation of the C++ RE2 library (run `brew install re2`, or use
 Linux/BSD tools to install the `re2` package).
 
-```shell
-pip3 install 'reliabot[re2]'
+```console
+reliabot$ pip3 install -q 'reliabot[re2]'
 ```
 
 > ⚠️The `re2` extra (which depends on [pyre2-updated][7]) only works for Python
@@ -167,6 +168,15 @@ pip3 install 'reliabot[re2]'
 > maintained for compatibility, but the shorter name is now preferred.
 
 Once installed, you can add the Python binary directory to your `PATH`.
+
+### As an executable script
+
+Although it's not ideal, you can also put the `reliabot.py` script into any
+directory in your PATH (with or without the `.py` extension), mark it as
+executable, and run it directly. This _requires_ `ruamel.yaml` to be installed
+in the (default) Python environment, but can be convenient for _ad hoc_ use.
+The `pyre2-updated` package and RE2 C library are **not** required, but you'll
+have to use `--re` to suppress warnings about failure to load RE2 if missing.
 
 ### As a `pre-commit` hook
 
@@ -196,7 +206,7 @@ add the following to the `repos` entry in `.pre‑commit‑config.yaml`
 
 ```yaml
   - repo: https://github.com/dupuy/reliabot
-    rev: v0.1.1 # Specify any revision you want
+    rev: v0.5.2 # Specify any revision you want
     hooks:
       - id: reliabot
         additional_dependencies: [pyre2-updated] # or just `pyre2` or omit this

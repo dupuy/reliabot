@@ -94,6 +94,7 @@ jobs:
             github.com:443
             objects.githubusercontent.com:443
             pkg-containers.githubusercontent.com:443
+            pypi.org:443
             rekor.sigstore.dev:443
             releases.astral.sh:443
             sigstore-tuf-root.storage.googleapis.com:443
@@ -207,6 +208,7 @@ jobs:
             github.com:443
             objects.githubusercontent.com:443
             pkg-containers.githubusercontent.com:443
+            pypi.org:443
             rekor.sigstore.dev:443
             releases.astral.sh:443
             sigstore-tuf-root.storage.googleapis.com:443

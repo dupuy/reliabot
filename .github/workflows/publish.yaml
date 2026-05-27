@@ -78,7 +78,7 @@ jobs:
     permissions:
       id-token: write # Trusted publishing requires this permission
       attestations: write
-      contents: read
+      contents: write # Needed for annotated tag push
       actions: read # Needed to download artifacts
 
     steps:

@@ -143,7 +143,7 @@ keywords = [
     "pre-commit-hook",
 ]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
     "Environment :: Plugins",
     "Intended Audience :: Developers",
@@ -154,6 +154,11 @@ classifiers = [
     "Topic :: Software Development :: Version Control :: Git",
     "Topic :: System :: Software Distribution",
     "Topic :: Utilities",
+]
+exclude = [
+    ".github",
+    ".pre-commit-config.yaml",
+    "testdir",
 ]
 
 [tool.poetry.dependencies]

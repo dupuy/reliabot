@@ -9,9 +9,6 @@ releases.
 ## [0.5.1] - 2026-05-27
 ### Details
 
-#### Added 🚀
-- Add GH_REPO for all workflow_run jobs by @dupuyarc in [#374](https://github.com/dupuy/reliabot/pull/374)
-
 #### Changed 🔄
 - Add GH_REPO for all workflow_run jobs by @dupuyarc in [#374](https://github.com/dupuy/reliabot/pull/374)
 

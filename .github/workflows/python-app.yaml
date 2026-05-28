@@ -138,8 +138,8 @@ jobs:
           {
             COMMIT_TAG=$(git describe) &&
               echo "COMMIT_TAG=$COMMIT_TAG" >&2 ;
-            VERSION_TAG="v`poetry version --short |
-              sed -e 's/a/-alpha./' -e 's/b/-beta./' -e 's/rc/-rc./'`" &&
+            VERSION_TAG="v$(poetry version --short |
+              sed -e 's/a/-alpha./' -e 's/b/-beta./' -e 's/rc/-rc./'))" &&
                 echo "VERSION_TAG=$VERSION_TAG" ;
             case "$COMMIT_TAG" in
               *-[abr]*-[1-9]*-*)
@@ -151,11 +151,11 @@ jobs:
                 echo "'git show' to check if the pre-release base tag is" ;
                 echo "an annotated tag like release tags."
                 exit 1 ;;
-              ${VERSION_TAG})
+              "${VERSION_TAG}")
                 echo "artifact-name=" ;
                 echo "pr-commit=false" ; echo "pr-tag=false" ;
                 echo "pr-release=false" ; echo "release-name=" ;;
-              ${VERSION_TAG}-*)
+              "${VERSION_TAG}"-*)
                 echo "artifact-name=" ;
                 echo "pr-commit=true" ; echo "pr-tag=false" ;
                 echo "pr-release=false" ; echo "release-name=" ;;

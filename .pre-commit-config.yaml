@@ -164,6 +164,12 @@ repos:
         # shellfmt Python installer relies on old setuptools API
         language_version: '3.11'
 
+  # GitHub Actions (including ShellCheck on workflow scripts)
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.7.12
+    hooks:
+      - id: actionlint
+
   # Go
   # - repo: https://github.com/syntaqx/git-hooks
   #   rev: v0.0.18

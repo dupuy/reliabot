@@ -84,6 +84,10 @@ on:
       - 'setup.py'
       - 'tox.ini'
       - '.github/workflows/python-app.yaml'
+      - 'testdir/**'
+      - 'requirements.txt'
+      - 'release.toml'
+
 
 # Declare default permissions as read only.
 permissions:

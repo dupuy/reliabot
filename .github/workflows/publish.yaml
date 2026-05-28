@@ -52,15 +52,17 @@ jobs:
         id: metadata
         run: |
           METADATA_FILE=$(find artifacts -name metadata.json | head -n 1)
-          if [ -z "$METADATA_FILE" ]; then
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
+          {
+            if [ -z "$METADATA_FILE" ]; then
+              echo "skip=true"
+              exit 0
+            fi
 
-          # Extract values using jq and set as outputs
-          echo "skip=false" >> "$GITHUB_OUTPUT"
-          echo "PR_RELEASE=$(jq -r '.["pr-release"]' "$METADATA_FILE")" >> "$GITHUB_OUTPUT"
-          echo "PR_TAG=$(jq -r '.["pr-tag"]' "$METADATA_FILE")" >> "$GITHUB_OUTPUT"
+            # Extract values using jq and set as outputs
+            echo "skip=false"
+            echo "PR_RELEASE=$(jq -r '.["pr-release"]' "$METADATA_FILE")"
+            echo "PR_TAG=$(jq -r '.["pr-tag"]' "$METADATA_FILE")"
+          } >> "$GITHUB_OUTPUT"
 
   test-release:
     runs-on: ubuntu-24.04

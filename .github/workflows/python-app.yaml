@@ -78,16 +78,14 @@ on:
       - synchronize
     paths:
       - '**.py'
-      - 'pyproject.toml'
-      - 'poetry.lock'
-      - 'setup.cfg'
-      - 'setup.py'
-      - 'tox.ini'
       - '.github/workflows/python-app.yaml'
-      - 'testdir/**'
-      - 'requirements.txt'
+      - 'poetry.lock'
+      - 'pyproject.toml'
       - 'release.toml'
-
+      - 'requirements.txt'
+      - 'setup.cfg'
+      - 'testdir/**'
+      - 'tox.ini'
 
 # Declare default permissions as read only.
 permissions:

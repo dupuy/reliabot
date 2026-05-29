@@ -76,6 +76,16 @@ on:
       - ready_for_review
       - reopened
       - synchronize
+    paths:
+      - '**.py'
+      - '.github/workflows/python-app.yaml'
+      - 'poetry.lock'
+      - 'pyproject.toml'
+      - 'release.toml'
+      - 'requirements.txt'
+      - 'setup.cfg'
+      - 'testdir/**'
+      - 'tox.ini'
 
 # Declare default permissions as read only.
 permissions:

@@ -105,7 +105,9 @@ repos:
     hooks:
       - id: prettier
         args: [--single-quote]
-        exclude: fuzz/corpus|styles/|testdir/github/action[.]yml
+        # ,github/workflows changes are handled by local prettier-workflows*
+        exclude: >
+          fuzz/corpus|styles/|testdir/github/action[.]yml|^[.]github/workflows/
         exclude_types: [markdown]
   - repo: https://github.com/codespell-project/codespell
     rev: v2.4.2
@@ -164,11 +166,36 @@ repos:
         # shellfmt Python installer relies on old setuptools API
         language_version: '3.11'
 
-  # GitHub Actions (including ShellCheck on workflow scripts)
+  # GitHub Actions and Workflows
   - repo: https://github.com/rhysd/actionlint
+    # Includes ShellCheck on workflow scripts
     rev: v1.7.12
     hooks:
       - id: actionlint
+  # Prettier --write for GitHub workflows in local repository
+  - repo: local
+    hooks:
+      - id: prettier-workflows
+        name: prettier (for GitHub workflows in local repos)
+        entry: prettier --ignore-unknown --single-quote --write
+        language: node
+        additional_dependencies:
+          - prettier@3.8.3
+        files: ^[.]github/workflows/.*[.]ya?ml$
+        pass_filenames: true
+  # Read-only Prettier --check for GitHub workflows in local repository
+  # that only has any effect if the prettier --write is skipped
+  - repo: local
+    hooks:
+      - id: prettier-workflows-ci
+        name: prettier (checking only for GitHub workflows)
+        # If there is a way to skip this for local repos ONLY, use it.
+        entry: prettier --ignore-unknown --single-quote --check
+        language: node
+        additional_dependencies:
+          - prettier@3.8.3
+        files: ^[.]github/workflows/.*[.]ya?ml$
+        pass_filenames: true
 
   # Go
   # - repo: https://github.com/syntaqx/git-hooks
@@ -185,7 +212,7 @@ repos:
 
   # Python
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.14
+    rev: v0.15.15
     hooks:
       # Run the linter.
       - id: ruff
@@ -208,7 +235,7 @@ repos:
           - --remove-import=from typing import List
           - --remove-import=from typing import Set
           - --remove-import=from typing import Tuple
-        files: ^(?!setup.py$).*\.py$
+        files: ^(?!setup.py$).*[.]py$
         stages: [manual] # prevent whitespace battle with ruff --format (Black)
   - repo: https://github.com/PyCQA/prospector
     rev: v1.18.0
@@ -253,7 +280,7 @@ repos:
     hooks:
       - id: dead
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.14
+    rev: v0.15.15
     hooks:
       # Run the formatter.
       - id: ruff-format
@@ -314,7 +341,7 @@ repos:
     rev: v3.14.2
     hooks:
       - id: vale
-        exclude: CHANGELOG*|LICENSE|humans\.txt|requirements.*|styles/
+        exclude: CHANGELOG*|LICENSE|humans[.]txt|requirements.*|styles/
         types_or:
           - asciidoc
           - html
@@ -418,3 +445,4 @@ ci:
     - hadolint
     - markdown-link-check
     - poetry-lock
+    - prettier-workflows

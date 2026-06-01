@@ -160,6 +160,7 @@ jobs:
           prerelease: "${{ steps.metadata.outputs.PR_RELEASE == 'true' && 'false' || 'true' }}"
           tag: '${{ steps.metadata.outputs.VERSION_TAG }}'
           updateOnlyUnreleased: true
+          commit: ${{ github.event.workflow_run.head_sha }}
 
       - name: 'Prepare packages for TestPyPI'
         if: steps.metadata.outputs.skip == 'false' && steps.metadata.outputs.PR_TAG == 'true'
@@ -279,6 +280,21 @@ jobs:
         with:
           attestations: true
           packages-dir: 'pypi_dist/'
+
+      - name: 'Create draft release'
+        if: steps.metadata.outputs.skip == 'false' && steps.metadata.outputs.PR_TAG == 'true'
+        uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
+        with:
+          allowUpdates: true
+          artifactErrorsFailBuild: true
+          artifacts: '${{ steps.metadata.outputs.ARTIFACT_DIR }}/*'
+          bodyFile: '${{ steps.metadata.outputs.ARTIFACT_DIR }}/release-notes.md'
+          draft: true
+          name: '${{ steps.metadata.outputs.RELEASE_NAME }}'
+          prerelease: false
+          tag: '${{ steps.metadata.outputs.VERSION_TAG }}'
+          updateOnlyUnreleased: true
+          commit: ${{ github.event.workflow_run.head_sha }}
 
       - name: 'Create and push tag'
         if: steps.metadata.outputs.skip == 'false' && steps.metadata.outputs.PR_TAG == 'true'

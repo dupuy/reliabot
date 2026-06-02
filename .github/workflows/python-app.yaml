@@ -114,7 +114,7 @@ jobs:
 
     steps:
       - name: 'Harden runner'
-        uses: step-security/harden-runner@8d3c67de8e2fe68ef647c8db1e6a09f647780f40 # v2.19.0
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
         with:
           disable-sudo: true
           egress-policy: block
@@ -124,7 +124,7 @@ jobs:
             pypi.org:443
 
       - name: 'Checkout repository'
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           # The `git describe` COMMIT_TAG output requires these fetch-* options.
           fetch-depth: 0
@@ -219,7 +219,7 @@ jobs:
     steps:
       - name: 'Harden runner'
         if: env.pr-commit == 'true'
-        uses: step-security/harden-runner@8d3c67de8e2fe68ef647c8db1e6a09f647780f40 # v2.19.0
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
         with:
           disable-sudo: true
           egress-policy: block
@@ -235,7 +235,7 @@ jobs:
 
       - name: 'Checkout repository'
         if: env.pr-commit == 'true'
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           # The `git-cliff` release notes action requires these fetch-* options.
           fetch-depth: 0

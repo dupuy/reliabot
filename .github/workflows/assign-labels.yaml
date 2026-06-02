@@ -37,7 +37,7 @@ jobs:
             api.github.com:443
 
       - name: 'Assign labels'
-        uses: dupuy/action-assign-labels@671a4ca2da0f900464c58b8b5540a1e07133e915 # v1.5.1
+        uses: dupuy/action-assign-labels@441d2f8960b781df4abf3b66e13473a47d893f50 # v2.6.1
         with:
           apply-changes: true
           conventional-commits: |

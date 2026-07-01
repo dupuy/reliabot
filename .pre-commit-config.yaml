@@ -212,7 +212,7 @@ repos:
 
   # Python
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.15
+    rev: v0.15.20
     hooks:
       # Run the linter.
       - id: ruff
@@ -238,7 +238,7 @@ repos:
         files: ^(?!setup.py$).*[.]py$
         stages: [manual] # prevent whitespace battle with ruff --format (Black)
   - repo: https://github.com/PyCQA/prospector
-    rev: v1.18.0
+    rev: v1.19.0
     hooks:
       - id: prospector
         # Needed for pylint import checks.
@@ -280,7 +280,7 @@ repos:
     hooks:
       - id: dead
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.15
+    rev: v0.15.20
     hooks:
       # Run the formatter.
       - id: ruff-format
@@ -338,7 +338,7 @@ repos:
         exclude: tests/
 
   - repo: https://github.com/errata-ai/vale
-    rev: v3.14.2
+    rev: v3.15.1
     hooks:
       - id: vale
         exclude: CHANGELOG*|LICENSE|humans[.]txt|requirements.*|styles/

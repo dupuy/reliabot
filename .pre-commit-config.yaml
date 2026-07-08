@@ -259,7 +259,7 @@ repos:
         args: [-c, pyproject.toml]
         additional_dependencies: ['bandit[toml]']
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v2.1.0
+    rev: v2.2.0
     hooks:
       - id: mypy
   - repo: https://github.com/pre-commit/pygrep-hooks
@@ -438,7 +438,8 @@ ci:
     Checks run by https://pre-commit.ci
   autofix_prs: true # this is what is really useful about pre-commit.ci
   #  pre-commit.ci autoupdate not as good as pre-commit-update
-  autoupdate_commit_msg: 'chore: close this PR, run pre-commit-update'
+  autoupdate_commit_msg: >
+    'chore: close this & run `pre-commit run -a pre-commit-update`'
   autoupdate_schedule: 'quarterly' # ideally: 'never'
   # Checks to disable on pre-commit.ci (sadly, not autoupdate)
   skip:

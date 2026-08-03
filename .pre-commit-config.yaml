@@ -110,7 +110,7 @@ repos:
           fuzz/corpus|styles/|testdir/github/action[.]yml|^[.]github/workflows/
         exclude_types: [markdown]
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.4.2
+    rev: v2.4.3
     hooks:
       - id: codespell
         args: [-L, 'pullrequest,pullrequests']
@@ -120,7 +120,7 @@ repos:
     hooks:
       - id: gitleaks
   - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
-    rev: '3.6.1'
+    rev: '3.8.0'
     hooks:
       - id: editorconfig-checker
         alias: ec
@@ -212,7 +212,7 @@ repos:
 
   # Python
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.20
+    rev: v0.16.1
     hooks:
       # Run the linter.
       - id: ruff
@@ -224,7 +224,7 @@ repos:
       - id: pyupgrade
         args: [--py310-plus]
   - repo: https://github.com/asottile/reorder-python-imports
-    rev: v3.16.0
+    rev: v3.17.0
     hooks:
       - id: reorder-python-imports
         args:
@@ -238,7 +238,7 @@ repos:
         files: ^(?!setup.py$).*[.]py$
         stages: [manual] # prevent whitespace battle with ruff --format (Black)
   - repo: https://github.com/PyCQA/prospector
-    rev: v1.19.0
+    rev: v1.19.1
     hooks:
       - id: prospector
         # Needed for pylint import checks.
@@ -259,7 +259,7 @@ repos:
         args: [-c, pyproject.toml]
         additional_dependencies: ['bandit[toml]']
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v2.2.0
+    rev: v2.3.0
     hooks:
       - id: mypy
   - repo: https://github.com/pre-commit/pygrep-hooks
@@ -280,7 +280,7 @@ repos:
     hooks:
       - id: dead
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.20
+    rev: v0.16.1
     hooks:
       # Run the formatter.
       - id: ruff-format
@@ -338,7 +338,7 @@ repos:
         exclude: tests/
 
   - repo: https://github.com/errata-ai/vale
-    rev: v3.15.1
+    rev: v3.17.0
     hooks:
       - id: vale
         exclude: CHANGELOG*|LICENSE|humans[.]txt|requirements.*|styles/
@@ -375,7 +375,7 @@ repos:
 
   # Docker
   - repo: https://github.com/hadolint/hadolint
-    rev: v2.14.0
+    rev: v2.15.1
     hooks:
       - id: hadolint
         args: ['--failure-threshold=info']

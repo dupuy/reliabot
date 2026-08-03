@@ -90,6 +90,9 @@ filter_unconventional = true
 split_commits = true
 # regex for preprocessing the commit messages
 commit_preprocessors = [
+    # prevent CI skip directives in commits from disabling release workflows
+    # (tested by ci-skip-test.sh, which also tests the Makefile equivalent)
+    { pattern='(?i)\[ *(((no|skip|actions|ci)[- _]?){2}) *\]',replace="($1)" },
     # remove issue numbers from commits
     { pattern = '\((\w+\s)?#([0-9]+)\)', replace = "" },
     { pattern = "^---.*$", replace = "" },
@@ -115,17 +118,17 @@ commit_parsers = [
     { message = "^.*: fix", group = "Fixed 🛠" },
     { message = "^.*", group = "Changed 🔄" },
 ]
-# protect breaking changes from being skipped due to matching a skipping commit_parser
+# Don't protect breaking changes from matching a skipping commit_parser
 protect_breaking_commits = false
-# filter out the commits that are not matched by commit parsers
+# Don't filter out the commits that aren't matched by commit parsers
 filter_commits = false
 # regex for matching git tags
 tag_pattern = "v[0-9].*"
 # regex for skipping tags
 skip_tags = "-(alpha|beta|rc)"
-# sort the tags topologically
+# Don't sort the tags topologically
 topo_order = false
-# sort the commits inside sections by oldest/newest order
+# sort the commits inside sections by Newest order
 sort_commits = "newest"
 
 [tool.poetry]

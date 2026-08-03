@@ -68,6 +68,11 @@ PR_MAKE_TAG=sed -e 's/^/v/' -e 's/a/-alpha./' -e 's/b/-beta./' -e 's/rc/-rc./'
 VERSION_TAG=poetry version --short | $(PR_MAKE_TAG)
 MAJOR_VERSION=poetry version --short | sed -n -e '{s/\..*//p;q;}'
 COMPARE=https://github.com/dupuy/reliabot/compare
+# Rewrite wide-scope CI skip directives ([skip ci] and friends) as (skip ci) so
+# that quoting a commit message in the release commit message cannot disable
+# checks on the release PR. This backs up the git-cliff commit_preprocessors
+# entry in pyproject.toml; ci-skip-test.sh reads this variable and tests both.
+NO_CI_SKIP=s/\[ *(((no|skip|actions|ci)[- _]?){2}) *\]/(\1)/gI
 major minor patch prerelease release: has-git-cliff has-poetry
 	git fetch origin
 	git fetch upstream # needed to get tags from primary fork
@@ -100,7 +105,8 @@ major minor patch prerelease release: has-git-cliff has-poetry
 	@TITLE="chore(release): reliabot `$(VERSION_TAG)`" &&                \
 	NOTES_TMP="docs/notes-$${PPID}~" &&                                  \
 	echo "$${TITLE}" > "$${NOTES_TMP}.msg" &&                            \
-	sed '/^# /,/^### /d' "$${NOTES_TMP}" >> "$${NOTES_TMP}.msg" &&       \
+	sed -E -e '$(NO_CI_SKIP)'                                            \
+	  -e '/^# /,/^### /d' "$${NOTES_TMP}" >> "$${NOTES_TMP}.msg" &&      \
 	SKIP=codespell,markdown-link-check,vale                              \
 	  git commit -F "$${NOTES_TMP}.msg" &&                               \
 	RELEASE_BRANCH="`git branch --show-current`" &&                      \

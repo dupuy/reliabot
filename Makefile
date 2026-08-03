@@ -1,6 +1,6 @@
 TARGETS := all build clean corpus devtools major minor patch \
 	    prerelease release tests uninstall uninstall-pipx update words
-TOOLS := git-cliff poetry tox vale
+TOOLS := git-cliff poetry pre-commit-update tox vale
 TOOL_DIR := $${HOME}/.local/bin
 
 .PHONY: $(TARGETS) $(TOOLS) $(addprefix has-,$(TOOLS))
@@ -73,7 +73,7 @@ COMPARE=https://github.com/dupuy/reliabot/compare
 # checks on the release PR. This backs up the git-cliff commit_preprocessors
 # entry in pyproject.toml; ci-skip-test.sh reads this variable and tests both.
 NO_CI_SKIP=s/\[ *(((no|skip|actions|ci)[- _]?){2}) *\]/(\1)/gI
-major minor patch prerelease release: has-git-cliff has-poetry
+major minor patch prerelease release: has-git-cliff has-poetry has-pre-commit-update
 	git fetch origin
 	git fetch upstream # needed to get tags from primary fork
 	git checkout main

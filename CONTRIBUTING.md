@@ -214,12 +214,11 @@ pre-commit installed at .git/hooks/pre-commit
 pre-commit installed at .git/hooks/commit-msg
 ```
 
-If you don't (or can't) install pre-commit on your system (say, if you're using
-the GitHub file editor in the web UI to fix a small typo), once you create a
-PR, the [pre-commit.ci][19] service runs the pre-commit checks for you and
-pushes fixes to your PRs for many style / formatting issues. Run `git pull` on
-your PR branch after the **pre-commit.ci - pr** checks are no longer pending,
-and show either success or failure.
+If you haven't installed pre-commit on your system (or if you're using the
+GitHub web UI), the [pre-commit.ci][19] service runs pre-commit checks for you
+and pushes fixes to your PRs for style and formatting issues. Run `git pull` on
+your PR branch to pick up those fixes once the **pre-commit.ci - pr** checks
+are no longer pending, and show either success or failure.
 
 ### Contributing code and bug fixes
 
@@ -322,6 +321,12 @@ Reliabot repository, or as commits that pre-commit.ci adds to your PR.
 - Use the present tense ("Add feature" not "Added feature").
 - Use the imperative mood ("Move cursor to…" not "Moves cursor to…").
 - Reference issues and pull requests liberally after the first line.
+- If there is a strong need to turn off a particular pre-commit check or GitHub
+  Actions workflow for a particular commit, DO NOT use a broad commit message
+  directive like `[skip ci]` that prevents all checking. Instead, use a focused
+  one like `[skip test-coverage]` or `[skip pre-commit.ci]`. To skip a specific
+  pre-commit check, set the `SKIP` environment variable, like this:
+  `SKIP=vale git commit -m 'docs: add something`.
 
 ### Python code
 

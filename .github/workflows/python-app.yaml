@@ -141,7 +141,7 @@ jobs:
             COMMIT_TAG=$(git describe) &&
               echo "COMMIT_TAG=$COMMIT_TAG" >&2 ;
             VERSION_TAG="v$(poetry version --short |
-              sed -e 's/a/-alpha./' -e 's/b/-beta./' -e 's/rc/-rc./'))" &&
+              sed -e 's/a/-alpha./' -e 's/b/-beta./' -e 's/rc/-rc./')" &&
                 echo "VERSION_TAG=$VERSION_TAG" ;
             case "$COMMIT_TAG" in
               *-[abr]*-[1-9]*-*)

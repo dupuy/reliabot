@@ -8,6 +8,7 @@
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/dupuy/reliabot.svg)](http://isitmaintained.com/project/dupuy/reliabot "Percentage of issues still open")
 \
 [![Python build workflow status](https://img.shields.io/github/actions/workflow/status/dupuy/reliabot/python-app.yaml)](https://github.com/dupuy/reliabot/actions/workflows/python-app.yaml)
+[![Status](https://img.shields.io/badge/CI%2FCD_status-8A2BE2)](https://mindful-scorpion-7323.statusgator.app)
 ![PyPI Version](https://img.shields.io/pypi/v/reliabot)
 [![GitHub Release](https://img.shields.io/github/v/release/dupuy/reliabot)](https://github.com/dupuy/reliabot/releases)
 \

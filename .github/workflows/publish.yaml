@@ -53,8 +53,8 @@ jobs:
       - name: 'Generate hashes'
         id: hash
         run: |
-          mv artifacts/dist* dist
-          echo "hashes=$(sha256sum dist/* | base64 -w0)" >> "$GITHUB_OUTPUT"
+          cd artifacts &&
+            echo "hashes=$(sha256sum dist/* | base64 -w0)" >> "$GITHUB_OUTPUT"
 
       - name: 'Load metadata'
         id: metadata

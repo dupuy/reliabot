@@ -21,7 +21,7 @@ jobs:
     permissions:
       contents: read
       actions: read # Needed to download artifacts
-    # Security: only run if the triggering workflow succeeded and it was a push.
+    # Security: only run if the triggering workflow succeeds, and it's a push.
     if: >
       github.event.workflow_run.event == 'push' &&
       github.event.workflow_run.conclusion == 'success' &&
@@ -29,9 +29,9 @@ jobs:
 
     outputs:
       hashes: ${{ steps.hash.outputs.hashes }}
+      skip: ${{ steps.metadata.outputs.skip }}
       pr-release: ${{ steps.metadata.outputs.PR_RELEASE }}
       pr-tag: ${{ steps.metadata.outputs.PR_TAG }}
-      skip: ${{ steps.metadata.outputs.skip }}
       version-tag: ${{ steps.metadata.outputs.VERSION_TAG }}
 
     steps:
@@ -73,20 +73,14 @@ jobs:
             echo "VERSION_TAG=$(jq -r '.["VERSION_TAG"]' "$METADATA_FILE")"
           } >> "$GITHUB_OUTPUT"
 
-  provenance:
-    needs: [prepare]
-    permissions:
-      actions: read
-      id-token: write
-      contents: write
-    # MUST use @v2.* version pin rather than a hash, required for SLSA Level 3
-    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v2.1.0
-    with:
-      base64-subjects: ${{ needs.prepare.outputs.hashes }}
-      provenance-name: 'reliabot.intoto.jsonl'
-      upload-assets: true
-      upload-tag-name: ${{ needs.prepare.outputs.version-tag }}
-      continue-on-error: true # Prevent total failure due to Node 20 binaries
+  post-prepare:
+    runs-on: ubuntu-24.04
+    needs: prepare
+    steps:
+      - run: echo "skip = ${{ needs.prepare.outputs.skip }}"
+      - run: echo "pr-release = ${{ needs.prepare.outputs.pr-release }}"
+      - run: echo "pr-tag = ${{ needs.prepare.outputs.pr-tag }}"
+      - run: echo "version-tag = ${{ needs.prepare.outputs.version-tag }}"
 
   test-release:
     runs-on: ubuntu-24.04
@@ -346,3 +340,23 @@ jobs:
           prerelease: "${{ steps.metadata.outputs.PR_RELEASE == 'true' && 'false' || 'true' }}"
           tag: '${{ steps.metadata.outputs.VERSION_TAG }}'
           updateOnlyUnreleased: true
+
+  provenance:
+    needs: [prepare, test-release, pypi-release]
+    if: >
+      always() && (
+        needs.test-release.result == 'success' ||
+        needs.pypi-release.result == 'success'
+      )
+    permissions:
+      actions: read
+      id-token: write
+      contents: write
+    # MUST use @v2.* version pin rather than a hash, required for SLSA Level 3
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v2.1.0
+    with:
+      base64-subjects: ${{ needs.prepare.outputs.hashes }}
+      provenance-name: 'reliabot.intoto.jsonl'
+      upload-assets: true
+      upload-tag-name: ${{ needs.prepare.outputs.version-tag }}
+      # continue-on-error: true # Prevent total failure due to Node 20 binaries

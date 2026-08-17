@@ -259,7 +259,7 @@ repos:
         args: [-c, pyproject.toml]
         additional_dependencies: ['bandit[toml]']
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v2.3.0
+    rev: v2.3.1
     hooks:
       - id: mypy
   - repo: https://github.com/pre-commit/pygrep-hooks

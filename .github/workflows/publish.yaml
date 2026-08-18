@@ -62,7 +62,7 @@ jobs:
       - name: 'Load metadata'
         id: metadata
         run: |
-          ls -lr artifacts
+          ls -lR artifacts; set -x
           # Use grep to protect against metachars in folder name
           METADATA_FILE=$(find artifacts -name metadata.json |
                           grep -E '^[A-Za-z/._-]+$' | head -n 1)

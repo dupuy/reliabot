@@ -56,7 +56,7 @@ jobs:
             else
               echo "pr-commit=true" ;
             fi
-          } | tee -a "$GITHUB_OUTPUT"
+          } >> "$GITHUB_OUTPUT"
 
       - name: 'Set up Python'
         if: steps.computed.outputs.pr-commit == 'true'

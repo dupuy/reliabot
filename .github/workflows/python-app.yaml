@@ -98,6 +98,7 @@ permissions:
 
 jobs:
   tests:
+    if: github.repository == 'dupuy/reliabot'
     runs-on: ubuntu-24.04 # ubuntu-26.04 once in public beta
 
     outputs:
@@ -208,8 +209,9 @@ jobs:
 
     # Build for pull requests AND for release-related push events to main.
     if: >
-      github.event_name == 'pull_request' ||
-      (github.event_name == 'push' && needs.tests.outputs.pr_tag == 'true')
+      github.repository == 'dupuy/reliabot' &&
+      (github.event_name == 'pull_request' ||
+        (github.event_name == 'push' && needs.tests.outputs.pr_tag == 'true'))
     env:
       VERSION_TAG: ${{ needs.tests.outputs.VERSION_TAG }}
       ARTIFACT_NAME: ${{ needs.tests.outputs.ARTIFACT_NAME }}

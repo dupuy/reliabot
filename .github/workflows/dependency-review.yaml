@@ -20,6 +20,7 @@ concurrency:
 
 jobs:
   dependency-review:
+    if: github.repository == 'dupuy/reliabot'
     runs-on: ubuntu-24.04
     steps:
       - name: 'Harden runner'

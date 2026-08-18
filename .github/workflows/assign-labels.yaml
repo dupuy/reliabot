@@ -24,6 +24,7 @@ permissions:
 
 jobs:
   assign-labels:
+    if: github.repository == 'dupuy/reliabot'
     runs-on: ubuntu-24.04
     permissions:
       pull-requests: write

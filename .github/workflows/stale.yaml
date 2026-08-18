@@ -15,6 +15,7 @@ permissions:
 
 jobs:
   stale:
+    if: github.repository == 'dupuy/reliabot'
     runs-on: ubuntu-24.04
     permissions:
       issues: write

@@ -21,6 +21,7 @@ permissions:
 jobs:
   analyze:
     name: 'Analyze'
+    if: github.repository == 'dupuy/reliabot'
     runs-on: ubuntu-24.04
     permissions:
       actions: read

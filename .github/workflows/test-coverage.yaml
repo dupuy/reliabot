@@ -17,6 +17,7 @@ permissions:
 
 jobs:
   tests:
+    if: github.repository == 'dupuy/reliabot'
     runs-on: ubuntu-24.04
 
     steps:

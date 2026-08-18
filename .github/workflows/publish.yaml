@@ -7,6 +7,7 @@ name: 'Publish release'
 
 on:
   workflow_run:
+    branches: [main]
     workflows: ['Test, build, release, and upload Python Poetry app']
     types:
       - completed
@@ -30,9 +31,11 @@ jobs:
     outputs:
       hashes: ${{ steps.hash.outputs.hashes }}
       skip: ${{ steps.metadata.outputs.skip }}
-      pr-release: ${{ steps.metadata.outputs.PR_RELEASE }}
-      pr-tag: ${{ steps.metadata.outputs.PR_TAG }}
-      version-tag: ${{ steps.metadata.outputs.VERSION_TAG }}
+      ARTIFACT_DIR: ${{ steps.metadata.outputs.ARTIFACT_DIR }}
+      pr_release: ${{ steps.metadata.outputs.pr_release }}
+      pr_tag: ${{ steps.metadata.outputs.pr_tag }}
+      RELEASE_NAME: ${{ steps.metadata.outputs.RELEASE_NAME }}
+      VERSION_TAG: ${{ steps.metadata.outputs.VERSION_TAG }}
 
     steps:
       - name: 'Harden runner'
@@ -59,7 +62,9 @@ jobs:
       - name: 'Load metadata'
         id: metadata
         run: |
-          METADATA_FILE=$(find artifacts -name metadata.json | head -n 1)
+          # Use grep to protect against metachars in folder name
+          METADATA_FILE=$(find artifacts -name metadata.json |
+                          grep -E '^[A-Za-z/._-]+$' | head -n 1)
           {
             if [ -z "$METADATA_FILE" ]; then
               echo "skip=true"
@@ -68,32 +73,29 @@ jobs:
 
             # Extract values using jq and set as outputs
             echo "skip=false"
-            echo "PR_RELEASE=$(jq -r '.["pr-release"]' "$METADATA_FILE")"
-            echo "PR_TAG=$(jq -r '.["pr-tag"]' "$METADATA_FILE")"
+            echo "pr_release=$(jq -r '.["pr_release"]' "$METADATA_FILE")"
+            echo "pr_tag=$(jq -r '.["pr_tag"]' "$METADATA_FILE")"
+            echo "RELEASE_NAME=$(jq -r '.["RELEASE_NAME"]' "$METADATA_FILE")"
             echo "VERSION_TAG=$(jq -r '.["VERSION_TAG"]' "$METADATA_FILE")"
-          } >> "$GITHUB_OUTPUT"
-
-  post-prepare:
-    runs-on: ubuntu-24.04
-    needs: prepare
-    steps:
-      - run: echo "skip = ${{ needs.prepare.outputs.skip }}"
-      - run: echo "pr-release = ${{ needs.prepare.outputs.pr-release }}"
-      - run: echo "pr-tag = ${{ needs.prepare.outputs.pr-tag }}"
-      - run: echo "version-tag = ${{ needs.prepare.outputs.version-tag }}"
+          } | tee -a "$GITHUB_OUTPUT"
 
   test-release:
     runs-on: ubuntu-24.04
     needs: prepare
-    # Only run if prepare succeeded and it's a pre-release (pr-release is false)
+    # Only run if prepare succeeds, and it's a pre-release (pr_release is false)
     if: >
       needs.prepare.outputs.skip == 'false' &&
-      needs.prepare.outputs.pr-tag == 'true' &&
-      needs.prepare.outputs.pr-release == 'false'
+      needs.prepare.outputs.pr_tag == 'true' &&
+      needs.prepare.outputs.pr_release == 'false'
 
     environment:
       name: test-pypi
       url: https://test.pypi.org/p/reliabot
+
+    env:
+      ARTIFACT_DIR: ${{ needs.prepare.outputs.ARTIFACT_DIR }}
+      RELEASE_NAME: ${{ needs.prepare.outputs.RELEASE_NAME }}
+      VERSION_TAG: ${{ needs.prepare.outputs.VERSION_TAG }}
 
     permissions:
       id-token: write # Trusted publishing requires this permission
@@ -128,67 +130,41 @@ jobs:
         run: |
           gh run download ${{ github.event.workflow_run.id }} --dir artifacts
 
-      - name: 'Load metadata and prepare environment'
-        id: metadata
-        run: |
-          METADATA_FILE=$(find artifacts -name metadata.json | head -n 1)
-          if [ -z "$METADATA_FILE" ]; then
-            echo "No metadata.json found. This might not be a release-related run."
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          # Extract values using jq
-          {
-            echo "VERSION_TAG=$(jq -r '.VERSION_TAG' "$METADATA_FILE")"
-            echo "PR_RELEASE=$(jq -r '.["pr-release"]' "$METADATA_FILE")"
-            echo "PR_TAG=$(jq -r '.["pr-tag"]' "$METADATA_FILE")"
-            echo "RELEASE_NAME=$(jq -r '.["release-name"]' "$METADATA_FILE")"
-            echo "ARTIFACT_DIR=$(dirname "$METADATA_FILE")"
-          } | tee -a "$GITHUB_OUTPUT" >> "$GITHUB_ENV"
-
-          echo "skip=false" >> "$GITHUB_OUTPUT"
-
       - name: 'Sign built artifacts'
-        if: steps.metadata.outputs.skip == 'false' && steps.metadata.outputs.PR_TAG == 'true'
         uses: sigstore/gh-action-sigstore-python@790bc6befb9d733738f18d8f895854b453640ec9 # v3.5.0
         with:
           inputs: >
-            ${{ steps.metadata.outputs.ARTIFACT_DIR }}/*.tar.gz
-            ${{ steps.metadata.outputs.ARTIFACT_DIR }}/*.whl
-            ${{ steps.metadata.outputs.ARTIFACT_DIR }}/reliabot.spdx.json
+            ${{ env.ARTIFACT_DIR }}/*.tar.gz
+            ${{ env.ARTIFACT_DIR }}/*.whl
+            ${{ env.ARTIFACT_DIR }}/reliabot.spdx.json
 
       - name: 'Attest SBOM'
-        if: steps.metadata.outputs.skip == 'false' && steps.metadata.outputs.PR_TAG == 'true'
         uses: actions/attest@508db95dd578ae2727ebd6217d5ba78e4fbda05d # v4.2.1
         with:
-          subject-path: '${{ steps.metadata.outputs.ARTIFACT_DIR }}/*'
-          sbom-path: '${{ steps.metadata.outputs.ARTIFACT_DIR }}/reliabot.spdx.json'
+          subject-path: '${{ env.ARTIFACT_DIR }}/*'
+          sbom-path: '${{ env.ARTIFACT_DIR }}/reliabot.spdx.json'
 
       - name: 'Create draft release'
-        if: steps.metadata.outputs.skip == 'false' && steps.metadata.outputs.PR_TAG == 'true'
         uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
         with:
           allowUpdates: true
           artifactErrorsFailBuild: true
-          artifacts: '${{ steps.metadata.outputs.ARTIFACT_DIR }}/*'
-          bodyFile: '${{ steps.metadata.outputs.ARTIFACT_DIR }}/release-notes.md'
+          artifacts: '${{ env.ARTIFACT_DIR }}/*'
+          bodyFile: '${{ env.ARTIFACT_DIR }}/release-notes.md'
           draft: true
-          name: '${{ steps.metadata.outputs.RELEASE_NAME }}'
-          prerelease: "${{ steps.metadata.outputs.PR_RELEASE == 'true' && 'false' || 'true' }}"
-          tag: '${{ steps.metadata.outputs.VERSION_TAG }}'
+          name: '${{ env.RELEASE_NAME }}'
+          prerelease: true
+          tag: '${{ env.VERSION_TAG }}'
           updateOnlyUnreleased: true
           commit: ${{ github.event.workflow_run.head_sha }}
 
       - name: 'Prepare packages for TestPyPI'
-        if: steps.metadata.outputs.skip == 'false' && steps.metadata.outputs.PR_TAG == 'true'
         run: |
           mkdir -p test_pypi_dist
-          cp ${{ steps.metadata.outputs.ARTIFACT_DIR }}/*.tar.gz test_pypi_dist/
-          cp ${{ steps.metadata.outputs.ARTIFACT_DIR }}/*.whl test_pypi_dist/
+          cp "$ARTIFACT_DIR"/*.tar.gz test_pypi_dist/
+          cp "$ARTIFACT_DIR"/*.whl test_pypi_dist/
 
       - name: 'Publish to TestPyPI'
-        if: steps.metadata.outputs.skip == 'false' && steps.metadata.outputs.PR_TAG == 'true'
         uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
         with:
           attestations: true
@@ -198,15 +174,20 @@ jobs:
   pypi-release:
     runs-on: ubuntu-24.04
     needs: prepare
-    # Only run if prepare succeeds, and it's a full release (pr-release is true)
+    # Only run if prepare succeeds, and it's a full release (pr_release is true)
     if: >
       needs.prepare.outputs.skip == 'false' &&
-      needs.prepare.outputs.pr-tag == 'true' &&
-      needs.prepare.outputs.pr-release == 'true'
+      needs.prepare.outputs.pr_tag == 'true' &&
+      needs.prepare.outputs.pr_release == 'true'
 
     environment:
       name: pypi
       url: https://pypi.org/p/reliabot
+
+    env:
+      ARTIFACT_DIR: ${{ needs.prepare.outputs.ARTIFACT_DIR }}
+      RELEASE_NAME: ${{ needs.prepare.outputs.RELEASE_NAME }}
+      VERSION_TAG: ${{ needs.prepare.outputs.VERSION_TAG }}
 
     permissions:
       id-token: write # Trusted publishing requires this permission
@@ -248,98 +229,53 @@ jobs:
         run: |
           gh run download ${{ github.event.workflow_run.id }} --dir artifacts
 
-      - name: 'Load metadata and prepare environment'
-        id: metadata
-        run: |
-          METADATA_FILE=$(find artifacts -name metadata.json | head -n 1)
-          if [ -z "$METADATA_FILE" ]; then
-            echo "No metadata.json found. Skipping production release."
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          # Extract values using jq
-          {
-            echo "VERSION_TAG=$(jq -r '.VERSION_TAG' "$METADATA_FILE")"
-            echo "PR_RELEASE=$(jq -r '.["pr-release"]' "$METADATA_FILE")"
-            echo "PR_TAG=$(jq -r '.["pr-tag"]' "$METADATA_FILE")"
-            echo "RELEASE_NAME=$(jq -r '.["release-name"]' "$METADATA_FILE")"
-            echo "ARTIFACT_DIR=$(dirname "$METADATA_FILE")"
-          } | tee -a "$GITHUB_OUTPUT" >> "$GITHUB_ENV"
-
-          echo "skip=false" >> "$GITHUB_OUTPUT"
-
       - name: 'Sign built artifacts'
-        if: steps.metadata.outputs.skip == 'false' && steps.metadata.outputs.PR_TAG == 'true'
         uses: sigstore/gh-action-sigstore-python@790bc6befb9d733738f18d8f895854b453640ec9 # v3.5.0
         with:
           inputs: >
-            ${{ steps.metadata.outputs.ARTIFACT_DIR }}/*.tar.gz
-            ${{ steps.metadata.outputs.ARTIFACT_DIR }}/*.whl
-            ${{ steps.metadata.outputs.ARTIFACT_DIR }}/reliabot.spdx.json
+            ${{ env.ARTIFACT_DIR }}/*.tar.gz
+            ${{ env.ARTIFACT_DIR }}/*.whl
+            ${{ env.ARTIFACT_DIR }}/reliabot.spdx.json
 
       - name: 'Attest SBOM'
-        if: steps.metadata.outputs.skip == 'false' && steps.metadata.outputs.PR_TAG == 'true'
         uses: actions/attest@508db95dd578ae2727ebd6217d5ba78e4fbda05d # v4.2.1
         with:
-          subject-path: '${{ steps.metadata.outputs.ARTIFACT_DIR }}/*'
-          sbom-path: '${{ steps.metadata.outputs.ARTIFACT_DIR }}/reliabot.spdx.json'
+          subject-path: '${{ env.ARTIFACT_DIR }}/*'
+          sbom-path: '${{ env.ARTIFACT_DIR }}/reliabot.spdx.json'
 
       - name: 'Prepare packages for PyPI'
-        if: steps.metadata.outputs.skip == 'false' && steps.metadata.outputs.PR_TAG == 'true'
         run: |
           mkdir -p pypi_dist
-          cp ${{ steps.metadata.outputs.ARTIFACT_DIR }}/*.tar.gz pypi_dist/
-          cp ${{ steps.metadata.outputs.ARTIFACT_DIR }}/*.whl pypi_dist/
+          cp "$ARTIFACT_DIR"/*.tar.gz pypi_dist/
+          cp "$ARTIFACT_DIR"/*.whl pypi_dist/
 
       - name: 'Publish to PyPI'
-        if: steps.metadata.outputs.skip == 'false' && steps.metadata.outputs.PR_TAG == 'true'
         uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
         with:
           attestations: true
           packages-dir: 'pypi_dist/'
 
       - name: 'Create draft release'
-        if: steps.metadata.outputs.skip == 'false' && steps.metadata.outputs.PR_TAG == 'true'
         uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
         with:
           allowUpdates: true
           artifactErrorsFailBuild: true
-          artifacts: '${{ steps.metadata.outputs.ARTIFACT_DIR }}/*'
-          bodyFile: '${{ steps.metadata.outputs.ARTIFACT_DIR }}/release-notes.md'
+          artifacts: '${{ env.ARTIFACT_DIR }}/*'
+          bodyFile: '${{ env.ARTIFACT_DIR }}/release-notes.md'
           draft: true
-          name: '${{ steps.metadata.outputs.RELEASE_NAME }}'
+          name: '${{ env.RELEASE_NAME }}'
           prerelease: false
-          tag: '${{ steps.metadata.outputs.VERSION_TAG }}'
+          tag: '${{ env.VERSION_TAG }}'
           updateOnlyUnreleased: true
           commit: ${{ github.event.workflow_run.head_sha }}
 
-      - name: 'Create and push tag'
-        if: steps.metadata.outputs.skip == 'false' && steps.metadata.outputs.PR_TAG == 'true'
+      - name: 'Create and push annotated tag'
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          if [ "$PR_RELEASE" = "true" ]; then
-            # Annotated tag for final release
-            git tag -a "$VERSION_TAG" -F "${{ steps.metadata.outputs.ARTIFACT_DIR }}/release-notes.md"
-          else
-            # Light-weight tag for pre-release
-            git tag "$VERSION_TAG"
-          fi
+          # Annotated tag for final release
+          git tag -a "$VERSION_TAG" -F "$ARTIFACT_DIR/release-notes.md"
           git push origin "$VERSION_TAG"
-
-      - name: 'Finalize GitHub release'
-        if: steps.metadata.outputs.skip == 'false' && steps.metadata.outputs.PR_TAG == 'true'
-        uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
-        with:
-          allowUpdates: true
-          # Re-upload artifacts to ensure signatures are present in the final release
-          artifacts: '${{ steps.metadata.outputs.ARTIFACT_DIR }}/*'
-          draft: false
-          name: '${{ steps.metadata.outputs.RELEASE_NAME }}'
-          prerelease: "${{ steps.metadata.outputs.PR_RELEASE == 'true' && 'false' || 'true' }}"
-          tag: '${{ steps.metadata.outputs.VERSION_TAG }}'
-          updateOnlyUnreleased: true
 
   provenance:
     needs: [prepare, test-release, pypi-release]
@@ -358,5 +294,30 @@ jobs:
       base64-subjects: ${{ needs.prepare.outputs.hashes }}
       provenance-name: 'reliabot.intoto.jsonl'
       upload-assets: true
-      upload-tag-name: ${{ needs.prepare.outputs.version-tag }}
-      # continue-on-error: true # Prevent total failure due to Node 20 binaries
+      upload-tag-name: ${{ needs.prepare.outputs.VERSION_TAG }}
+      continue-on-error: true # Prevent total failure due to Node 20 binaries
+
+  finalize-release:
+    runs-on: ubuntu-24.04
+    needs: [prepare, pypi-release, provenance] # finalize AFTER provenance
+    steps:
+      - name: 'Harden runner'
+        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        with:
+          disable-sudo: true
+          egress-policy: audit
+          allowed-endpoints: >
+            api.github.com:443
+            uploads.github.com:443
+
+      - name: 'Finalize GitHub release'
+        uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
+        with:
+          allowUpdates: true
+          # Re-upload artifacts to ensure signatures are present in the final release
+          artifacts: '${{ needs.prepare.outputs.ARTIFACT_DIR }}/*'
+          draft: false
+          name: '${{ needs.prepare.outputs.RELEASE_NAME }}'
+          prerelease: false
+          tag: '${{ needs.prepare.outputs.VERSION_TAG }}'
+          updateOnlyUnreleased: true

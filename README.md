@@ -9,13 +9,18 @@
 \
 [![Python build workflow status](https://img.shields.io/github/actions/workflow/status/dupuy/reliabot/python-app.yaml)](https://github.com/dupuy/reliabot/actions/workflows/python-app.yaml)
 [![Status](https://img.shields.io/badge/CI%2FCD_status-8A2BE2)](https://mindful-scorpion-7323.statusgator.app)
-![PyPI Version](https://img.shields.io/pypi/v/reliabot)
+[![PyPI Version](https://img.shields.io/pypi/v/reliabot)](https://pypi.org/project/reliabot/)
 [![GitHub Release](https://img.shields.io/github/v/release/dupuy/reliabot)](https://github.com/dupuy/reliabot/releases)
 \
 [![GitHub License](https://img.shields.io/github/license/dupuy/reliabot)](LICENSE)
-![GitHub repository size](https://img.shields.io/github/repo-size/dupuy/reliabot)
-![GitHub repository file+folder count](https://img.shields.io/github/directory-file-count/dupuy/reliabot)
-![GitHub top language](https://img.shields.io/github/languages/top/dupuy/reliabot)
+[![GitHub repository size](https://img.shields.io/github/repo-size/dupuy/reliabot)](https://github.com/dupuy/reliabot/graphs/code-frequency)
+[![GitHub top language](https://img.shields.io/github/languages/top/dupuy/reliabot)](https://github.com/collections/programming-languages)
+
+<!-- markdown-link-check-disable -->
+
+[![GitHub repository file+folder count](https://img.shields.io/github/directory-file-count/dupuy/reliabot)](https://githubtree.mgks.dev/repo/dupuy/reliabot/main/?ref=badge&sort=folder-az&style=classic)
+
+<!-- moarkdown-link-check-enable -->
 
 <!-- ![Lines of code](https://img.shields.io/tokei/lines/github/dupuy/reliabot) -->
 

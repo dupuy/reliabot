@@ -16,6 +16,18 @@ on:
 permissions:
   contents: read
 
+# Only run this publish workflow for one commit at a time, don't cancel any
+# pending jobs.
+# Grouped by commit: o global group could cancel a pending publish job for a
+# burst of no-release pushes, since GitHub keeps only one pending run per group.
+concurrency:
+  group: publish-release-${{ github.event.workflow_run.head_sha }}
+  cancel-in-progress: false
+
+env:
+  ARTIFACTS_DIR: artifacts
+  RUN_ID: ${{ github.event.workflow_run.id }}
+
 jobs:
   prepare:
     runs-on: ubuntu-24.04
@@ -27,11 +39,11 @@ jobs:
       github.event.workflow_run.event == 'push' &&
       github.event.workflow_run.conclusion == 'success' &&
       github.repository == 'dupuy/reliabot'
-
+    timeout-minutes: 5
     outputs:
       hashes: ${{ steps.hash.outputs.hashes }}
       skip: ${{ steps.metadata.outputs.skip }}
-      ARTIFACT_DIR: ${{ steps.metadata.outputs.ARTIFACT_DIR }}
+      DIST: ${{ steps.metadata.outputs.DIST }}
       pr_release: ${{ steps.metadata.outputs.pr_release }}
       pr_tag: ${{ steps.metadata.outputs.pr_tag }}
       RELEASE_NAME: ${{ steps.metadata.outputs.RELEASE_NAME }}
@@ -51,13 +63,13 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
         run: |
-          gh run download ${{ github.event.workflow_run.id }} --dir artifacts
+          gh run download "$RUN_ID" --dir "$ARTIFACTS_DIR"
 
       - name: 'Load metadata'
         id: metadata
         run: |
           # Use grep to protect against metachars in folder name
-          METADATA_FILE=$(find artifacts -name metadata.json |
+          METADATA_FILE=$(find "$ARTIFACTS_DIR" -name metadata.json |
                           grep -E '^[0-9A-Za-z/._-]+$' | head -n 1)
           {
             if [ -z "$METADATA_FILE" ]; then
@@ -67,6 +79,7 @@ jobs:
 
             # Extract values using jq and set as outputs
             echo "skip=false"
+            echo "DIST=$(dirname "$METADATA_FILE")"
             for K in ARTIFACT_NAME pr_release pr_tag RELEASE_NAME VERSION_TAG
             do
               echo "$K=$(jq -r '.["'"$K"'"]' "$METADATA_FILE")"
@@ -77,7 +90,7 @@ jobs:
         id: hash
         run: |
           {
-            cd artifacts &&
+            cd "$ARTIFACTS_DIR" &&
               echo "hashes=$(sha256sum "$ARTIFACT_NAME"/* | base64 -w0)"
           } >> "$GITHUB_OUTPUT"
 
@@ -89,20 +102,20 @@ jobs:
       needs.prepare.outputs.skip == 'false' &&
       needs.prepare.outputs.pr_tag == 'true' &&
       needs.prepare.outputs.pr_release == 'false'
-
+    timeout-minutes: 15
     environment:
       name: test-pypi
       url: https://test.pypi.org/p/reliabot
 
     env:
-      ARTIFACT_DIR: ${{ needs.prepare.outputs.ARTIFACT_DIR }}
+      DIST: ${{ needs.prepare.outputs.DIST }}
       RELEASE_NAME: ${{ needs.prepare.outputs.RELEASE_NAME }}
       VERSION_TAG: ${{ needs.prepare.outputs.VERSION_TAG }}
 
     permissions:
       id-token: write # Trusted publishing requires this permission
       attestations: write
-      contents: write # Needed for annotated tag push
+      contents: write # Needed for draft release creation
       actions: read # Needed to download artifacts
 
     steps:
@@ -130,29 +143,29 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
         run: |
-          gh run download ${{ github.event.workflow_run.id }} --dir artifacts
+          gh run download "$RUN_ID" --dir "$ARTIFACTS_DIR"
 
       - name: 'Sign built artifacts'
         uses: sigstore/gh-action-sigstore-python@790bc6befb9d733738f18d8f895854b453640ec9 # v3.5.0
         with:
           inputs: >
-            ${{ env.ARTIFACT_DIR }}/*.tar.gz
-            ${{ env.ARTIFACT_DIR }}/*.whl
-            ${{ env.ARTIFACT_DIR }}/reliabot.spdx.json
+            ${{ env.DIST }}/*.tar.gz
+            ${{ env.DIST }}/*.whl
+            ${{ env.DIST }}/reliabot.spdx.json
 
       - name: 'Attest SBOM'
         uses: actions/attest@508db95dd578ae2727ebd6217d5ba78e4fbda05d # v4.2.1
         with:
-          subject-path: '${{ env.ARTIFACT_DIR }}/*'
-          sbom-path: '${{ env.ARTIFACT_DIR }}/reliabot.spdx.json'
+          subject-path: '${{ env.DIST }}/*'
+          sbom-path: '${{ env.DIST }}/reliabot.spdx.json'
 
       - name: 'Create draft release'
         uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
         with:
           allowUpdates: true
           artifactErrorsFailBuild: true
-          artifacts: '${{ env.ARTIFACT_DIR }}/*'
-          bodyFile: '${{ env.ARTIFACT_DIR }}/release-notes.md'
+          artifacts: '${{ env.DIST }}/*'
+          bodyFile: '${{ env.DIST }}/release-notes.md'
           draft: true
           name: '${{ env.RELEASE_NAME }}'
           prerelease: true
@@ -163,8 +176,8 @@ jobs:
       - name: 'Prepare packages for TestPyPI'
         run: |
           mkdir -p test_pypi_dist
-          cp "$ARTIFACT_DIR"/*.tar.gz test_pypi_dist/
-          cp "$ARTIFACT_DIR"/*.whl test_pypi_dist/
+          cp "$DIST"/*.tar.gz test_pypi_dist/
+          cp "$DIST"/*.whl test_pypi_dist/
 
       - name: 'Publish to TestPyPI'
         uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
@@ -181,13 +194,13 @@ jobs:
       needs.prepare.outputs.skip == 'false' &&
       needs.prepare.outputs.pr_tag == 'true' &&
       needs.prepare.outputs.pr_release == 'true'
-
+    timeout-minutes: 15
     environment:
       name: pypi
       url: https://pypi.org/p/reliabot
 
     env:
-      ARTIFACT_DIR: ${{ needs.prepare.outputs.ARTIFACT_DIR }}
+      DIST: ${{ needs.prepare.outputs.DIST }}
       RELEASE_NAME: ${{ needs.prepare.outputs.RELEASE_NAME }}
       VERSION_TAG: ${{ needs.prepare.outputs.VERSION_TAG }}
 
@@ -229,27 +242,27 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
         run: |
-          gh run download ${{ github.event.workflow_run.id }} --dir artifacts
+          gh run download "$RUN_ID" --dir "$ARTIFACTS_DIR"
 
       - name: 'Sign built artifacts'
         uses: sigstore/gh-action-sigstore-python@790bc6befb9d733738f18d8f895854b453640ec9 # v3.5.0
         with:
           inputs: >
-            ${{ env.ARTIFACT_DIR }}/*.tar.gz
-            ${{ env.ARTIFACT_DIR }}/*.whl
-            ${{ env.ARTIFACT_DIR }}/reliabot.spdx.json
+            ${{ env.DIST }}/*.tar.gz
+            ${{ env.DIST }}/*.whl
+            ${{ env.DIST }}/reliabot.spdx.json
 
       - name: 'Attest SBOM'
         uses: actions/attest@508db95dd578ae2727ebd6217d5ba78e4fbda05d # v4.2.1
         with:
-          subject-path: '${{ env.ARTIFACT_DIR }}/*'
-          sbom-path: '${{ env.ARTIFACT_DIR }}/reliabot.spdx.json'
+          subject-path: '${{ env.DIST }}/*'
+          sbom-path: '${{ env.DIST }}/reliabot.spdx.json'
 
       - name: 'Prepare packages for PyPI'
         run: |
           mkdir -p pypi_dist
-          cp "$ARTIFACT_DIR"/*.tar.gz pypi_dist/
-          cp "$ARTIFACT_DIR"/*.whl pypi_dist/
+          cp "$DIST"/*.tar.gz pypi_dist/
+          cp "$DIST"/*.whl pypi_dist/
 
       - name: 'Publish to PyPI'
         uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
@@ -262,8 +275,8 @@ jobs:
         with:
           allowUpdates: true
           artifactErrorsFailBuild: true
-          artifacts: '${{ env.ARTIFACT_DIR }}/*'
-          bodyFile: '${{ env.ARTIFACT_DIR }}/release-notes.md'
+          artifacts: '${{ env.DIST }}/*'
+          bodyFile: '${{ env.DIST }}/release-notes.md'
           draft: true
           name: '${{ env.RELEASE_NAME }}'
           prerelease: false
@@ -275,8 +288,8 @@ jobs:
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          # Annotated tag for final release
-          git tag -a "$VERSION_TAG" -F "$ARTIFACT_DIR/release-notes.md"
+          # Annotated tag for full release (not pre-release)
+          git tag -a "$VERSION_TAG" -F "$DIST/release-notes.md"
           git push origin "$VERSION_TAG"
 
   provenance:
@@ -302,6 +315,10 @@ jobs:
   finalize-release:
     runs-on: ubuntu-24.04
     needs: [prepare, pypi-release, provenance] # finalize AFTER provenance
+    permissions:
+      contents: write
+    timeout-minutes: 5
+
     steps:
       - name: 'Harden runner'
         uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
@@ -316,8 +333,6 @@ jobs:
         uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
         with:
           allowUpdates: true
-          # Re-upload artifacts to ensure signatures are present in the final release
-          artifacts: '${{ needs.prepare.outputs.ARTIFACT_DIR }}/*'
           draft: false
           name: '${{ needs.prepare.outputs.RELEASE_NAME }}'
           prerelease: false

@@ -62,10 +62,9 @@ jobs:
       - name: 'Load metadata'
         id: metadata
         run: |
-          ls -lR artifacts; set -x
           # Use grep to protect against metachars in folder name
           METADATA_FILE=$(find artifacts -name metadata.json |
-                          grep -E '^[A-Za-z/._-]+$' | head -n 1)
+                          grep -E '^[0-9A-Za-z/._-]+$' | head -n 1)
           {
             if [ -z "$METADATA_FILE" ]; then
               echo "skip=true"

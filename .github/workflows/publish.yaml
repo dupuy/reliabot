@@ -53,12 +53,6 @@ jobs:
         run: |
           gh run download ${{ github.event.workflow_run.id }} --dir artifacts
 
-      - name: 'Generate hashes'
-        id: hash
-        run: |
-          cd artifacts && ln -s dist* dist &&
-            echo "hashes=$(sha256sum dist/* | base64 -w0)" >> "$GITHUB_OUTPUT"
-
       - name: 'Load metadata'
         id: metadata
         run: |
@@ -73,11 +67,19 @@ jobs:
 
             # Extract values using jq and set as outputs
             echo "skip=false"
-            echo "pr_release=$(jq -r '.["pr_release"]' "$METADATA_FILE")"
-            echo "pr_tag=$(jq -r '.["pr_tag"]' "$METADATA_FILE")"
-            echo "RELEASE_NAME=$(jq -r '.["RELEASE_NAME"]' "$METADATA_FILE")"
-            echo "VERSION_TAG=$(jq -r '.["VERSION_TAG"]' "$METADATA_FILE")"
-          } | tee -a "$GITHUB_OUTPUT"
+            for K in ARTIFACT_NAME pr_release pr_tag RELEASE_NAME VERSION_TAG
+            do
+              echo "$K=$(jq -r '.["'"$K"'"]' "$METADATA_FILE")"
+            done
+          } | tee -a "$GITHUB_ENV" "$GITHUB_OUTPUT" # and also stdout
+
+      - name: 'Generate hashes'
+        id: hash
+        run: |
+          {
+            cd artifacts &&
+              echo "hashes=$(sha256sum "$ARTIFACT_NAME"/* | base64 -w0)"
+          } >> "$GITHUB_OUTPUT"
 
   test-release:
     runs-on: ubuntu-24.04

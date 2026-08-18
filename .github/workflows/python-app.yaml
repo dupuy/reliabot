@@ -179,7 +179,7 @@ jobs:
                     echo "RELEASE_NAME=Release $VERSION_TAG" ;;
                 esac ;
             esac ;
-          } | tee -a "$GITHUB_OUTPUT"
+          } >> "$GITHUB_OUTPUT"
 
       - name: 'Set up Python'
         if: steps.computed.outputs.pr_commit == 'true'

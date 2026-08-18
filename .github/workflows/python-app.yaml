@@ -290,18 +290,22 @@ jobs:
           config: release.toml
           version: 'v2.9.1'
 
-      - name: 'Generate metadata for privileged tasks'
+      - name: 'Generate metadata for publish workflow'
         if: env.pr_tag == 'true'
         run: |
-          cat <<EOF > dist/metadata.json
+          METADATA_FILE=dist/metadata.json
+          cat <<EOF >"$METADATA_FILE"
           {
             "ARTIFACT_NAME": "$ARTIFACT_NAME",
             "pr_release": "$pr_release",
             "pr_tag": "$pr_tag",
-            "RELEASE_NAME": "$RELEASE_NAME"
+            "RELEASE_NAME": "$RELEASE_NAME",
             "VERSION_TAG": "$VERSION_TAG",
+
+            "JSON requires": "a comma-less final entry"
           }
           EOF
+          python3 -m json.tool "$METADATA_FILE"
 
       - name: 'Upload distribution package as an artifact'
         if: github.repository == 'dupuy/reliabot' && env.pr_tag == 'true'

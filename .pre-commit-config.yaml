@@ -167,9 +167,10 @@ repos:
         language_version: '3.11'
 
   # GitHub Actions and Workflows
-  - repo: https://github.com/rhysd/actionlint
+  - repo: https://github.com/kjanat/actionlint
+    # (previously https://github.com/rhysd/actionlint v1.7.3)
     # Includes ShellCheck on workflow scripts
-    rev: v1.7.12
+    rev: v1.10.0
     hooks:
       - id: actionlint
   # Prettier --write for GitHub workflows in local repository

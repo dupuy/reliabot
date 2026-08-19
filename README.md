@@ -1,3 +1,5 @@
+<!-- markdown-link-check-disable -->
+
 [![Codacy coverage](https://app.codacy.com/project/badge/Coverage/4668d53bee4f45c394437197d2e20c01)](https://app.codacy.com/gh/dupuy/reliabot/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
 [![Codacy grade](https://app.codacy.com/project/badge/Grade/4668d53bee4f45c394437197d2e20c01)](https://app.codacy.com/gh/dupuy/reliabot/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![CodeQL status](https://github.com/dupuy/reliabot/workflows/CodeQL/badge.svg)](https://github.com/dupuy/reliabot/security/)
@@ -15,12 +17,9 @@
 [![GitHub License](https://img.shields.io/github/license/dupuy/reliabot)](LICENSE)
 [![GitHub repository size](https://img.shields.io/github/repo-size/dupuy/reliabot)](https://github.com/dupuy/reliabot/graphs/code-frequency)
 [![GitHub top language](https://img.shields.io/github/languages/top/dupuy/reliabot)](https://github.com/collections/programming-languages)
-
-<!-- markdown-link-check-disable -->
-
 [![GitHub repository file+folder count](https://img.shields.io/github/directory-file-count/dupuy/reliabot)](https://githubtree.mgks.dev/repo/dupuy/reliabot/main/?ref=badge&sort=folder-az&style=classic)
 
-<!-- moarkdown-link-check-enable -->
+<!-- markdown-link-check-enable -->
 
 <!-- ![Lines of code](https://img.shields.io/tokei/lines/github/dupuy/reliabot) -->
 

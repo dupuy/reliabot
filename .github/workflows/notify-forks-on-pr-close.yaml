@@ -1,7 +1,7 @@
 name: Notify fork on PR close/merge
 
 on:
-  pull_request:
+  pull_request_target: # not pull_request as that requires workflow approval
     branches:
       - main
     types: [closed]
@@ -24,15 +24,16 @@ jobs:
 
       NOTIFY: >
         gh api --method POST -H "Accept: application/vnd.github+json"
-            "/repos/$OWNER/$NAME/dispatches"
-            -f "event_type=closed_upstream_pr"
-            -f "client_payload[base]=$BASE"
-            -f "client_payload[head]=$HEAD"
-            -f "client_payload[head_repo]=$HEAD_REPO"
-            -F "client_payload[merged]=$MERGED"
-            -F "client_payload[pr_number]=$PR_NUMBER"
-            -f "client_payload[upstream]=$UPSTREAM"
+        "/repos/$OWNER/$NAME/dispatches"
+        -f "event_type=closed_upstream_pr"
+        -f "client_payload[base]=$BASE"
+        -f "client_payload[head]=$HEAD"
+        -f "client_payload[head_repo]=$HEAD_REPO"
+        -F "client_payload[merged]=$MERGED"
+        -F "client_payload[pr_number]=$PR_NUMBER"
+        -f "client_payload[upstream]=$UPSTREAM"
       # Only use -F for boolean or numeric fields, for proper JSON typing
+      # Do not indent extra lines as that causes YAML `>` folding to include \n
 
     steps:
       - name: 'Harden runner'

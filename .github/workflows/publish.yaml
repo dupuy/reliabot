@@ -58,13 +58,20 @@ jobs:
           allowed-endpoints: >
             api.github.com:443
 
-      - name: 'Download artifacts'
+      - name: 'Download artifacts (if any)'
+        # If there are no artifacts, this was not a release merge/push
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
+          ARTIFACTS: ${{ env.GH_REPO }}/actions/runs/${{ env.RUN_ID }}/artifacts
         run: |
-          gh run download "$RUN_ID" --dir "$ARTIFACTS_DIR"
-
+          COUNT=$(gh api "repos/$ARTIFACTS" --jq '.total_count')
+          if [ "$COUNT" -eq 0 ]; then
+            echo "No artifacts from run $RUN_ID — nothing to publish."
+            mkdir -p "$ARTIFACTS_DIR"
+          else
+            gh run download "$RUN_ID" --dir "$ARTIFACTS_DIR"
+          fi
       - name: 'Load metadata'
         id: metadata
         run: |

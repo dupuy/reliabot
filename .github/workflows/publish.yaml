@@ -65,13 +65,14 @@ jobs:
           GH_REPO: ${{ github.repository }}
           ARTIFACTS: ${{ env.GH_REPO }}/actions/runs/${{ env.RUN_ID }}/artifacts
         run: |
-          COUNT=$(gh api "repos/$ARTIFACTS" --jq '.total_count')
-          if [ "$COUNT" -eq 0 ]; then
+          if COUNT=$(gh api "repos/$ARTIFACTS" --jq '.total_count') &&
+              [ "$COUNT" -gt 0 ]; then
+            gh run download "$RUN_ID" --dir "$ARTIFACTS_DIR"
+          else
             echo "No artifacts from run $RUN_ID — nothing to publish."
             mkdir -p "$ARTIFACTS_DIR"
-          else
-            gh run download "$RUN_ID" --dir "$ARTIFACTS_DIR"
           fi
+
       - name: 'Load metadata'
         id: metadata
         run: |

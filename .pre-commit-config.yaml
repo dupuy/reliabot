@@ -150,7 +150,7 @@ repos:
 
   # Shell
   - repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: v0.11.0.1
+    rev: v0.11.0.1-1
     hooks:
       - id: shellcheck
         # shellcheck Python installer relies on old setuptools API
@@ -170,7 +170,7 @@ repos:
   - repo: https://github.com/kjanat/actionlint
     # (previously https://github.com/rhysd/actionlint v1.7.3)
     # Includes ShellCheck on workflow scripts
-    rev: v1.10.0
+    rev: v1.11.0
     hooks:
       - id: actionlint
   # Prettier --write for GitHub workflows in local repository
@@ -213,7 +213,7 @@ repos:
 
   # Python
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.16.3
+    rev: v0.16.4
     hooks:
       # Run the linter.
       - id: ruff
@@ -281,7 +281,7 @@ repos:
     hooks:
       - id: dead
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.16.3
+    rev: v0.16.4
     hooks:
       # Run the formatter.
       - id: ruff-format
@@ -339,7 +339,7 @@ repos:
         exclude: tests/
 
   - repo: https://github.com/errata-ai/vale
-    rev: v3.17.1
+    rev: v3.18.0
     hooks:
       - id: vale
         exclude: CHANGELOG*|LICENSE|humans[.]txt|requirements.*|styles/

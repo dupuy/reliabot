@@ -283,7 +283,8 @@ jobs:
           version: 'v2.9.1'
 
       - name: 'Generate "unreleased" notes'
-        if: env.pr_commit == 'true' && env.pr_tag == 'false'
+        if: >
+          env.pr_commit == 'true' && env.pr_tag == 'false'
         uses: orhun/git-cliff-action@f50e11560dce63f7c33227798f90b924471a88b5 # v4.8.0
         with:
           args: '--unreleased'
@@ -308,7 +309,8 @@ jobs:
           python3 -m json.tool "$METADATA_FILE"
 
       - name: 'Upload distribution package as an artifact'
-        if: github.repository == 'dupuy/reliabot' && env.pr_tag == 'true'
+        if: >
+          github.repository == 'dupuy/reliabot' && env.pr_tag == 'true'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           if-no-files-found: error

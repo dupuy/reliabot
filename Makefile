@@ -77,6 +77,7 @@ major minor patch prerelease release: has-git-cliff has-poetry has-pre-commit-up
 	git fetch origin
 	git fetch upstream # needed to get tags from primary fork
 	git checkout main
+	git push origin main --follow-tags # push fetched annotated tags
 	pre-commit-update
 	git add .pre-commit-config.yaml
 	@case $@ in                                                           \

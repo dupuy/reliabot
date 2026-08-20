@@ -323,6 +323,8 @@ jobs:
   finalize-release:
     runs-on: ubuntu-24.04
     needs: [prepare, pypi-release, provenance] # finalize AFTER provenance
+    if: > # fold marker needed to prevent YAML interpretation of ! and && below
+      !cancelled() && needs.pypi-release.result == 'success'
     permissions:
       contents: write
     timeout-minutes: 5

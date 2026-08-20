@@ -1,0 +1,57 @@
+name: Notify fork on PR close/merge
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: [closed]
+
+# Declare default permissions as read only.
+permissions:
+  contents: read
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-26.04
+    env:
+      BASE: ${{ github.event.pull_request.base.ref }}
+      HEAD: ${{ github.event.pull_request.head.ref }}
+      HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+      MERGED: ${{ github.event.pull_request.merged }}
+      NAME: ${{ github.event.repository.name }}
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+      UPSTREAM: ${{ github.repository }}
+
+      NOTIFY: >
+        gh api --method POST -H "Accept: application/vnd.github+json"
+            "/repos/$OWNER/$NAME/dispatches"
+            -f "event_type=closed_upstream_pr"
+            -f "client_payload[base]=$BASE"
+            -f "client_payload[head]=$HEAD"
+            -f "client_payload[head_repo]=$HEAD_REPO"
+            -F "client_payload[merged]=$MERGED"
+            -F "client_payload[pr_number]=$PR_NUMBER"
+            -f "client_payload[upstream]=$UPSTREAM"
+      # Only use -F for boolean or numeric fields, for proper JSON typing
+
+    steps:
+      - name: 'Harden runner'
+        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        with:
+          disable-sudo: true
+          egress-policy: audit
+          allowed-endpoints: >
+            api.github.com:443
+
+      - name: Send repository_dispatch to fork 1
+        env:
+          GH_TOKEN: ${{ secrets.DUPUYARC_TOKEN }}
+          OWNER: dupuyarc
+          # Override repo NAME here if the fork is named differently
+        run: set -x; eval "$NOTIFY"
+
+      # Add more fork notifications here
+      # GitHub token secrets should be fine-grained personal access tokens with
+      # Contents: Read & Write scoped to the fork repository. If fine-grained
+      # isn't available, then classic repo scope.
+      # Set them in per-fork step envs to avoid leaking into other repositories.

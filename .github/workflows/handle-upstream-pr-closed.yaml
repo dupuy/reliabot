@@ -43,6 +43,7 @@ jobs:
 
       - name: 'Sync'
         if: ${{ github.event.client_payload.merged }}
+        continue-on-error: true
         run: |
           SYNC_MSG="Sync of $UPSTREAM \`$BASE\` to $REPO after this PR merged."
           OUT=$(gh repo sync "$REPO" -b "$BASE" 2>&1)
@@ -51,10 +52,12 @@ jobs:
               gh pr comment "$PR_NUMBER" --repo "$UPSTREAM" --body "$SYNC_MSG"
           else
             echo Failed "$SYNC_MSG"; echo "$OUT"
+            exit 1
           fi
 
       - name: 'Delete PR head branch'
         if: ${{ github.event.client_payload.head_repo == github.repository }}
+        continue-on-error: true
         run: |
           DELETE_MSG="Deleted PR branch $HEAD from $REPO after closing this PR."
           OUT=$(gh api --method DELETE "repos/$REPO/git/refs/heads/$HEAD" 2>&1)
@@ -63,4 +66,5 @@ jobs:
               gh pr comment "$PR_NUMBER" --repo "$UPSTREAM" --body "$DELETE_MSG"
           else
             echo Failed "$DELETE_MSG"; echo "$OUT"
+            exit 1
           fi

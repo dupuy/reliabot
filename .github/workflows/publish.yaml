@@ -26,6 +26,7 @@ concurrency:
 
 env:
   ARTIFACTS_DIR: artifacts
+  GH_REPO: ${{ github.repository }}
   RUN_ID: ${{ github.event.workflow_run.id }}
 
 jobs:
@@ -62,7 +63,6 @@ jobs:
         # If there are no artifacts, this was not a release merge/push
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_REPO: ${{ github.repository }}
           ARTIFACTS: ${{ env.GH_REPO }}/actions/runs/${{ env.RUN_ID }}/artifacts
         run: |
           if COUNT=$(gh api "repos/$ARTIFACTS" --jq '.total_count') &&

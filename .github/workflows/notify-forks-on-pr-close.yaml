@@ -40,7 +40,7 @@ jobs:
         uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
         with:
           disable-sudo: true
-          egress-policy: audit
+          egress-policy: block
           allowed-endpoints: >
             api.github.com:443
 
@@ -49,7 +49,7 @@ jobs:
           GH_TOKEN: ${{ secrets.DUPUYARC_TOKEN }}
           OWNER: dupuyarc
           # Override repo NAME here if the fork is named differently
-        run: set -x; eval "$NOTIFY"
+        run: eval "$NOTIFY"
 
       # Add more fork notifications here
       # GitHub token secrets should be fine-grained personal access tokens with

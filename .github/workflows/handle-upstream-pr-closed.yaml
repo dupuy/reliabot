@@ -32,22 +32,21 @@ jobs:
         uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
         with:
           disable-sudo: true
-          egress-policy: audit
+          egress-policy: block
           allowed-endpoints: >
             api.github.com:443
 
-      - name: Show payload
+      - name: 'Show payload'
         run: |
           if $MERGED; then OUTCOME=merged; else OUTCOME=closed; fi
           echo "Upstream $UPSTREAM PR #$PR_NUMBER from $HEAD to $BASE $OUTCOME"
 
       - name: 'Sync'
-        if: ${{ github.event.client_payload.merged }}
+        if: github.event.client_payload.merged
         continue-on-error: true
         run: |
-          SYNC_MSG="Sync of $UPSTREAM \`$BASE\` to $REPO after this PR merged."
-          OUT=$(gh repo sync "$REPO" -b "$BASE" 2>&1)
-          if test $? = 0; then
+          SYNC_MSG="Sync of $UPSTREAM \`$BASE\` to $REPO after merging PR."
+          if OUT=$(gh repo sync "$REPO" -b "$BASE" 2>&1); then
             GH_TOKEN="$UPSTREAM_PR_TOKEN" \
               gh pr comment "$PR_NUMBER" --repo "$UPSTREAM" --body "$SYNC_MSG"
           else
@@ -56,12 +55,13 @@ jobs:
           fi
 
       - name: 'Delete PR head branch'
-        if: ${{ github.event.client_payload.head_repo == github.repository }}
+        if: github.event.client_payload.head_repo == github.repository
         continue-on-error: true
         run: |
-          DELETE_MSG="Deleted PR branch $HEAD from $REPO after closing this PR."
+          DELETE_MSG="Deleted branch \`$HEAD\` from $REPO after closing PR."
           OUT=$(gh api --method DELETE "repos/$REPO/git/refs/heads/$HEAD" 2>&1)
-          if test $? = 0; then
+          # shellcheck disable=SC2181
+          if [ $? = 0 ]; then
             GH_TOKEN="$UPSTREAM_PR_TOKEN" \
               gh pr comment "$PR_NUMBER" --repo "$UPSTREAM" --body "$DELETE_MSG"
           else

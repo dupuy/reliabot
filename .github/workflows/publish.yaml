@@ -18,7 +18,7 @@ permissions:
 
 # Only run this publish workflow for one commit at a time, don't cancel any
 # pending jobs.
-# Grouped by commit: o global group could cancel a pending publish job for a
+# Grouped by commit: a global group could cancel a pending `publish` job for a
 # burst of no-release pushes, since GitHub keeps only one pending run per group.
 concurrency:
   group: publish-release-${{ github.event.workflow_run.head_sha }}

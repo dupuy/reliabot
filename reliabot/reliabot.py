@@ -276,8 +276,7 @@ except re.error:  # pragma: no cover
     DOCTEST_OPTION_FLAGS = doctest.FAIL_FAST  # Reduce noise from broken tests.
 
 EMITTER_INDENTS = {"mapping": 4, "offset": 2, "sequence": 4}
-EMITTER_SETTINGS = {**EMITTER_INDENTS, "width": 76, "yaml-start": True}
-# TODO(Once 3.8 is EOL): EMITTER_INDENTS | {"width": 76, "yaml-start": True}
+EMITTER_SETTINGS: dict = EMITTER_INDENTS | {"width": 76, "yaml-start": True}
 EXCLUSIONS: dict[str, set[str]] = {"ignore": set(), "keep": set()}
 
 FS_ENCODING = sys.getfilesystemencoding()
@@ -396,7 +395,12 @@ def main(optargv: list[str] | None = None) -> int:
             ValueError,  # unparsable numerics (like ".")
             YAMLError,  # many invalid YAML cases
         ) as ruamel_err:
-            dedup_warn(ruamel_err.args[0])
+            err_msg = (
+                ruamel_err.args[0]
+                if (ruamel_err.args and ruamel_err.args[0] is not None)
+                else getattr(ruamel_err, "problem", None) or "Invalid YAML"
+            )
+            dedup_warn(err_msg)
             return Err.CONFIG
         except AssertionError:
             # AssertionError raised when unable to move old comment
@@ -432,7 +436,7 @@ def main(optargv: list[str] | None = None) -> int:
         cwd = ""
         if not filename.startswith(os.pathsep):
             cwd = f" in '{os.getcwd()}'"
-        err = f"{os_err.strerror}: '{filename}'{cwd}"
+        err = f"{os_err.strerror or 'OSError'}: '{filename}'{cwd}"
         dedup_warn(f"Failed to {action} configuration file:{NLSP}{err}")
         return Err.RUNTIME
     except RuntimeError as rt_err:
@@ -473,7 +477,7 @@ def check_git_repository(path: bytes) -> None:
         raise RuntimeError(msg)
 
 
-def load_dependabot_config(config_yml: bytes) -> CommentedMap:
+def load_dependabot_config(config_yml: bytes) -> CommentedMap | dict:
     """Load `dependabot.yml` configuration file, if present.
 
     Using ruamel.yaml, this preserves YAML comments and vertical whitespace.
@@ -497,13 +501,13 @@ def load_dependabot_config(config_yml: bytes) -> CommentedMap:
             msg = f"Configuration parse timed out for '{fsdecode(config_yml)}'"
             raise ValueError(msg) from None
     if not isinstance(config, (CommentedMap, dict)):
-        msg = f"'{dependabot_file}' is a {type(config)}, not a map"
+        msg = f"'{fsdecode(config_yml)}' is a {type(config)}, not a map"
         raise ValueError(msg)
     return config
 
 
 def extract_settings(
-    config: CommentedMap, defaults: dict[str, Any]
+    config: CommentedMap | CommentedSeq | dict, defaults: dict[str, Any]
 ) -> dict[str, Any]:
     """Extract settings from Reliabot YAML comments in ruamel.yaml config.
 
@@ -519,7 +523,11 @@ def extract_settings(
     settings = dict(defaults)
 
     try:
-        comments = [comment.value for comment in config.ca.comment[1]]
+        # fmt: off
+        # noinspection unresolved-references
+        comments = [comment.value for comment # attribute/type errors handled
+                    in config.ca.comment[1]]  # type: ignore[union-attr]
+        # fmt: on
     except (AttributeError, IndexError, TypeError):
         if config:
             warnings.warn(
@@ -707,24 +715,15 @@ def find_ecosystems(
     any_files = False
     for file in subprocess.check_output(GIT_LS, cwd=path).lower().splitlines():
         any_files = True
-        dirname, filename = split(file.decode("utf-8"))  # Use fsdecode()?
-        if ignored(dirname):
+        dir_name, filename = split(file.decode("utf-8"))  # Use fsdecode()?
+        if ignored(dir_name):
             continue
-        # ignored = dirname in ignore_set
-        # for ignore in ignore_set:
-        #     if ignore and not ignore.endswith("/"):  # preserve "" ignore all
-        #         ignore += "/"
-        #     if ignored or dirname.startswith(ignore):
-        #         ignored = True
-        #         break
-        # if ignored:
-        #     continue
         match = ECOSYSTEM_REGEX.fullmatch(filename)  # type: ignore[union-attr]
         if match:
             for key, val in match.groupdict().items():
                 if val is not None:
-                    ecosystems[join("/", dirname)].add(key.replace("_", "-"))
-        if dirname == workflows and DOT_YAML_REGEX.search(filename.lower()):
+                    ecosystems[join("/", dir_name)].add(key.replace("_", "-"))
+        if dir_name == workflows and DOT_YAML_REGEX.search(filename.lower()):
             ecosystems["/"].add(fsdecode(GITHUB_ACTIONS))
     if not any_files:
         msg = f"'{fsdecode(path)}' has no files tracked by Git."
@@ -882,7 +881,7 @@ def validate_dependabot_config(config: CommentedMap | dict) -> None:
 def create_dependabot_config(ecosystems: dict[str, set]) -> list[dict]:
     """Create a new Dependabot configuration for discovered ecosystems.
 
-    TODO: Use a template mecbanism for configuring each ecosystem type
+    TODO: Use a template mechanism for configuring each ecosystem type
 
     :param ecosystems: mapping of folder paths to package ecosystem names.
     :returns: list of updates entries for parsed YAML Dependabot configuration.
@@ -1042,11 +1041,12 @@ def update_pre_commit_file_patterns(config_file: TextIO) -> bool:
     """
     modified = False
     config = YAML(pure=PURE).load(config_file)
-    local = "local"
+    local = CommentedSeq()
     repos: list[dict[str, CommentedSeq]]
     # pre-commit-hooks.yaml has no repos or hooks structure, make it so.
     if isinstance(config, CommentedSeq):
-        repos = [{"repo": local, "hooks": config}]
+        # ruff: ignore[C408]
+        repos = [dict(repo=local, hooks=config)]
     else:
         repos = config["repos"]
 
@@ -1072,7 +1072,7 @@ def config_emitter(emitter: YAML, settings: dict[str, Any]) -> dict[str, int]:
     r"""Apply reliabot YAML format settings to a YAML parser/emitter.
 
     :param emitter: A ruamel.yaml parser/emitter.
-    :param settings: Emitter settings (indentation, etcetera.)
+    :param settings: Emitter settings (indentation, width, etc.)
     :returns: dict with indentation settings (mapping, offset, sequence).
 
     >>> test_emitter = YAML(pure=PURE)

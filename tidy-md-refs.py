@@ -47,7 +47,7 @@ link = re.compile(r"\[([^]]+)]\[([^]^]+)]")
 # The regex for finding the label. Again, don't find footnotes
 # by mistake. Allow up to three spaces of indentation, per CommonMark spec.
 # Avoid eating a reference label on a line following an invalid one.
-# TODO: Properly handle link titles (hard, probably requires markdown parser)
+# TODO: Properly handle link titles (hard, probably requires Markdown parser)
 label = re.compile(r"^ {0,3}\[([^]]+)]:\s+(?!\[)(.+)$", re.MULTILINE)
 
 # The regex for label-like things that might create confusion with our labels.

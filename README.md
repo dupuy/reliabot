@@ -85,7 +85,8 @@ files tracked in Git, including both committed and staged files.
 
 ```console
 reliabot$ ./reliabot/reliabot.py
-Usage: reliabot.py [--re] --update | [--] GIT_REPO
+Usage: reliabot.py [--re] [OPTIONS]... [--] GIT_REPO
+   OPTIONS: --insecure | --update
 (use '--' if GIT_REPO starts with '-', or see script source)
 ```
 

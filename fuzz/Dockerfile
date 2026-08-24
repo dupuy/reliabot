@@ -100,8 +100,8 @@ COPY reliabot_fuzzer.py reliabot_fuzzer.py
 COPY reliabot.dict reliabot.dict
 COPY corpus corpus
 
-RUN useradd -Md /app/reliabot -s /bin/bash fuzzer \
+RUN useradd -Md /app/reliabot -s /bin/bash fuzzer -u 1234 \
     && chown -R fuzzer:fuzzer /app/reliabot
-USER fuzzer
+USER 1234
 
 ENTRYPOINT ["python3", "reliabot_fuzzer.py", "-dict=reliabot.dict", "corpus"]

@@ -37,7 +37,7 @@ from os.path import basename, exists, isdir, join, split
 from typing import Any, TextIO, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Iterable, Iterator
+    from collections.abc import Callable, Generator, Iterable, Iterator
     from types import FrameType
 
 
@@ -106,7 +106,7 @@ def dedup_warn(message: str, key: str | None = None) -> None:
 
 
 @contextlib.contextmanager
-def time_limit(seconds: float) -> Iterator[None]:
+def time_limit(seconds: float) -> Generator[None]:
     """Context manager to raise TimeLimitError after *seconds* seconds.
 
     For portability, uses signal.setitimer() and signal.SIGALRM on POSIX systems,
@@ -125,7 +125,8 @@ def time_limit(seconds: float) -> Iterator[None]:
     ...     while time.time() < end:
     ...         pass  # busy loop since may not interrupt sleep() call
     Traceback (most recent call last):
-    TimeLimitError: ...
+    ...
+    reliabot.TimeLimitError: ...
     """
     # TODO: use https://pypi.org/project/stopit/ to support non-main thread
     if threading.current_thread() != threading.main_thread():
@@ -171,17 +172,15 @@ RE_WARNING = f"""
 if len(sys.argv) > 1 and sys.argv[1] == RE_OPTION:
     sys.argv.pop(1)
 else:
-    try:
-        # Avoids terrible consequences for pathological RE matching.
+    try:  # to avoid terrible consequences for pathological RE matching.
+        # noinspection unused-imports
         import re2 as re
 
         RE2 = True
     except ImportError:
         dedup_warn(f"Can't import 're2', falling back to 're'.{RE_WARNING}")
-        re = None
     else:  # Generate fallback warning if re2 package can't handle regexp
-        if re is not None:
-            re.set_fallback_notification(re.FALLBACK_WARNING)
+        re.set_fallback_notification(re.FALLBACK_WARNING)
 
 if not RE2:
     import re
@@ -276,8 +275,7 @@ except re.error:  # pragma: no cover
     DOCTEST_OPTION_FLAGS = doctest.FAIL_FAST  # Reduce noise from broken tests.
 
 EMITTER_INDENTS = {"mapping": 4, "offset": 2, "sequence": 4}
-EMITTER_SETTINGS = {**EMITTER_INDENTS, "width": 76, "yaml-start": True}
-# TODO(Once 3.8 is EOL): EMITTER_INDENTS | {"width": 76, "yaml-start": True}
+EMITTER_SETTINGS: dict = EMITTER_INDENTS | {"width": 76, "yaml-start": True}
 EXCLUSIONS: dict[str, set[str]] = {"ignore": set(), "keep": set()}
 
 FS_ENCODING = sys.getfilesystemencoding()
@@ -340,12 +338,12 @@ def main(optargv: list[str] | None = None) -> int:
     0
     >>> test_dir = "testdir/github/"
     >>> test_conf = f"{test_dir}/.github/{fsdecode(DEPENDABOT_CONFIG)}"
-    >>> _ = not exists(test_conf) or os.unlink(test_conf)
+    >>> os.unlink(test_conf) if exists(test_conf) else None
     >>> os.chdir(test_dir)
     >>> main(["reliabot.py", OPT_UPDATE])
     4
     >>> os.chdir("../..")
-    >>> _ = not exists(test_conf) or os.unlink(test_conf)
+    >>> _ = os.unlink(test_conf) if exists(test_conf) else None
     """
     check = False
     modified = False
@@ -396,7 +394,12 @@ def main(optargv: list[str] | None = None) -> int:
             ValueError,  # unparsable numerics (like ".")
             YAMLError,  # many invalid YAML cases
         ) as ruamel_err:
-            dedup_warn(ruamel_err.args[0])
+            err_msg = (
+                ruamel_err.args[0]
+                if (ruamel_err.args and ruamel_err.args[0] is not None)
+                else getattr(ruamel_err, "problem", None) or "Invalid YAML"
+            )
+            dedup_warn(err_msg)
             return Err.CONFIG
         except AssertionError:
             # AssertionError raised when unable to move old comment
@@ -432,7 +435,7 @@ def main(optargv: list[str] | None = None) -> int:
         cwd = ""
         if not filename.startswith(os.pathsep):
             cwd = f" in '{os.getcwd()}'"
-        err = f"{os_err.strerror}: '{filename}'{cwd}"
+        err = f"{os_err.strerror or 'OSError'}: '{filename}'{cwd}"
         dedup_warn(f"Failed to {action} configuration file:{NLSP}{err}")
         return Err.RUNTIME
     except RuntimeError as rt_err:
@@ -473,7 +476,7 @@ def check_git_repository(path: bytes) -> None:
         raise RuntimeError(msg)
 
 
-def load_dependabot_config(config_yml: bytes) -> CommentedMap:
+def load_dependabot_config(config_yml: bytes) -> CommentedMap | dict:
     """Load `dependabot.yml` configuration file, if present.
 
     Using ruamel.yaml, this preserves YAML comments and vertical whitespace.
@@ -497,13 +500,13 @@ def load_dependabot_config(config_yml: bytes) -> CommentedMap:
             msg = f"Configuration parse timed out for '{fsdecode(config_yml)}'"
             raise ValueError(msg) from None
     if not isinstance(config, (CommentedMap, dict)):
-        msg = f"'{dependabot_file}' is a {type(config)}, not a map"
+        msg = f"'{fsdecode(config_yml)}' is a {type(config).__name__}, not map"
         raise ValueError(msg)
     return config
 
 
 def extract_settings(
-    config: CommentedMap, defaults: dict[str, Any]
+    config: CommentedMap | CommentedSeq | dict, defaults: dict[str, Any]
 ) -> dict[str, Any]:
     """Extract settings from Reliabot YAML comments in ruamel.yaml config.
 
@@ -519,7 +522,10 @@ def extract_settings(
     settings = dict(defaults)
 
     try:
-        comments = [comment.value for comment in config.ca.comment[1]]
+        # fmt: off
+        comments = [comment.value for comment # attribute/type errors handled
+                    in config.ca.comment[1]]  # type: ignore[union-attr]
+        # fmt: on
     except (AttributeError, IndexError, TypeError):
         if config:
             warnings.warn(
@@ -707,24 +713,15 @@ def find_ecosystems(
     any_files = False
     for file in subprocess.check_output(GIT_LS, cwd=path).lower().splitlines():
         any_files = True
-        dirname, filename = split(file.decode("utf-8"))  # Use fsdecode()?
-        if ignored(dirname):
+        dir_name, filename = split(file.decode("utf-8"))  # Use fsdecode()?
+        if ignored(dir_name):
             continue
-        # ignored = dirname in ignore_set
-        # for ignore in ignore_set:
-        #     if ignore and not ignore.endswith("/"):  # preserve "" ignore all
-        #         ignore += "/"
-        #     if ignored or dirname.startswith(ignore):
-        #         ignored = True
-        #         break
-        # if ignored:
-        #     continue
         match = ECOSYSTEM_REGEX.fullmatch(filename)  # type: ignore[union-attr]
         if match:
             for key, val in match.groupdict().items():
                 if val is not None:
-                    ecosystems[join("/", dirname)].add(key.replace("_", "-"))
-        if dirname == workflows and DOT_YAML_REGEX.search(filename.lower()):
+                    ecosystems[join("/", dir_name)].add(key.replace("_", "-"))
+        if dir_name == workflows and DOT_YAML_REGEX.search(filename.lower()):
             ecosystems["/"].add(fsdecode(GITHUB_ACTIONS))
     if not any_files:
         msg = f"'{fsdecode(path)}' has no files tracked by Git."
@@ -733,7 +730,7 @@ def find_ecosystems(
 
 
 def update_dependabot_config(
-    config: dict, ecosystems: dict[str, set[str]], kept: Callable[[str], bool]
+    config: dict, ecosystems: dict[str, Any], kept: Callable[[str], bool]
 ) -> bool:
     """Update Dependabot configuration with discovered ecosystems.
 
@@ -882,7 +879,7 @@ def validate_dependabot_config(config: CommentedMap | dict) -> None:
 def create_dependabot_config(ecosystems: dict[str, set]) -> list[dict]:
     """Create a new Dependabot configuration for discovered ecosystems.
 
-    TODO: Use a template mecbanism for configuring each ecosystem type
+    TODO: Use a template mechanism for configuring each ecosystem type
 
     :param ecosystems: mapping of folder paths to package ecosystem names.
     :returns: list of updates entries for parsed YAML Dependabot configuration.
@@ -1022,11 +1019,24 @@ def update_pre_commit_files(folder: str = ".") -> int:
 OPT_USES_MAP[OPT_UPDATE_PRE_COMMIT] = update_pre_commit_files
 
 
+def update_reliabot_file_pattern(hook: CommentedMap) -> bool:
+    """Update reliabot file pattern in a pre-commit hook.
+
+    :param hook: hook entry in a configuration file.
+    :returns: True if it updates the hook, otherwise False.
+    :raises KeyError: if the hook lacks 'id' or 'files'.
+    """
+    if hook["id"] == "reliabot" and hook["files"] != ECOSYSTEM_RE_FILES:
+        hook["files"] = ECOSYSTEM_RE_FILES
+        return True
+    return False
+
+
 def update_pre_commit_file_patterns(config_file: TextIO) -> bool:
     r"""Update reliabot file patterns in folder's pre-commit configuration.
 
     :param config_file: configuration file text stream.
-    :returns: True if files were updated, otherwise False.
+    :returns: True if the file was modified, otherwise False.
     :raises AttributeError: if file is empty.
     :raises KeyError: if list lacks 'id', map lacks 'repos', 'repo' or 'hooks'.
 
@@ -1043,24 +1053,25 @@ def update_pre_commit_file_patterns(config_file: TextIO) -> bool:
     modified = False
     config = YAML(pure=PURE).load(config_file)
     local = "local"
-    repos: list[dict[str, CommentedSeq]]
-    # pre-commit-hooks.yaml has no repos or hooks structure, make it so.
-    if isinstance(config, CommentedSeq):
-        repos = [{"repo": local, "hooks": config}]
-    else:
+    if isinstance(config, CommentedMap):
+        # Find reliabot hook in pre-commit-config
         repos = config["repos"]
-
-    for repo in repos:
-        if repo["repo"] != local:
-            continue
-
-        for hook in repo["hooks"]:
-            if (
-                hook["id"] == "reliabot"
-                and hook["files"] != ECOSYSTEM_RE_FILES
-            ):
+        for repo in repos:
+            if repo["repo"] == local:
+                for hook in repo["hooks"]:
+                    if update_reliabot_file_pattern(hook):
+                        modified = True
+                        break
+                break
+    elif isinstance(config, CommentedSeq):
+        # Find reliabot hook in pre-commit-hooks
+        for hook in config:
+            if update_reliabot_file_pattern(hook):
                 modified = True
-                hook["files"] = ECOSYSTEM_RE_FILES
+                break
+    else:
+        unexpected_type = f"Unexpected type '{type(config).__name__}'"
+        raise TypeError(unexpected_type)
     if modified:
         reset(config_file)
         settings = extract_settings(config, EMITTER_SETTINGS)
@@ -1072,7 +1083,7 @@ def config_emitter(emitter: YAML, settings: dict[str, Any]) -> dict[str, int]:
     r"""Apply reliabot YAML format settings to a YAML parser/emitter.
 
     :param emitter: A ruamel.yaml parser/emitter.
-    :param settings: Emitter settings (indentation, etcetera.)
+    :param settings: Emitter settings (indentation, width, etc.)
     :returns: dict with indentation settings (mapping, offset, sequence).
 
     >>> test_emitter = YAML(pure=PURE)
@@ -1336,12 +1347,12 @@ True
 """,
     UPDATE_PRE_COMMIT_FILE_PATTERNS: r"""
 >>> err1 = StringIO()
->>> update_pre_commit_file_patterns(err1)  # doctest: +IGNORE_EXCEPTION_DETAIL
+>>> update_pre_commit_file_patterns(err1)
 Traceback (most recent call last):
 ...
-TypeError: 'NoneType' object is not subscriptable
+TypeError: Unexpected type 'NoneType'
 >>> err2 = StringIO('key: value\n')
->>> update_pre_commit_file_patterns(err2)  # doctest: +IGNORE_EXCEPTION_DETAIL
+>>> update_pre_commit_file_patterns(err2)
 Traceback (most recent call last):
 ...
 KeyError: 'repos'
@@ -1349,7 +1360,7 @@ KeyError: 'repos'
 >>> update_pre_commit_file_patterns(err3)  # doctest: +IGNORE_EXCEPTION_DETAIL
 Traceback (most recent call last):
 ...
-TypeError: string indices must be integers
+TypeError: string indices must be integers, not 'str'
 >>> pre_commits = ['''
 ... # pre-commit-hooks.yaml
 ... - id: reliabot

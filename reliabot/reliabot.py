@@ -27,14 +27,15 @@ import os
 import signal
 import subprocess
 import sys
+import tempfile
 import threading
 import traceback
 import warnings
 from collections import defaultdict
 from enum import IntEnum
 from io import SEEK_SET, StringIO
-from os.path import basename, exists, isdir, join, split
-from typing import Any, TextIO, TYPE_CHECKING
+from os.path import basename, dirname, exists, isdir, join, split
+from typing import Any, IO, TextIO, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Generator, Iterable, Iterator
@@ -64,9 +65,10 @@ def usage() -> None:
     SystemExit: 2
     """
     command = basename(sys.argv[0])
-    dedup_warn(f"Usage: {command} [--re] --update | [--] GIT_REPO")
+    dedup_warn(f"Usage: {command} [--re] [OPTIONS]... [--] GIT_REPO")
+    dedup_warn("   OPTIONS: --insecure | --update")
     dedup_warn("(use '--' if GIT_REPO starts with '-', or see script source)")
-    # "Internal" options:
+    # "Internal" options (must be last argument – no GIT_REPO allowed):
     # --self-test – run doctests in sources
     # --update-pre-commit-files – update pre-commit-* reliabot* files: entries.
     sys.exit(int(Err.USAGE))
@@ -291,6 +293,7 @@ GIT_LS = [GIT_CMD, "ls-files"]
 
 NLSP = "\n "
 
+OPT_INSECURE = "--insecure"  # To follow symlinks on update.
 OPT_UPDATE = "--update"  # For pre-commit, returning Err.UPDATE on changes.
 OPT_UPDATE_PRE_COMMIT = "--update-pre-commit"  # To update pre-commit configs.
 # OPT_USES_MAP is updated just after each function in it is defined.
@@ -300,6 +303,8 @@ PRE_COMMIT_CONFIG = ".pre-commit-config.yaml"
 PRE_COMMIT_HOOKS = ".pre-commit-hooks.yaml"
 
 PURE = True  # Use pure Python parser
+
+SECURE_MAX_MODE = 0o666  # Maximum file mode (rw-rw-rw-) unless --insecure
 
 TESTDIR = b"testdir"  # dead:disable
 TEST_CONFIGURED = b"configured"  # dead:disable
@@ -347,24 +352,35 @@ def main(optargv: list[str] | None = None) -> int:
     """
     check = False
     modified = False
+    secure = True
     update_status = "Updating"
     conf: CommentedMap | dict = {}
 
-    argv = optargv or sys.argv
+    argv = list(optargv or sys.argv)
     try:
-        if argv[1] == "--":  # "end of options"
-            argv.pop(1)
-        elif argv[1] == OPT_UPDATE:
-            argv[1] = "."
-            check = True
-        elif argv[1] in OPT_USES_MAP:
-            return OPT_USES_MAP[argv[1]]()
-        elif argv[1].startswith("-"):
-            dedup_warn(f"Unknown option '{argv[1]}'", argv[1])
-            if "_" in argv[1]:  # this is an easy error to make and hard to see
-                use_dashes = argv[1].replace("_", "-")
-                dedup_warn(f"  Did you mean '{use_dashes}'?", use_dashes)
-            usage()
+        while len(argv) > 1 and argv[1].startswith("-"):
+            if argv[1] == "--":
+                argv.pop(1)
+                break
+            if argv[1] == OPT_INSECURE:
+                argv.pop(1)
+                secure = False
+            elif argv[1] == OPT_UPDATE:
+                argv.pop(1)
+                argv.append(".")
+                check = True
+            elif argv[1] in OPT_USES_MAP:
+                cmdopt = argv.pop(1)
+                if len(argv) > 1:
+                    dedup_warn(f"Option '{cmdopt}' must be the last", cmdopt)
+                    usage()
+                return OPT_USES_MAP[cmdopt]()
+            else:
+                dedup_warn(f"Unknown option '{argv[1]}'", argv[1])
+                if "_" in argv[1]:  # an easy error to make but hard to see
+                    use_dashes = argv[1].replace("_", "-")
+                    dedup_warn(f"  Did you mean '{use_dashes}'?", use_dashes)
+                usage()
 
         if len(argv) != 2:
             usage()
@@ -376,6 +392,7 @@ def main(optargv: list[str] | None = None) -> int:
 
     repo_dir = argv[1].encode(FS_ENCODING, "surrogatepass")
     dconf = join(repo_dir, GITHUB_DEPENDABOT)
+    d_name = fsdecode(dconf)
 
     action = "read"
     new = False
@@ -427,15 +444,56 @@ def main(optargv: list[str] | None = None) -> int:
         if update_dependabot_config(conf, ecosystems, exclude.matcher("keep")):
             modified = True
             action = "write"
-            dedup_warn(f"{update_status} '{fsdecode(dconf)}'...")
-            with open(dconf, "w+" if new else "r+", encoding="utf-8") as dfile:
-                safe_dump(conf, settings, dfile)
-    except OSError as os_err:
-        filename = fsdecode(os_err.filename)
+            dedup_warn(f"{update_status} '{d_name}'...")
+            if secure:
+                temp_dir = dirname(dconf) or b"."
+                temp_path = None
+                try:
+                    # py < 3.14: https://github.com/python/cpython/issues/66305
+                    with time_limit(2.0):
+                        fd, temp_path = tempfile.mkstemp(
+                            dir=temp_dir,
+                            prefix=b".reliabot-",
+                            suffix=b".tmp",
+                        )
+                    with open(fd, "w", encoding="utf-8") as dfile:
+                        safe_dump(conf, settings, dfile)
+                    try:
+                        orig_mode = os.stat(dconf).st_mode & SECURE_MAX_MODE
+                    except OSError:  # probably file doesn't exist yet
+                        current_umask = os.umask(0o177)  # securest sane umask
+                        os.umask(current_umask)  # restore original umask fast
+                        orig_mode = SECURE_MAX_MODE & ~current_umask
+                    os.chmod(temp_path, orig_mode)
+                    os.replace(temp_path, dconf)
+                except BaseException as exc:
+                    err = str(exc)
+                    if temp_path is not None and exists(temp_path):
+                        try:
+                            os.remove(temp_path)
+                        except OSError:
+                            tmp_name = fsdecode(temp_path)
+                            dedup_warn(f"Failed to remove '{tmp_name}'")
+                    dedup_warn(
+                        f"Could not securely {action} '{d_name}':{NLSP}{err}"
+                    )
+                    dedup_warn("Fix permissions or try with --insecure")
+                    raise
+            else:
+                mode = "w+" if new else "r+"
+                with open(dconf, mode, encoding="utf-8") as dfile:
+                    safe_dump(conf, settings, dfile)
+    except (OSError, TimeLimitError) as os_exc:
+        if isinstance(os_exc, OSError):
+            d_name = fsdecode(os_exc.filename)
+            err = f"{os_exc.strerror or 'OS Error'}"
+        else:
+            err = type(os_exc).__name__
+        dedup_warn(err)
         cwd = ""
-        if not filename.startswith(os.pathsep):
+        if not d_name.startswith(os.pathsep):
             cwd = f" in '{os.getcwd()}'"
-        err = f"{os_err.strerror or 'OSError'}: '{filename}'{cwd}"
+        err += f": '{d_name}'{cwd}"
         dedup_warn(f"Failed to {action} configuration file:{NLSP}{err}")
         return Err.RUNTIME
     except RuntimeError as rt_err:
@@ -900,7 +958,7 @@ def create_dependabot_config(ecosystems: dict[str, set]) -> list[dict]:
 def safe_dump(
     config: CommentedMap | CommentedSeq | dict | list,
     settings: dict[str, Any],
-    config_stream: TextIO,
+    config_stream: IO[Any],  # in practice, always TextIO, but mypy can't tell
 ) -> None:
     """Safely dump YAML configuration file.
 
@@ -1267,7 +1325,7 @@ True
 ...     if subdir not in ecos["/" + subdir]:
 ...         print(f"'{subdir}' not found in /{subdir}")
 """,
-    MAIN: """
+    MAIN: r"""
 >>> stderr = sys.stderr
 >>> sys.stderr = sys.stdout  # also capture dedup_warn() stderr messages
 >>> main(["reliabot"])
@@ -1302,16 +1360,67 @@ SystemExit: 2
 >>> sys.warnoptions
 ['default']
 >>> badlink = "testdir/badlink/.github/dependabot.yml"
->>> if os.path.exists(badlink):
+>>> if os.path.exists(badlink) or os.path.islink(badlink):
 ...     os.unlink(badlink)
 >>> os.symlink("notdir/notfile", badlink)
->>> main(["reliabot", "testdir/badlink"])  # doctest: +ELLIPSIS
+>>> main(["reliabot", "--insecure", "testdir/badlink"])  # doctest: +ELLIPSIS
 Creating 'testdir/badlink/.github/dependabot.yml'...
 Failed to write configuration file:
  No such file or directory: 'testdir/badlink/.github/dependabot.yml' in ...
 <Err.RUNTIME: 1>
->>> sys.stderr = stderr
 >>> os.unlink(badlink)
+>>> os.symlink("notdir/notfile", badlink)
+>>> main(["reliabot", "testdir/badlink"])  # doctest: +ELLIPSIS
+Creating 'testdir/badlink/.github/dependabot.yml'...
+0
+>>> os.path.islink(badlink)  # Broken symlink replaced with regular file
+False
+>>> os.unlink(badlink)
+>>> target_file = "testdir/target.yml"
+>>> with open(target_file, "w", encoding="utf-8") as tf:
+...     lines = ["version: 2"]
+...     lines.append("updates:")
+...     lines.append("- directory: /")
+...     lines.append("  package-ecosystem: npm")
+...     lines.append("  schedule:")
+...     lines.append("    interval: monthly")
+...     valid_target = "\n".join(lines)
+...     _ = tf.write(valid_target)
+>>> os.symlink("../../target.yml", badlink)
+>>> main(["reliabot", "testdir/badlink"])  # doctest: +ELLIPSIS
+Removed obsolete 'npm' entry in '/'
+Updating 'testdir/badlink/.github/dependabot.yml'...
+0
+>>> os.path.islink(badlink)  # Symlink was replaced with a new regular file
+False
+>>> with open(target_file, "r", encoding="utf-8") as tf:
+...     tf.read() == valid_target  # Target file was not modified
+True
+>>> os.unlink(badlink)
+>>> os.symlink("../../target.yml", badlink)
+>>> main(["reliabot", "--insecure", "testdir/badlink"])  # doctest: +ELLIPSIS
+Removed obsolete 'npm' entry in '/'
+Updating 'testdir/badlink/.github/dependabot.yml'...
+0
+>>> os.path.islink(badlink)  # Insecure update preserved symlink
+True
+>>> with open(target_file, "r", encoding="utf-8") as tf:
+...     "package-ecosystem: terraform" in tf.read()  # Target file was modified
+True
+>>> os.unlink(badlink)
+>>> os.unlink(target_file)
+>>> invalid_file = "testdir/github/.github/dependabot.yml"
+>>> bad_yaml = "secret_password_12345: {invalid_yaml\n"
+>>> with open(invalid_file, "w", encoding="utf-8") as f:
+...     _ = f.write(bad_yaml)
+>>> main(["reliabot", "testdir/github"])  # doctest: +ELLIPSIS
+while parsing a flow mapping
+<Err.CONFIG: 3>
+>>> with open(invalid_file, "r", encoding="utf-8") as f:
+...     f.read() == bad_yaml  # No data written on parse error
+True
+>>> sys.stderr = stderr
+>>> os.unlink(invalid_file)
 """,
     SAFE_DUMP: r"""
 >>> stderr = sys.stderr

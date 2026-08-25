@@ -68,7 +68,7 @@ def usage() -> None:
     dedup_warn(f"Usage: {command} [--re] [OPTIONS]... [--] GIT_REPO")
     dedup_warn("   OPTIONS: --insecure | --update")
     dedup_warn("(use '--' if GIT_REPO starts with '-', or see script source)")
-    # "Internal" options (must be last argument – no GIT_REPO allowed:
+    # "Internal" options (must be last argument – no GIT_REPO allowed):
     # --self-test – run doctests in sources
     # --update-pre-commit-files – update pre-commit-* reliabot* files: entries.
     sys.exit(int(Err.USAGE))
@@ -304,6 +304,8 @@ PRE_COMMIT_HOOKS = ".pre-commit-hooks.yaml"
 
 PURE = True  # Use pure Python parser
 
+SECURE_MAX_MODE = 0o666  # Maximum file mode (rw-rw-rw-) unless --insecure
+
 TESTDIR = b"testdir"  # dead:disable
 TEST_CONFIGURED = b"configured"  # dead:disable
 TEST_GIT = b"git"  # dead:disable
@@ -390,6 +392,7 @@ def main(optargv: list[str] | None = None) -> int:
 
     repo_dir = argv[1].encode(FS_ENCODING, "surrogatepass")
     dconf = join(repo_dir, GITHUB_DEPENDABOT)
+    d_name = fsdecode(dconf)
 
     action = "read"
     new = False
@@ -441,9 +444,10 @@ def main(optargv: list[str] | None = None) -> int:
         if update_dependabot_config(conf, ecosystems, exclude.matcher("keep")):
             modified = True
             action = "write"
-            dedup_warn(f"{update_status} '{fsdecode(dconf)}'...")
+            dedup_warn(f"{update_status} '{d_name}'...")
             if secure:
                 temp_dir = dirname(dconf) or b"."
+                temp_path = None
                 try:
                     # py < 3.14: https://github.com/python/cpython/issues/66305
                     with time_limit(2.0):
@@ -452,28 +456,44 @@ def main(optargv: list[str] | None = None) -> int:
                             prefix=b".reliabot-",
                             suffix=b".tmp",
                         )
-                except TimeLimitError:
-                    dir_str = fsdecode(temp_dir)
-                    msg = f"Timed out creating temporary file in '{dir_str}'"
-                    raise RuntimeError(msg) from None
-                try:
                     with open(fd, "w", encoding="utf-8") as dfile:
                         safe_dump(conf, settings, dfile)
+                    try:
+                        orig_mode = os.stat(dconf).st_mode & SECURE_MAX_MODE
+                    except OSError:  # probably file doesn't exist yet
+                        current_umask = os.umask(0o177)  # securest sane umask
+                        os.umask(current_umask)  # restore original umask fast
+                        orig_mode = SECURE_MAX_MODE & ~current_umask
+                    os.chmod(temp_path, orig_mode)
                     os.replace(temp_path, dconf)
-                except BaseException:
-                    if exists(temp_path):
-                        os.unlink(temp_path)
+                except BaseException as exc:
+                    err = str(exc)
+                    if temp_path is not None and exists(temp_path):
+                        try:
+                            os.remove(temp_path)
+                        except OSError:
+                            tmp_name = fsdecode(temp_path)
+                            dedup_warn(f"Failed to remove '{tmp_name}'")
+                    dedup_warn(
+                        f"Could not securely {action} '{d_name}':{NLSP}{err}"
+                    )
+                    dedup_warn("Fix permissions or try with --insecure")
                     raise
             else:
                 mode = "w+" if new else "r+"
                 with open(dconf, mode, encoding="utf-8") as dfile:
                     safe_dump(conf, settings, dfile)
-    except OSError as os_err:
-        filename = fsdecode(os_err.filename)
+    except (OSError, TimeLimitError) as os_exc:
+        if isinstance(os_exc, OSError):
+            d_name = fsdecode(os_exc.filename)
+            err = f"{os_exc.strerror or 'OS Error'}"
+        else:
+            err = type(os_exc).__name__
+        dedup_warn(err)
         cwd = ""
-        if not filename.startswith(os.pathsep):
+        if not d_name.startswith(os.pathsep):
             cwd = f" in '{os.getcwd()}'"
-        err = f"{os_err.strerror or 'OSError'}: '{filename}'{cwd}"
+        err += f": '{d_name}'{cwd}"
         dedup_warn(f"Failed to {action} configuration file:{NLSP}{err}")
         return Err.RUNTIME
     except RuntimeError as rt_err:
@@ -938,7 +958,7 @@ def create_dependabot_config(ecosystems: dict[str, set]) -> list[dict]:
 def safe_dump(
     config: CommentedMap | CommentedSeq | dict | list,
     settings: dict[str, Any],
-    config_stream: IO[Any],
+    config_stream: IO[Any],  # in practice, always TextIO, but mypy can't tell
 ) -> None:
     """Safely dump YAML configuration file.
 

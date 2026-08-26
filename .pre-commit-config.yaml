@@ -307,7 +307,6 @@ repos:
   # Markdown
   - repo: local
     hooks:
-      # Use param, raises, returns and var; use PEP484 annotations for types.
       - id: tidy-md-refs
         name: Tidy numbering of Markdown reference links
         language: script

@@ -15,6 +15,26 @@ in the `testdir` hierarchy that cannot be added to the Git repository:
 >>> _ = isdir("testdir/git/.git") or os.mkdir("testdir/git/.git")
 >>> _ = isdir("testdir/github/.git") or os.mkdir("testdir/github/.git")
 >>> _ = isdir("testdir/not-git") or os.mkdir("testdir/not-git")
+>>> _ = isdir("testdir/worktree") or os.mkdir("testdir/worktree")
+>>> if not exists("testdir/worktree/.git"):
+...     with open("testdir/worktree/.git", "w", encoding="utf-8") as wt_git:
+...         print("gitdir: ../git/.git", file=wt_git)
+>>> _ = isdir("testdir/worktree-bad-prefix") or os.mkdir(
+...     "testdir/worktree-bad-prefix"
+... )
+>>> if not exists("testdir/worktree-bad-prefix/.git"):
+...     with open(
+...         "testdir/worktree-bad-prefix/.git", "w", encoding="utf-8"
+...     ) as wt_bad:
+...         print("not-a-gitdir-line", file=wt_bad)
+>>> _ = isdir("testdir/worktree-missing") or os.mkdir(
+...     "testdir/worktree-missing"
+... )
+>>> if not exists("testdir/worktree-missing/.git"):
+...     with open(
+...         "testdir/worktree-missing/.git", "w", encoding="utf-8"
+...     ) as wt_miss:
+...         print("gitdir: ../does-not-exist", file=wt_miss)
 >>> if os.path.islink("testdir") and os.readlink("testdir") == "../testdir/":
 ...     _ = isdir(".git") or os.mkdir(".git")
 """
@@ -34,7 +54,16 @@ import warnings
 from collections import defaultdict
 from enum import IntEnum
 from io import SEEK_SET, StringIO
-from os.path import basename, dirname, exists, isdir, join, split
+from os.path import (
+    basename,
+    dirname,
+    exists,
+    isabs,
+    isdir,
+    join,
+    normpath,
+    split,
+)
 from typing import Any, IO, TextIO, TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -290,6 +319,7 @@ GITHUB_WORKFLOWS = join(GITHUB, b"workflows")
 GIT_CMD = "/usr/bin/git" if os.name == "posix" else "git"
 GIT_DIR = b".git"
 GIT_LS = [GIT_CMD, "ls-files"]
+GITDIR_PREFIX = b"gitdir:"  # Marks a `.git` *file* in a Git worktree.
 
 NLSP = "\n "
 
@@ -312,6 +342,9 @@ TEST_GIT = b"git"  # dead:disable
 TEST_GITHUB = b"github"  # dead:disable
 TEST_NOT_DIR = b"not-dir"  # dead:disable
 TEST_NOT_GIT = b"not-git"  # dead:disable
+TEST_WORKTREE = b"worktree"  # dead:disable
+TEST_WORKTREE_BAD_PREFIX = b"worktree-bad-prefix"  # dead:disable
+TEST_WORKTREE_MISSING = b"worktree-missing"  # dead:disable
 
 TRUTHY = {"false": 0, "off": 0, "on": 1, "true": 1}
 
@@ -506,15 +539,70 @@ def main(optargv: list[str] | None = None) -> int:
     return int(Err.UPDATED) if check and modified else 0
 
 
+def resolve_gitdir_file(git_file: bytes, repo_path: bytes) -> bytes | None:
+    """Resolve the real Git directory referenced by a worktree `.git` file.
+
+    In a Git worktree checkout, `.git` is a *file* (not a directory)
+    containing a single newline-terminated line of the form
+    ``gitdir: <path>``, pointing at the real Git directory for that worktree
+    (normally under the main repository's ``.git/worktrees/<name>``). A
+    relative ``<path>`` is resolved relative to the directory containing
+    `git_file`, matching Git's own behavior.
+
+    :param git_file: Path of the (non-directory) `.git` entry to read.
+    :param repo_path: Directory containing `git_file`, to resolve relative
+        paths against.
+    :returns: Resolved Git directory path, or None if `git_file` isn't a
+        well-formed single-line ``gitdir:`` pointer file.
+
+    >>> fsdecode(
+    ...     resolve_gitdir_file(
+    ...         join(TESTDIR, TEST_WORKTREE, GIT_DIR),
+    ...         join(TESTDIR, TEST_WORKTREE),
+    ...     )
+    ... )
+    'testdir/git/.git'
+    >>> resolve_gitdir_file(join(TESTDIR, TEST_NOT_DIR), TESTDIR)  # empty file
+    >>> resolve_gitdir_file(join(TESTDIR, TEST_GIT), TESTDIR)  # a directory
+    """
+    try:
+        with open(git_file, "rb") as gitdir_file:
+            lines = gitdir_file.readlines()
+    except OSError:
+        return None
+    if len(lines) != 1 or not lines[0].endswith(b"\n"):
+        return None
+    line = lines[0][:-1]
+    if not line.startswith(GITDIR_PREFIX):
+        return None
+    target = line[len(GITDIR_PREFIX) :].strip()
+    if not target:
+        return None
+    if not isabs(target):
+        target = join(repo_path, target)
+    return normpath(target)
+
+
 def check_git_repository(path: bytes) -> None:
     """Check that path argument is a Git repository.
 
     This only does a basic sanity check and doesn't actually verify the index.
+    In a Git worktree, `.git` is a file rather than a directory; that case is
+    followed to the real Git directory via `resolve_gitdir_file` and checked
+    the same way as an ordinary `.git` directory.
 
     :param path: filesystem path.
-    :raises RuntimeError: if path isn't a folder with a `.git` sub-folder.
+    :raises RuntimeError: if path isn't a folder with a `.git` sub-folder, or
+        a `.git` file pointing to one (as in a Git worktree).
 
     >>> check_git_repository(join(TESTDIR, b"git/"))
+    >>> stderr = sys.stderr
+    >>> sys.stderr = sys.stdout  # also capture dedup_warn() worktree notice
+    >>> check_git_repository(
+    ...     join(TESTDIR, TEST_WORKTREE)
+    ... )  # doctest: +ELLIPSIS
+    On worktree 'testdir/worktree' of 'testdir/git/.git'
+    >>> sys.stderr = stderr
     """
     path_str = fsdecode(path)
     msg = f"'{path_str}' "
@@ -529,6 +617,17 @@ def check_git_repository(path: bytes) -> None:
         msg += "is not a Git repository.."
         raise RuntimeError(msg)
     if not isdir(git_dir):
+        real_git_dir = resolve_gitdir_file(git_dir, path)
+        if real_git_dir is not None:
+            real_git_str = fsdecode(real_git_dir)
+            dedup_warn(f"On worktree '{path_str}' of '{real_git_str}'")
+            if isdir(real_git_dir):
+                return
+            msg = (
+                f"Bad Git repo '{path_str}': worktree gitdir "
+                f"'{real_git_str}' is not a directory."
+            )
+            raise RuntimeError(msg)
         git_str = fsdecode(git_dir)
         msg = f"Bad Git repo '{path_str}': '{git_str}' is not a directory."
         raise RuntimeError(msg)
@@ -1246,6 +1345,19 @@ RuntimeError: 'testdir/not-dir'...
 Traceback (most recent call last):
 ...
 RuntimeError: 'testdir/not-git' ... Git...
+>>> check_git_repository(join(TESTDIR, TEST_WORKTREE_BAD_PREFIX))  # doctest: +ELLIPSIS
+Traceback (most recent call last):
+...
+RuntimeError: ... is not a directory.
+>>> stderr = sys.stderr
+>>> sys.stderr = sys.stdout  # also capture dedup_warn() worktree notice
+>>> try:
+...     check_git_repository(join(TESTDIR, TEST_WORKTREE_MISSING))
+... except RuntimeError as rt_err:
+...     print(rt_err)  # doctest: +ELLIPSIS
+On worktree 'testdir/worktree-missing' of 'testdir/does-not-exist'
+Bad Git repo ...: worktree gitdir ... is not a directory.
+>>> sys.stderr = stderr
 """,
     CONFIG_EMITTER: r"""
 >>> test_file = "testdir/github/action.yml"

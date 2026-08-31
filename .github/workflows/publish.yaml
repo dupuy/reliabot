@@ -16,13 +16,14 @@ on:
 permissions:
   contents: read
 
-# Only run this publish workflow for one commit at a time, don't cancel any
-# pending jobs.
-# Grouped by commit: a global group could cancel a pending `publish` job for a
-# burst of no-release pushes, since GitHub keeps only one pending run per group.
+# Only run this workflow for one commit at a time, canceling running jobs.
+# If a previous `publish` run failed to start for any reason, it will run again
+# when a later push to main occurs. Builds always run from main, but there may
+# be metadata embedded in the job/workflow parameters, so it's best to cancel
+# earlier runs in favor of later ones.
 concurrency:
   group: publish-release-${{ github.event.workflow_run.head_sha }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 env:
   ARTIFACTS_DIR: artifacts

@@ -44,7 +44,7 @@ jobs:
           gh run download ${{ github.event.workflow_run.id }} --name coverage-report
 
       - name: 'Run codacy-coverage-reporter'
-        uses: codacy/codacy-coverage-reporter-action@89d6c85cfafaec52c72b6c5e8b2878d33104c699 # v1.3.0
+        uses: step-security/codacy-coverage-reporter-action@44e97cd9a5e5328b79a4fd414746d6b074da1411 # v1.3.0
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
           language: Python

@@ -168,7 +168,7 @@ jobs:
           sbom-path: '${{ env.DIST }}/reliabot.spdx.json'
 
       - name: 'Create draft release'
-        uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
+        uses: step-security/release-action@a0d8e0f90f554c15366ca2c9046bf4090d24adbe # v1.21.0
         with:
           allowUpdates: true
           artifactErrorsFailBuild: true
@@ -279,7 +279,7 @@ jobs:
           packages-dir: 'pypi_dist/'
 
       - name: 'Create draft release'
-        uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
+        uses: step-security/release-action@a0d8e0f90f554c15366ca2c9046bf4090d24adbe # v1.21.0
         with:
           allowUpdates: true
           artifactErrorsFailBuild: true
@@ -340,7 +340,7 @@ jobs:
             uploads.github.com:443
 
       - name: 'Finalize GitHub release'
-        uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
+        uses: step-security/release-action@a0d8e0f90f554c15366ca2c9046bf4090d24adbe # v1.21.0
         with:
           allowUpdates: true
           draft: false

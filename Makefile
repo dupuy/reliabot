@@ -80,12 +80,18 @@ major minor patch prerelease release: has-git-cliff has-poetry has-pre-commit-up
 	git push origin main --follow-tags # push fetched annotated tags
 	pre-commit-update
 	git add .pre-commit-config.yaml
-	@case $@ in                                                           \
-	  release)                                                            \
-	    VERSION=`git-cliff -c bump.toml --bumped-version | sed 's/-.*//'` \
-	    ;;                                                                \
-	  *) VERSION=$@ ;;                                                    \
+	@NEXT=`git-cliff -c bump.toml --bumped-version | sed 's/-.*//'`; \
+	case "$@/`poetry version`" in                                    \
+	  prerelease/reliabot*[abrc]*) VERSION=$@ ;;                     \
+	  prerelease/*) poetry version "$${NEXT#v}"; VERSION=$@ ;;       \
+	  release/*) VERSION="$${NEXT}" ;;                               \
+	  *) VERSION=$@ ;;                                               \
 	esac; poetry version "$${VERSION#v}"
+	CHANGELOG="docs/CHANGELOG-`$(MAJOR_VERSION)`.md";               \
+	if [ ! -f "$${CHANGELOG}" ]; then                               \
+	  touch "$${CHANGELOG}" && ln -sf "$${CHANGELOG}" CHANGELOG.md; \
+	fi;                                                             \
+	test -f CHANGELOG.md && git add "$${CHANGELOG}" CHANGELOG.md
 	@RELEASE="`$(VERSION_TAG)`" &&                                     \
 	CHANGELOG="docs/CHANGELOG-`$(MAJOR_VERSION)`.md" &&                \
 	CHANGELOG_TMP="docs/changelog-$${PPID}~" &&                        \

@@ -95,6 +95,8 @@ commit_preprocessors = [
     { pattern='(?i)\[ *(((no|skip|actions|ci)[- _]?){2}) *\]',replace="($1)" },
     # remove issue numbers from commits
     { pattern = '\((\w+\s)?#([0-9]+)\)', replace = "" },
+    # remove things that look like commit subjects but aren't
+    { pattern = "^ *\"\\w+:.*$", replace = "" },
     { pattern = "^---.*$", replace = "" },
     { pattern = "^[.][.][.].*$", replace = "" },
     { pattern = "^- .*$", replace = "" },
@@ -105,18 +107,22 @@ commit_preprocessors = [
     { pattern = "^dependency.*$", replace = "" },
     { pattern = "^[Uu]pdate.*$", replace = "" },
 ]
-# regex for parsing and grouping commits
+# regex for parsing and grouping commits (output alpha sorted by group name)
 commit_parsers = [
+    { body = "BREAKING CHANGE:", group = "Breaking Changes ⚠️" },
+    { message = "(?m)^.*!:", group = "Breaking Changes ⚠️" },
     { message = "^chore", scope = "deps", skip = "true" },
     { message = "^chore", scope = "deps-dev", skip = "true" },
-    { message = "^.*: add", group = "Added 🚀" },
-    { message = "^.*: support", group = "Added 🚀" },
-    { message = "^.*: remove", group = "Removed 🗑️" },
-    { message = "^.*: delete", group = "Removed 🗑️" },
-    { message = "^test", group = "Fixed 🛠️" },
-    { message = "^fix", group = "Fixed 🛠" },
-    { message = "^.*: fix", group = "Fixed 🛠" },
-    { message = "^.*", group = "Changed 🔄" },
+    { message = "\\Atests?", group = "Fixed 🛠" },
+    { message = "\\Afix", group = "Fixed 🛠" },
+    { message = "\\A\\w+: add", group = "Features added 🚀" },
+    { message = "\\A\\w+: support", group = "Features added 🚀" },
+    { message = "\\A\\w+: remove", group = "Removed 🗑️" },
+    { message = "\\A\\w+: delete", group = "Removed 🗑️" },
+    { message = "^style", skip = "true" },
+    { message = "^https", skip = "true" },
+    { message = ">$", skip = "true" },
+    { message = "(?m)^(build|ci|docs?|feat|refactor)", group = "Changed 🔄" },
 ]
 # Don't protect breaking changes from matching a skipping commit_parser
 protect_breaking_commits = false
@@ -125,7 +131,7 @@ filter_commits = false
 # regex for matching git tags
 tag_pattern = "v[0-9].*"
 # regex for skipping tags
-skip_tags = "-(alpha|beta|rc)"
+skip_tags = "(-(alpha|beta|rc)\\.|\\d[abrc])\\d+$"
 # Don't sort the tags topologically
 topo_order = false
 # sort the commits inside sections by Newest order
@@ -133,7 +139,7 @@ sort_commits = "newest"
 
 [tool.poetry]
 name = "reliabot"
-version = "0.6.3a1"
+version = "0.6.4"
 description = "Maintain GitHub Dependabot configuration."
 license = "MIT"
 authors = ["Alexander Dupuy <alex@dupuy.us>"]

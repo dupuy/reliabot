@@ -51,7 +51,7 @@ $(FUZZ)github.dependabot.yml: .github/dependabot.yml
 $(FUZZ)pre-commit-config.yaml: .pre-commit-config.yaml
 	cp $< $@
 $(FUZZ)testdir.configured.github.dependabot.yml: \
-	 testdir/configured/.github/dependabot.yml
+		testdir/configured/.github/dependabot.yml
 	cp $< $@
 $(FUZZ)testdir.github.action.yml: testdir/github/action.yml
 	cp $< $@
@@ -73,19 +73,26 @@ COMPARE=https://github.com/dupuy/reliabot/compare
 # checks on the release PR. This backs up the git-cliff commit_preprocessors
 # entry in pyproject.toml; ci-skip-test.sh reads this variable and tests both.
 NO_CI_SKIP=s/\[ *(((no|skip|actions|ci)[- _]?){2}) *\]/(\1)/gI
-major minor patch prerelease release: has-git-cliff has-poetry has-pre-commit-update
+major minor patch prerelease release: \
+		has-git-cliff has-poetry has-pre-commit-update
 	git fetch origin
 	git fetch upstream # needed to get tags from primary fork
 	git checkout main
 	git push origin main --follow-tags # push fetched annotated tags
 	pre-commit-update
 	git add .pre-commit-config.yaml
-	@case $@ in                                                           \
-	  release)                                                            \
-	    VERSION=`git-cliff -c bump.toml --bumped-version | sed 's/-.*//'` \
-	    ;;                                                                \
-	  *) VERSION=$@ ;;                                                    \
+	@NEXT=`git-cliff -c bump.toml --bumped-version | sed 's/-.*//'`; \
+	case "$@/`poetry version`" in                                    \
+	  prerelease/reliabot*[abrc]*) VERSION=$@ ;;                     \
+	  prerelease/*) poetry version "$${NEXT#v}"; VERSION=$@ ;;       \
+	  release/*) VERSION="$${NEXT}" ;;                               \
+	  *) VERSION=$@ ;;                                               \
 	esac; poetry version "$${VERSION#v}"
+	CHANGELOG="docs/CHANGELOG-`$(MAJOR_VERSION)`.md"; \
+	if [ ! -f "$${CHANGELOG}" ]; then                 \
+	  touch "$${CHANGELOG}";                          \
+	fi;                                               \
+	test -f CHANGELOG.md && git add "$${CHANGELOG}" CHANGELOG.md
 	@RELEASE="`$(VERSION_TAG)`" &&                                     \
 	CHANGELOG="docs/CHANGELOG-`$(MAJOR_VERSION)`.md" &&                \
 	CHANGELOG_TMP="docs/changelog-$${PPID}~" &&                        \

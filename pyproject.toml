@@ -139,7 +139,7 @@ sort_commits = "newest"
 
 [tool.poetry]
 name = "reliabot"
-version = "0.6.4"
+version = "1.0.1a0"
 description = "Maintain GitHub Dependabot configuration."
 license = "MIT"
 authors = ["Alexander Dupuy <alex@dupuy.us>"]

@@ -106,7 +106,7 @@ jobs:
   test-release:
     runs-on: ubuntu-24.04
     needs: prepare
-    # Only run if prepare succeeds, and it's a pre-release (pr_release is false)
+    # Only run if prepare succeeds, and it's a prerelease (pr_release is false)
     if: >
       needs.prepare.outputs.skip == 'false' &&
       needs.prepare.outputs.pr_tag == 'true' &&
@@ -168,14 +168,14 @@ jobs:
           subject-path: '${{ env.DIST }}/*'
           sbom-path: '${{ env.DIST }}/reliabot.spdx.json'
 
-      - name: 'Create draft release'
+      - name: 'Create prerelease'
         uses: step-security/release-action@a0d8e0f90f554c15366ca2c9046bf4090d24adbe # v1.21.0
         with:
           allowUpdates: true
           artifactErrorsFailBuild: true
           artifacts: '${{ env.DIST }}/*'
           bodyFile: '${{ env.DIST }}/release-notes.md'
-          draft: true
+          draft: false
           name: '${{ env.RELEASE_NAME }}'
           prerelease: true
           tag: '${{ env.VERSION_TAG }}'
@@ -279,14 +279,14 @@ jobs:
           attestations: true
           packages-dir: 'pypi_dist/'
 
-      - name: 'Create draft release'
+      - name: 'Create release'
         uses: step-security/release-action@a0d8e0f90f554c15366ca2c9046bf4090d24adbe # v1.21.0
         with:
           allowUpdates: true
           artifactErrorsFailBuild: true
           artifacts: '${{ env.DIST }}/*'
           bodyFile: '${{ env.DIST }}/release-notes.md'
-          draft: true
+          draft: false
           name: '${{ env.RELEASE_NAME }}'
           prerelease: false
           tag: '${{ env.VERSION_TAG }}'
@@ -297,7 +297,7 @@ jobs:
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          # Annotated tag for full release (not pre-release)
+          # Annotated tag for full release (not prerelease)
           git tag -a "$VERSION_TAG" -F "$DIST/release-notes.md"
           git push origin "$VERSION_TAG"
 
@@ -319,33 +319,3 @@ jobs:
       provenance-name: 'reliabot.intoto.jsonl'
       upload-assets: true
       upload-tag-name: ${{ needs.prepare.outputs.VERSION_TAG }}
-      continue-on-error: true # Prevent total failure due to Node 20 binaries
-
-  finalize-release:
-    runs-on: ubuntu-24.04
-    needs: [prepare, pypi-release, provenance] # finalize AFTER provenance
-    if: > # fold marker needed to prevent YAML interpretation of ! and && below
-      !cancelled() && needs.pypi-release.result == 'success'
-    permissions:
-      contents: write
-    timeout-minutes: 5
-
-    steps:
-      - name: 'Harden runner'
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
-        with:
-          disable-sudo: true
-          egress-policy: block
-          allowed-endpoints: >
-            api.github.com:443
-            uploads.github.com:443
-
-      - name: 'Finalize GitHub release'
-        uses: step-security/release-action@a0d8e0f90f554c15366ca2c9046bf4090d24adbe # v1.21.0
-        with:
-          allowUpdates: true
-          draft: false
-          name: '${{ needs.prepare.outputs.RELEASE_NAME }}'
-          prerelease: false
-          tag: '${{ needs.prepare.outputs.VERSION_TAG }}'
-          updateOnlyUnreleased: true

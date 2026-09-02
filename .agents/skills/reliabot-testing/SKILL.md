@@ -17,6 +17,12 @@ Always work from the repository root. If no local clone is available,
 `git clone https://github.com/dupuy/reliabot.git` first. See
 `reference/repo-layout.md` for locations of all test-related configuration.
 
+When inspecting a specific commit, PR, or fork (especially `dupuyarc/reliabot`
+or other forks), prefer `git clone` / `git fetch` over fetching GitHub web
+pages — web views can return cached/stale content, and some raw/tree URLs are
+blocked. Use `git ls-remote https://github.com/$FORK_OWNER/reliabot.git` to
+check what's actually pushed before trying to fetch a specific SHA.
+
 **Quick check — just the embedded doctests:**
 
 ```console

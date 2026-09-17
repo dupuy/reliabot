@@ -172,7 +172,7 @@ repos:
     # Includes ShellCheck on workflow scripts
     rev: v1.17
     hooks:
-      - id: actionlint
+      - id: actionlint-shellcheck
   # Prettier --write for GitHub workflows in local repository
   - repo: local
     hooks:
@@ -186,6 +186,8 @@ repos:
         pass_filenames: true
   # Read-only Prettier --check for GitHub workflows in local repository
   # that only has any effect if the prettier --write is skipped
+  # This pre-commit is used by pre-commit.ci as GitHub Actions don't have any
+  # write access to the `.github/` folder for security reasons.
   - repo: local
     hooks:
       - id: prettier-workflows-ci

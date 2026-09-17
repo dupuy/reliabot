@@ -677,14 +677,16 @@ def extract_settings(
     :returns: Settings extracted from the comments
     """
     settings = dict(defaults)
-
+    has_config = False
     try:
+        if config.ca.comment is not None:  # type: ignore[union-attr]
+            has_config = True
         # fmt: off
         comments = [comment.value for comment # attribute/type errors handled
                     in config.ca.comment[1]]  # type: ignore[union-attr]
         # fmt: on
     except (AttributeError, IndexError, TypeError):
-        if config:
+        if has_config:
             warnings.warn(
                 f"{NLSP} extract_settings() couldn't get comments"
                 f"{NLSP}{traceback.format_exc()}",
@@ -1319,8 +1321,6 @@ def self_test() -> int:
         mod = sys.modules["reliabot"].reliabot
         (failed, tests) = doctest.testmod(mod, optionflags=flags)
     print(f"Passed {tests - failed} of {tests} doctests.")
-    if not failed:  # pragma: no cover
-        doctest.testmod(mod, verbose=True)
     return 1 if failed else 0
 
 

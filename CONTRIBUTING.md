@@ -241,12 +241,9 @@ You can run these doctests with any Reliabot installation by running it with
 the `--self-test` argument:
 
 ```console
-reliabot$ reliabot/reliabot.py --self-test 2>/dev/null | tail -5
-   1 tests in __main__.usage
-   4 tests in __main__.validate_dependabot_config
-149 tests in 43 items.
-149 passed and 0 failed.
-Test passed.
+reliabot$ export PYTHON_WARNINGS=ignore # optional
+reliabot$ reliabot/reliabot.py --self-test 2>/dev/null || true
+Passed 190 of 190 doctests.
 ```
 
 The complete Reliabot test suite of Reliabot runs with `tox`. You can run them

@@ -677,14 +677,16 @@ def extract_settings(
     :returns: Settings extracted from the comments
     """
     settings = dict(defaults)
-
+    has_config = False
     try:
+        if config.ca.comment is not None:  # type: ignore[union-attr]
+            has_config = True
         # fmt: off
         comments = [comment.value for comment # attribute/type errors handled
                     in config.ca.comment[1]]  # type: ignore[union-attr]
         # fmt: on
     except (AttributeError, IndexError, TypeError):
-        if config:
+        if has_config:
             warnings.warn(
                 f"{NLSP} extract_settings() couldn't get comments"
                 f"{NLSP}{traceback.format_exc()}",

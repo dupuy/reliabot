@@ -1,7 +1,7 @@
 # Reliabot – Agent Instructions
 
 This is a Python tool that maintains Dependabot configurations for GitHub
-repositories. It is distributed as both a CLI script and a pre-commit hook.
+repositories. You can use it on the command line or as a pre-commit hook.
 
 ## Project Overview
 
@@ -33,8 +33,8 @@ Optional body with more detail. Reference any relevant GitHub issues with `#123`
   - `ci(pre-commit): add conventional-pre-commit commit-msg hook`
   - `docs: update FAQ with Renovate comparison`
 - The `conventional-pre-commit` hook runs at the `commit-msg` stage and
-  **rejects** non-conforming messages. Do not use `-n`, `--no-verify`, or
-  `SKIP` environment variable to disable checks.
+  **rejects** non-conforming messages. Don't use `-n`, `--no-verify`, or `SKIP`
+  environment variable to turn off the commit-msg check.
 
 ## Refactoring Guidelines
 
@@ -46,7 +46,7 @@ Before refactoring any code:
 3. **Do not change behavior** in a refactoring commit. If a behavior change is
    also needed, make it in a separate `fix:` or `feat:` commit.
 4. **Preserve doctests**: `reliabot.py` uses doctests embedded in docstrings
-   and the `__test__` map. Do not remove or alter them unless the behavior they
+   and the `__test__` map. Don't remove or alter them unless the behavior they
    document is intentionally changing.
 5. **Suppressing linter warnings is acceptable** using `# noqa: BXXX` (Ruff) or
    `# pylint: disable=...` (Pylint) when the code must do something unusual —
@@ -57,11 +57,13 @@ Before refactoring any code:
 
 ## Code Style
 
-- **Formatter**: Ruff (Black-compatible). Pre-commit enforces this — do not
+- **Formatter**: Ruff (Black-compatible). Pre-commit enforces this — don't
   manually reformat in ways that contradict it.
 - **Linter**: Ruff + Prospector (Pylint). Both run in pre-commit.
 - **Shell scripts**: formatted with `shfmt -i 2 -ci`, linted with `shellcheck`.
-- **Import style**: follow existing patterns in the file being modified.
+- **Import style**: Ruff (`isort` multi-line + Black) - when bumping minimum
+  Python version, run `pre-commit --hook-stage=manual reorder-python-imports`
+  to clean up outdated `__future__` imports.
 
 ## Documentation Style
 
@@ -82,9 +84,20 @@ Before refactoring any code:
 - YAML indentation in `dependabot.yml` follows `ruamel.yaml` settings defined
   in Reliabot comments (`# reliabot: mapping=4 offset=2 sequence=4`).
 
+## Pre-commit checks
+
+- Most of the preceding guidelines are enforced by pre-commit checks. While
+  it's never OK to turn off commit checks entirely, in rare circumstances it's
+  necessary to turn off some checks for a single commit. Do this using the SKIP
+  environment variable, but reserve it for exceptional situations where there
+  is no way to immediately address the pre-commit error.
+- While iterating on updates that include `README.md` or Markdown files with
+  more than ten web links, it's OK to `SKIP=markdown-link-check` as it's slow.
+  Run a final `pre-commit run -a markdown-link-check` to verify links are OK.
+
 ## What Not To Do
 
-- Do not run `git commit --no-verify` or bypass pre-commit hooks.
+- Do not run `git commit --no-verify` to turn off pre-commit checking.
 - Do not add dependencies without updating `pyproject.toml` and `poetry.lock`.
 - Do not modify `CHANGELOG.md` directly — it is managed by the release process.
 - Do not push directly to `main`. Work on a branch and open a PR.

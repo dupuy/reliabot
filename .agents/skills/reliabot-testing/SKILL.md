@@ -61,7 +61,7 @@ The `envlist` (see `setup.cfg`) is:
   coverage gate (`--fail-under=85`).
 - `ci-skip` — run tests of `Makefile` and `git-cliff` release notes generation
   to ensure that any commits with CI skip directives are modified so that
-  CHANGELOG generation does not skip the release workflows.
+  CHANGELOG generation doesn't skip the release workflows.
 - `doctest-cli` — run <code>\`\`\`console</code> code blocks in `*.md` files
   (README.md, CONTRIBUTING.md, etc.) as literal shell transcripts; only targets
   Python 3.12 because of a `pyre2-updated` wheel constraint.
@@ -77,7 +77,7 @@ $ tox -e pre-commit
 **Coverage** is measured with `coverage` + the `covdefaults` plugin (see
 `[coverage:run]` in `setup.cfg`) and must stay ≥85%. If a change drops
 coverage, add a doctest that exercises the new/changed branch rather than
-disabling the check. See `reference/writing-tests.md` for more details.
+turning off the check. See `reference/writing-tests.md` for more details.
 
 ## Debugging a failing test
 

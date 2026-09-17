@@ -10,11 +10,12 @@
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/dupuy/reliabot.svg)](http://isitmaintained.com/project/dupuy/reliabot "Percentage of issues still open")
 \
 [![Python build workflow status](https://img.shields.io/github/actions/workflow/status/dupuy/reliabot/python-app.yaml)](https://github.com/dupuy/reliabot/actions/workflows/python-app.yaml)
-[![Status](https://img.shields.io/badge/CI%2FCD_status-8A2BE2)](https://mindful-scorpion-7323.statusgator.app)
-[![PyPI Version](https://img.shields.io/pypi/v/reliabot)](https://pypi.org/project/reliabot/)
-[![GitHub Release](https://img.shields.io/github/v/release/dupuy/reliabot)](https://github.com/dupuy/reliabot/releases)
+[![Release workflow status](https://github.com/dupuy/reliabot/actions/workflows/publish.yaml/badge.svg)](https://github.com/dupuy/reliabot/actions/workflows/publish.yaml)
+[![CI/CD status](https://img.shields.io/badge/CI%2FCD_status-8A2BE2)](https://mindful-scorpion-7323.statusgator.app)
+[![PyPI version](https://img.shields.io/pypi/v/reliabot)](https://pypi.org/project/reliabot/)
+[![GitHub release](https://img.shields.io/github/v/release/dupuy/reliabot)](https://github.com/dupuy/reliabot/releases)
 \
-[![GitHub License](https://img.shields.io/github/license/dupuy/reliabot)](LICENSE)
+[![GitHub license](https://img.shields.io/github/license/dupuy/reliabot)](LICENSE)
 [![GitHub repository size](https://img.shields.io/github/repo-size/dupuy/reliabot)](https://github.com/dupuy/reliabot/graphs/code-frequency)
 [![GitHub top language](https://img.shields.io/github/languages/top/dupuy/reliabot)](https://github.com/collections/programming-languages)
 [![GitHub repository file+folder count](https://img.shields.io/github/directory-file-count/dupuy/reliabot)](https://githubtree.mgks.dev/repo/dupuy/reliabot/main/?ref=badge&sort=folder-az&style=classic)
@@ -179,10 +180,10 @@ Once installed, you can add the Python binary directory to your `PATH`.
 
 Although it's not ideal, you can also put the `reliabot.py` script into any
 directory in your PATH (with or without the `.py` extension), mark it as
-executable, and run it directly. This _requires_ `ruamel.yaml` to be installed
-in the (default) Python environment, but can be convenient for _ad hoc_ use.
-The `pyre2-updated` package and RE2 C library are **not** required, but you'll
-have to use `--re` to suppress warnings about failure to load RE2 if missing.
+executable, and run it directly. This _requires_ installing `ruamel.yaml` in
+the (default) Python environment, but can be convenient for _ad hoc_ use. The
+`pyre2-updated` package and RE2 C library are **not** required, but you'll have
+to use `--re` to suppress warnings about failure to load RE2 if missing.
 
 ### As a `pre-commit` hook
 
@@ -231,13 +232,17 @@ configuration should invoke Reliabot automatically.
 ### Using with other pre-commit checks
 
 If you also configure a YAML checker in `.pre-commit-config.yaml`, it should
-come before Reliabot. And if you configure a YAML formatter, it should come
-after Reliabot. Pre-commit processes all hooks in the order they appear in the
-configuration, and this order provides the best results:
+come _before_ Reliabot. And if you configure a YAML formatter, it should come
+_after_ Reliabot. Pre-commit processes all hooks in the order they appear in
+the configuration, and the following order helps avoid endless formatting
+loops:
 
 1. YAML checker
 2. Reliabot
 3. YAML formatter
+
+It is helpful, though not strictly required, to adjust the reliabot settings in
+`dependabot.yml` to match indentation and other settings of the YAML formatter.
 
 ## Reliabot script
 
@@ -412,17 +417,20 @@ If any indentation setting appears more than once, Reliabot uses the last one.
 > with a YAML formatter. This is one reason YAML formatters in your
 > `.pre-commit-config.yaml` should come _after_ Reliabot.
 
-If you need more control of the formatting of `.pre‑commit-config.yaml`, it's
-best to configure pre-commit to use a YAML formatter like one of these:
+If you need more control of the formatting of `.pre‑commit-config.yaml`, you
+can configure pre-commit to use a YAML formatter like one of these:
 
 - [prettier][15] (use mapping=2 offset=2 sequence=4 for compatibility)
 - [Golang `yamlfmt`][16]
 - [Python `yamlfmt`][17] (also uses `ruamel.yaml` and its configuration
   settings).
 
+If you do use another formatter, it's helpful to adjust the reliabot settings
+for indentation in `dependabot.yml` to match your formatter configuration.
+
 > ⛔️**Warning**: Some combinations of indentation values can generate invalid
 > YAML output that `ruamel.yaml` can't parse. Reliabot checks that it can parse
-> the updated `dependabot.yml` contents; if not, it doesn't update the file and
+> the updated `dependabot.yml` contents. If not, it doesn't update the file and
 > instead fails with an exit code of 3, printing an error message like the
 > following:
 >

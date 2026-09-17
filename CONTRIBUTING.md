@@ -2,7 +2,7 @@
 
 🙏Thanks in advance for your contributions ❤️
 
-There are _many_ ways to contribute – one of the best is just using Reliabot
+There are _many_ ways to contribute – a good first step is just using Reliabot
 for your projects – and no contribution is too small or too large.
 
 - [Ask a question](#asking-a-question) about using Reliabot.
@@ -71,7 +71,7 @@ your question:
   - Operating System (distribution) and Python versions
 - Explain what you're trying to do, and what you don't understand.
 
-Someone should respond to the issue as soon as possible. Be patient. 🕗😊
+Someone should respond to the issue within a few days. Be patient. 🕗😊
 
 ## Reporting problems
 
@@ -87,7 +87,7 @@ steps in advance helps to fix any potential bug as fast as possible.
 - Searching the internet (especially Stack Overflow) can help you find any
   users of other tools, or in other forums, who have run into a similar
   problem.
-- Make sure you are using the latest Reliabot version.
+- Make sure you are using the most recent Reliabot version.
 - Confirm that your problem is really a bug and not an error on your part, such
   as using Reliabot with unsupported environments or versions. Reading the
   [documentation][2] can help. If you need help, consider just
@@ -122,8 +122,8 @@ problem using Reliabot:
   steps* that others can follow to recreate the issue. This may include your
   GitHub repository, probably its `pre-commit-config.yaml`, and definitely your
   `dependabot.yml` file.
-- For the best problem reports and fastest fixes, try to isolate the problem
-  and create a reduced test case.
+- To get a quick fix, try to isolate the problem and create a reduced test
+  case.
 - Provide the information you collected in the previous section.
 - If you would like to develop a fix for the problem, or already have a
   proposed change, please mention this in the problem report.
@@ -156,7 +156,7 @@ suggestion and how it relates to other approaches.
 
 ### Before suggesting an enhancement
 
-- Make sure you are using the latest Reliabot version.
+- Make sure you are using the most recent Reliabot version.
 - Read the [documentation][2] to see if Reliabot can already do what you want.
 - [Search the issues][4] to see if somebody already suggested this enhancement.
   If so, add a comment to that existing issue instead of opening a new one.

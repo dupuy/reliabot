@@ -312,6 +312,7 @@ jobs:
       actions: read
       id-token: write
       contents: write
+    cache-mode: read
     # MUST use @v2.* version pin rather than a hash, required for SLSA Level 3
     uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v2.1.0
     with:

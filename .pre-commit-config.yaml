@@ -338,7 +338,7 @@ repos:
         exclude: tests/
 
   - repo: https://github.com/errata-ai/vale
-    rev: v3.21.0
+    rev: v3.22.0
     hooks:
       - id: vale
         exclude: CHANGELOG*|LICENSE|humans[.]txt|requirements.*|styles/
@@ -426,7 +426,7 @@ repos:
         # Hook adapted from https://github.com/mineiros-io/pre-commit-hooks/
         description: |
           Checks hyperlinks in a markdown text to see if they're still valid.
-        entry: markdown-link-check.sh
+        entry: scripts/markdown-link-check.sh
         language: script
         types: [markdown]
         exclude: tests/

@@ -8,6 +8,7 @@ Keybase
 LLVM
 Makefile
 PEP
+PRs
 Pylint
 Quis
 TOML

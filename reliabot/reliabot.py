@@ -1319,8 +1319,6 @@ def self_test() -> int:
         mod = sys.modules["reliabot"].reliabot
         (failed, tests) = doctest.testmod(mod, optionflags=flags)
     print(f"Passed {tests - failed} of {tests} doctests.")
-    if not failed:  # pragma: no cover
-        doctest.testmod(mod, verbose=True)
     return 1 if failed else 0
 
 

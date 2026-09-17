@@ -12,13 +12,16 @@ on:
       - synchronize
 
 # Declare default permissions as read only.
+# code-quality: write is required to upload coverage data for the
+# "Restrict code coverage" ruleset rule (GitHub Code Quality, public preview).
 permissions:
   contents: read
+  code-quality: write
 
 jobs:
   tests:
     if: github.repository == 'dupuy/reliabot'
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
 
     steps:
       - name: 'Harden runner'
@@ -75,7 +78,7 @@ jobs:
         if: steps.computed.outputs.pr-commit == 'true'
         run: 'poetry run tox -e py'
 
-      - name: 'Upload coverage report'
+      - name: 'Upload coverage report as an artifact'
         if: steps.computed.outputs.pr-commit == 'true'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:

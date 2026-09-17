@@ -27,23 +27,12 @@
         "require_code_owner_review": true,
         "require_last_push_approval": true,
         "required_review_thread_resolution": false,
+        "require_extra_approval_for_unattributed_changes": true,
         "allowed_merge_methods": ["squash", "rebase"]
       }
     },
     {
       "type": "required_linear_history"
-    },
-    {
-      "type": "code_scanning",
-      "parameters": {
-        "code_scanning_tools": [
-          {
-            "tool": "CodeQL",
-            "security_alerts_threshold": "high_or_higher",
-            "alerts_threshold": "errors"
-          }
-        ]
-      }
     },
     {
       "type": "code_quality",
@@ -64,6 +53,22 @@
           {
             "context": "Codacy Static Code Analysis",
             "integration_id": 56611
+          },
+          {
+            "context": "tests",
+            "integration_id": 15368
+          }
+        ]
+      }
+    },
+    {
+      "type": "code_scanning",
+      "parameters": {
+        "code_scanning_tools": [
+          {
+            "tool": "CodeQL",
+            "security_alerts_threshold": "high_or_higher",
+            "alerts_threshold": "errors"
           }
         ]
       }

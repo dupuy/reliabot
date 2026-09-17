@@ -2,7 +2,9 @@
 #
 # This information is also available at:
 #
-# https://github.com/dupuy/reliabot/actions?query=is%3Aaction_required%2Cpending%2Cwaiting
+# https://github.com/dupuy/reliabot/actions?query=is%3Aaction_required
+# https://github.com/dupuy/reliabot/actions?query=is%3Apending
+# https://github.com/dupuy/reliabot/actions?query=is%3Awaiting
 #
 
 status() {

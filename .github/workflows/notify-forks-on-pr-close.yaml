@@ -44,7 +44,7 @@ jobs:
           allowed-endpoints: >
             api.github.com:443
 
-      - name: Send repository_dispatch to fork 1
+      - name: 'Send repository_dispatch to fork 1'
         env:
           GH_TOKEN: ${{ secrets.DUPUYARC_TOKEN }}
           OWNER: dupuyarc

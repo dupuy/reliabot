@@ -256,41 +256,52 @@ docstring-code-format = true
 # Allow en-dash (U+2013), which could be confused for -.
 allowed-confusables = ["–"]
 
-# Enabling flake8 -builtins (A), -annotations (ANN), -bugbear (B),
-# -comprehensions (C4), -pydocstyle (D), -errmsg (EM), -executable (EXE),
-# -future-annotations (FA), -boolean-trap (FBT), -implicit-str-concat (ISC),
-# -import-conventions (ICN), -pie (PIE), -quotes (Q), -return (RET),
-# -bandit (S), -simplify (SIM), -type-checking (TCH), and -2020 (YTT) in
-# addition to flynt (FLY) pep8-naming (N), perflint (PERF), pylint (PL*),
-# pyupgrade (UP), and the defaults (E4, E7, E9, F).
+# Enabling default options (E4, E7, E9, F) as well as
+# flake8: -builtins (A), -annotations (ANN), -async (ASYNC), -bugbear (B),
+# -comprehensions (C4), -pydocstyle (D), -datetimez (DTZ), -errmsg (EM),
+# -executable (EXE), -future-annotations (FA), -boolean-trap (FBT),
+# -logging-format (G), -implicit-str-concat (ISC), -import-conventions (ICN),
+# -no-pep420 (INP), -gettext (INT), -logging (LOG), -pie (PIE), -quotes (Q),
+# -return (RET), -bandit (S), -simplify (SIM), -type-checking (TCH), and
+# -2020 (YTT), in addition to
+# others: eradicate (ERA), flynt (FLY), refurb (FURB), pep8-naming (N),
+#  perflint (PERF), pylint (PL*), pyupgrade (UP),
+#  Ruff-specific rules (RUF) and isort-style multi-line imports (I).
+#
 # Pycodestyle warnings (W) aren't selected since other pre-commits catch them
 # (except for too-noisy W505).
-# TODO: "ASYNC", "DTZ", "ERA", "G", "INP", "INT", "LOG", "PTH", "SLOT", & "TRIO"
-# (if they become relevant). Also maybe "FURB"
+# TODO: -use-pathlib (PTH), and if they become relevant, -slots (SLOT)
+# and -trio (TRIO)
 select = [
-    "E4", "E7", "E9", "F", "A", "ANN", "B", "C4", "D", "EM", "EXE", "FA", "FBT",
-    "ISC", "ICN", "PIE", "Q", "RET", "S", "SIM", "TCH", "YTT",
-    "FLY", "N", "PERF", "PL", "UP",
-    "RUF",
+  # flake8
+  "E4", "E7", "E9", "F", "A", "ANN", "ASYNC", "B", "C4", "D", "DTZ", "EM",
+  "EXE", "FA", "FBT", "G", "ISC", "ICN", "INP", "INT", "LOG", "PIE", "Q", "RET",
+  "S", "SIM", "TCH", "YTT",
+  # others
+  "ERA", "FLY", "FURB", "N", "PERF", "PL", "UP",
+  "RUF",
+  "I",
+  # "PTH" #disabled for now, comment out for checking reliabot_fuzzer.py
 ]
 ignore = [
-    # "ANN101",  # missing-type-self
-    "B028",  # no-explicit-stacklevel
-    "D105",  # undocumented-magic-method
-    "ISC001",  # single-line-implicit-string-concatenation  # formatter conflict
-    "PLR091", # too-many-*  # TODO: reduce complexity or disable with comments
-    "PLR2004", # magic-value-comparison
-    "S404",  # suspicious-subprocess-import
-    "S603",  # subprocess call: check for execution of untrusted input
-    # This can be removed and the code fixed as it was already done for Optional[]
-    # ruff --fix --unsafe-fixes should do the trick
-    "UP007",  # non-pep604-annotation – Use X | Y for type annotations
+  # "ANN101",  # missing-type-self
+  "B028",  # no-explicit-stacklevel
+  "D105",  # undocumented-magic-method
+  "ISC001",  # single-line-implicit-string-concatenation  # formatter conflict
+  "PLR091", # too-many-*  # TODO: reduce complexity or disable with comments
+  "PLR2004", # magic-value-comparison
+  "S404",  # suspicious-subprocess-import
+  "S603",  # subprocess call: check for execution of untrusted input
 ]
 
 [tool.ruff.lint.flake8-type-checking]
 # Add quotes around type annotations, if doing so would allow
 # an import to be moved into a type-checking block.
 quote-annotations = true
+
+[tool.ruff.lint.isort]
+# Force imports with trailing commas to split into individual lines
+split-on-trailing-comma = true
 
 [tool.ruff.lint.pycodestyle]
 max-doc-length = 79

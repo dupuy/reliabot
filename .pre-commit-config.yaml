@@ -223,19 +223,18 @@ repos:
     rev: v3.21.2
     hooks:
       - id: pyupgrade
-        args: [--py310-plus]
+        args:
+          # TODO: update to --py311-plus in November 2026
+          - --py310-plus
   - repo: https://github.com/asottile/reorder-python-imports
     rev: v3.17.0
     hooks:
       - id: reorder-python-imports
         args:
-          - --py37-plus
+          # TODO: update to --py311-plus in November 2026
+          - --py310-plus
+          # remove from __future__ import annotations when py314 is minimum
           - --add-import=from __future__ import annotations
-          - --remove-import=from typing import Dict
-          - --remove-import=from typing import FrozenSet
-          - --remove-import=from typing import List
-          - --remove-import=from typing import Set
-          - --remove-import=from typing import Tuple
         files: ^(?!setup.py$).*[.]py$
         stages: [manual] # prevent whitespace battle with ruff --format (Black)
   - repo: https://github.com/PyCQA/prospector

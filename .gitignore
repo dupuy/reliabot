@@ -17,6 +17,9 @@ dist/
 cobertura.xml
 *.md.sh
 
+# Misc
+*.rej
+
 # MacOS
 .DS_Store
 .AppleDouble

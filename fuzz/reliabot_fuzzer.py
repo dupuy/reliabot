@@ -4,22 +4,25 @@
 Requires Python 3.11—3.12
 """
 
+from __future__ import annotations
+
+import os
 import sys
+
 import atheris
 
-
 # Import Reliabot modules
-import os
 
 # Make sure the parent directory is in sys.path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 with atheris.instrument_imports():
     from ruamel.yaml import YAML
+
     from reliabot import reliabot
 
-from ruamel.yaml.reader import ReaderError
 from ruamel.yaml.error import YAMLError
+from ruamel.yaml.reader import ReaderError
 
 
 def test_one_input(data: bytes) -> None:

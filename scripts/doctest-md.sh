@@ -27,20 +27,26 @@
 # so we can remove this hairy shell pipeline and let doctest-cli do all the work
 # in more comprehensible Python code.
 
+export MDTEST=NOT-A-FILENAME-THAT-SHOULD-EVER-EXIST
+cleanup() {
+  rm -f "${MDTEST}.sh"
+}
+trap cleanup EXIT
+
 grep -l '^```console' "$@" |
   # Ignore any files with newlines in their name. They could be handled safely
   # with find -print0 and xargs -0 re-invoking this script, but not worth it.
   grep '^\./.*\.md$' |
   (
     STATUS=0
-    while IFS= read -r mdtest; do
+    while IFS= read -r MDTEST; do
       awk '/^```console$/,/^```$/
-          /^<\!-- \$\?=[1-9][0-9]* -->$/' "$mdtest" |
+          /^<\!-- \$\?=[1-9][0-9]* -->$/' "${MDTEST}" |
         sed -e '/^[^ ]*\$ /{s//>>> /;s/$/ 2>\&1/;}' \
           -e '/^```/d' \
-          -e 's/^<\!-- \(\$\?=[1-9][0-9]*\) -->$/\1/' >"$mdtest.sh"
-      PYTHONWARNINGS=default doctest-cli "$mdtest.sh" || STATUS=$?
-      rm "$mdtest.sh"
+          -e 's/^<\!-- \(\$\?=[1-9][0-9]*\) -->$/\1/' >"${MDTEST}.sh"
+      PYTHONWARNINGS=default doctest-cli "${MDTEST}.sh" || STATUS=$?
+      cleanup
     done
     exit "$STATUS"
   )

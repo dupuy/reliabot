@@ -64,7 +64,7 @@ from os.path import (
     normpath,
     split,
 )
-from typing import Any, IO, TextIO, TYPE_CHECKING
+from typing import IO, TYPE_CHECKING, Any, TextIO
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Generator, Iterable, Iterator
@@ -614,7 +614,7 @@ def check_git_repository(path: bytes) -> None:
         raise RuntimeError(msg)
     git_dir = join(path, GIT_DIR)
     if not exists(git_dir):
-        msg += "is not a Git repository.."
+        msg += "is not a Git repository."
         raise RuntimeError(msg)
     if not isdir(git_dir):
         real_git_dir = resolve_gitdir_file(git_dir, path)
@@ -836,8 +836,7 @@ class Exclusions:
         :param dir_path: Directory path to check against the exclusion set.
         :returns: True if the path matches the exclusion set, otherwise False.
         """
-        if dir_path.startswith("/"):
-            dir_path = dir_path[1:]
+        dir_path = dir_path.removeprefix("/")
         matched = dir_path in self.match[key]
         if not matched:
             for prefix in self.prefix[key]:

@@ -1,6 +1,6 @@
 name: Cancel jobs pending approval on a PR close
 # This is intended to prevent GHA jobs from sitting around for 30 days waiting
-# for an approval that would only come too late. It does create problems it you
+# for an approval that would only come too late. It does create problems if you
 # close a PR and then later re-open it, but it is possible to manually re-run
 # any jobs that were never approved. Use scripts/stalled-actions.sh to see if
 # this is working as intended.
@@ -8,12 +8,15 @@ on: # zizmor: ignore[dangerous-triggers] OK as no code checkout or user input
   pull_request_target:
     types: [closed]
 
+# Declare default permissions as read only.
 permissions:
-  actions: write
+  contents: read
 
 jobs:
   cancel-pending-approval:
     runs-on: ubuntu-26.04
+    permissions:
+      actions: write
     steps:
       - name: 'Harden runner'
         uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1

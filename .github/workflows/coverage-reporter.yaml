@@ -54,9 +54,10 @@ jobs:
           coverage-reports: 'cobertura.xml'
           language: Python
 
-      - name: 'Upload coverage to GitHub Code Quality'
-        uses: actions/upload-code-coverage@d8e329117199404bba6fc81efe8093dc7c015e34 # v1.4.2
-        with:
-          file: cobertura.xml
-          label: 'code-coverage/tox'
-          language: Python
+      # GitHub Code Quality not enabled (or possible) for non-team
+      # - name: 'Upload coverage to GitHub Code Quality'
+      #   uses: actions/upload-code-coverage@d8e329117199404bba6fc81efe8093dc7c015e34 # v1.4.2
+      #   with:
+      #     file: cobertura.xml
+      #     label: 'code-coverage/tox'
+      #     language: Python

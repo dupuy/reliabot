@@ -1,6 +1,6 @@
 # Source repository: https://github.com/codacy/codacy-coverage-reporter-action/blob/master/README.md#uploading-coverage-to-codacy
 
-name: 'Codacy Coverage Reporter'
+name: 'Coverage Reporter'
 on:
   workflow_run:
     workflows: ['Run tests with coverage']
@@ -12,12 +12,12 @@ permissions:
   contents: read
 
 jobs:
-  codacy-coverage-reporter:
-    runs-on: ubuntu-24.04
-    name: codacy-coverage-reporter
+  coverage-reporter:
+    runs-on: ubuntu-26.04
     permissions:
       contents: read
       actions: read # Needed to download artifacts
+      code-quality: write
     # Only run on primary fork, since this requires a Codacy project token
     if: >
       github.event.workflow_run.conclusion == 'success' &&
@@ -43,9 +43,17 @@ jobs:
         run: |
           gh run download ${{ github.event.workflow_run.id }} --name coverage-report
 
-      - name: 'Run codacy-coverage-reporter'
+      - name: 'Upload coverage to Codacy'
         uses: step-security/codacy-coverage-reporter-action@44e97cd9a5e5328b79a4fd414746d6b074da1411 # v1.3.0
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-          language: Python
+          continue-on-error: true # Codacy failure must not block GitHub upload
           coverage-reports: 'cobertura.xml'
+          language: Python
+
+      - name: 'Upload coverage to GitHub Code Quality'
+        uses: actions/upload-code-coverage@d8e329117199404bba6fc81efe8093dc7c015e34 # v1.4.2
+        with:
+          file: cobertura.xml
+          label: 'code-coverage/tox'
+          language: Python

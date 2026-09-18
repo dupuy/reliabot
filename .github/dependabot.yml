@@ -9,14 +9,19 @@ updates:
     package-ecosystem: pip
     schedule:
       interval: monthly
+    cooldown:
+      default-days: 7
     groups:
       python-tools:
-        - ruff
-        - tox
+        patterns:
+          - ruff
+          - tox
   - directory: /
     package-ecosystem: github-actions
     schedule:
       interval: monthly
+    cooldown:
+      default-days: 7
     groups:
       gh-actions-infrastructure:
         patterns:
@@ -33,7 +38,11 @@ updates:
     package-ecosystem: docker
     schedule:
       interval: monthly
+    cooldown:
+      default-days: 7
   - directory: /fuzz
     package-ecosystem: pip
     schedule:
       interval: monthly
+    cooldown:
+      default-days: 7

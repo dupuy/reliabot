@@ -144,9 +144,13 @@ jobs:
         id: computed
         run: >
           {
-            COMMIT_TAG=$(git describe) &&
+            # All outputs from this job need to be sanitized if they are based
+            # on user-supplied input in the PR including commits and comments.
+            # Sanitize user-supplied git tags and poetry config with `tr -cd`
+            export LC_ALL=C;
+            COMMIT_TAG=$(git describe | tr -cd '[:alnum:]_.-') &&
               echo "COMMIT_TAG=$COMMIT_TAG" >&2 ;
-            VERSION_TAG="v$(poetry version --short |
+            VERSION_TAG="v$(poetry version --short | tr -cd '[:alnum:]_.-' |
               sed -e 's/a/-alpha./' -e 's/b/-beta./' -e 's/rc/-rc./')" &&
                 echo "VERSION_TAG=$VERSION_TAG" ;
             case "$COMMIT_TAG" in
@@ -292,9 +296,22 @@ jobs:
           version: 'v2.9.1'
 
       - name: 'Generate metadata for publish workflow'
-        if: env.pr_tag == 'true'
+        # Other workflows parse metadata, we must ensure its integrity
+        env: # override jobs env in case env was overridden by build steps
+          VERSION_TAG: ${{ needs.tests.outputs.VERSION_TAG }}
+          ARTIFACT_NAME: ${{ needs.tests.outputs.ARTIFACT_NAME }}
+          pr_release: ${{ needs.tests.outputs.pr_release }}
+          pr_tag: ${{ needs.tests.outputs.pr_tag }}
+          RELEASE_NAME: ${{ needs.tests.outputs.RELEASE_NAME }}
+        if: needs.tests.outputs.pr_tag == 'true'
         run: |
           METADATA_FILE=dist/metadata.json
+          export LC_ALL=C
+          ARTIFACT_NAME=$(echo "$ARTIFACT_NAME" | tr -cd '[:alnum:]_.-')
+          pr_release=$(echo "$pr_release" | tr -cd '[:alnum:]_.-')
+          pr_tag=$(echo "$pr_tag" | tr -cd '[:alnum:]_.-')
+          RELEASE_NAME=$(echo "$RELEASE_NAME" | tr -cd '[:alnum:]_.-')
+          VERSION_TAG=$(echo "$VERSION_TAG" | tr -cd '[:alnum:]_.-')
           cat <<EOF >"$METADATA_FILE"
           {
             "ARTIFACT_NAME": "$ARTIFACT_NAME",
@@ -303,10 +320,9 @@ jobs:
             "RELEASE_NAME": "$RELEASE_NAME",
             "VERSION_TAG": "$VERSION_TAG",
 
-            "JSON requires": "a comma-less final entry"
+            "JSON-requires": "comma-less-final-entry"
           }
           EOF
-          python3 -m json.tool "$METADATA_FILE"
 
       - name: 'Upload distribution package as an artifact'
         if: >

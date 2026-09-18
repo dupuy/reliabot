@@ -1,6 +1,6 @@
 name: Notify fork on PR close/merge
 
-on:
+on: # zizmor: ignore[dangerous-triggers] OK as no code checkout or user input
   pull_request_target: # not pull_request as that requires workflow approval
     branches:
       - main

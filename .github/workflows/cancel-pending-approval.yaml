@@ -4,7 +4,7 @@ name: Cancel jobs pending approval on a PR close
 # close a PR and then later re-open it, but it is possible to manually re-run
 # any jobs that were never approved. Use scripts/stalled-actions.sh to see if
 # this is working as intended.
-on:
+on: # zizmor: ignore[dangerous-triggers] OK as no code checkout or user input
   pull_request_target:
     types: [closed]
 

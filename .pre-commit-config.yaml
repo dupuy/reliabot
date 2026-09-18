@@ -173,6 +173,13 @@ repos:
     rev: v1.17
     hooks:
       - id: actionlint-shellcheck
+  - repo: https://github.com/zizmorcore/zizmor-pre-commit
+    # Zizmor static workflow security checker
+    rev: v1.30.1
+    hooks:
+      - id: zizmor
+        args: [-q, --fix]
+        exclude: testdir/
   # Prettier --write for GitHub workflows in local repository
   - repo: local
     hooks:

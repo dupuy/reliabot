@@ -9,7 +9,7 @@
 
 name: 'Assign labels to PRs from conventional commit titles'
 
-on:
+on: # zizmor: ignore[dangerous-triggers] OK as no code checkout or user input
   pull_request_target:
     branches: ['main']
     types:

@@ -5,7 +5,7 @@ name: 'Publish release'
 # Since it runs in the context of the main branch, it has access to secrets
 # and OIDC tokens even for pull requests from forks.
 
-on:
+on: # zizmor: ignore[dangerous-triggers] no checkout, no direct context use
   workflow_run:
     branches: [main]
     workflows: ['Test, build, release, and upload Python Poetry app']
@@ -76,7 +76,7 @@ jobs:
 
       - name: 'Load metadata'
         id: metadata
-        run: |
+        run: | # zizmor: ignore[github-env] values are sanitized with tr -cd
           # Use grep to protect against metachars in folder name
           METADATA_FILE=$(find "$ARTIFACTS_DIR" -name metadata.json |
                           grep -E '^[0-9A-Za-z/._-]+$' | head -n 1)
@@ -91,7 +91,8 @@ jobs:
             echo "DIST=$(dirname "$METADATA_FILE")"
             for K in ARTIFACT_NAME pr_release pr_tag RELEASE_NAME VERSION_TAG
             do
-              echo "$K=$(jq -r '.["'"$K"'"]' "$METADATA_FILE")"
+              echo "$K=$(jq -r '.["'"$K"'"]' "$METADATA_FILE" |
+                          tr -cd '[:alnum:]_.-')" # sanitize the JSON values
             done
           } | tee -a "$GITHUB_ENV" "$GITHUB_OUTPUT" # and also stdout
 
@@ -314,6 +315,7 @@ jobs:
       contents: write
     cache-mode: read
     # MUST use @v2.* version pin rather than a hash, required for SLSA Level 3
+    # zizmor: ignore[unpinned-uses]
     uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v2.1.0
     with:
       base64-subjects: ${{ needs.prepare.outputs.hashes }}

@@ -1,7 +1,9 @@
-# Source repository: https://github.com/codacy/codacy-coverage-reporter-action/blob/master/README.md#uploading-coverage-to-codacy
+# Adapted from https://github.com/codacy/codacy-coverage-reporter-action and
+# extended to upload to GitHub as well.
 
 name: 'Coverage Reporter'
-on:
+
+on: # zizmor: ignore[dangerous-triggers] no checkout, no direct context use
   workflow_run:
     workflows: ['Run tests with coverage']
     types:
@@ -40,8 +42,9 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
+          GH_RUN_ID: ${{ github.event.workflow_run.id }}
         run: |
-          gh run download ${{ github.event.workflow_run.id }} --name coverage-report
+          gh run download "$GH_RUN_ID" --name coverage-report
 
       - name: 'Upload coverage to Codacy'
         uses: step-security/codacy-coverage-reporter-action@44e97cd9a5e5328b79a4fd414746d6b074da1411 # v1.3.0

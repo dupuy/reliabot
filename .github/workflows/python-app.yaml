@@ -8,7 +8,7 @@
 # the current tag, a desired (pre-)release tag to be applied, or a "left over"
 # version of the most recent release tag.
 # All outputs are also environment variables in jobs that use them, and use
-# underscore '_' rather than hyphen '-' in their names. so shell 'run' scripts
+# underscore '_' rather than hyphen '-' in their names so shell 'run' scripts
 # can use them as environment variables rather than '${{ }}' substitutions
 # vulnerable to shell meta-characters in the value.
 # Although TESTS uses `poetry version` to get this value from 'pyproject.toml',
@@ -16,29 +16,20 @@
 # prevents a compromised action or workflow from exploiting these variables by
 # overriding the poetry-computed value.
 #
-# The TESTS job uses `git describe` to compute another variable (COMMIT_TAG)
-# that is not an output. Its value can be the current VERSION_TAG ("v1.2.3") or
-# a previous VERSION_TAG followed by '-', the number of further commits, and
-# a short commit hash, like this: 'v1.2.3-13-ca11ab1e'. The latter indicates an
-# "interim" (untagged) commit, and can be distinguished from a pre-release tag
-# like `v1.2.3-rc.5' by the presence of a second '-'.
+# The TESTS job checks whether refs/tags/VERSION_TAG already exists in git:
 #
-# The TESTS job uses these variables to determine the type of push (merge) or
-# pull request it is handling, and creates outputs for other jobs to use in 'if'
-# conditions for jobs or steps.
+# * Tag push:     pr_commit=false pr_release=false pr_tag=false (take no action)
+# * "Interim" PR: pr_commit=true  pr_release=false pr_tag=false (no tag/release)
+# * Pre-release:  pr_commit=true  pr_release=false pr_tag=true  (tag + TestPyPI)
+# * Release:      pr_commit=true  pr_release=true  pr_tag=true  (annotated + PyPI)
 #
-# * pr_commit  :: COMMIT_TAG != VERSION_TAG
-# * pr_release :: VERSION_TAG has no '-'
-# * pr_tag     :: COMMIT_TAG does not start with VERSION_TAG + '-'
+# If the tag already exists in the repository:
+# - If HEAD is the tag commit: Tag push (pr_commit=false, pr_tag=false).
+# - If HEAD is ahead of the tag: Interim commit (pr_commit=true, pr_tag=false).
+# If the tag does not exist:
+# - A new version tag will be created (pr_commit=true, pr_tag=true).
+# - pr_release is true for final releases (no '-'), false for pre-releases.
 #
-# [The pr_tag test uses '-' to prevent 'v1.2.10' starts with 'v1.2.1' mistakes.]
-#
-# - Tag push:     pr_commit=false pr_release=false pr_tag=false (take no action)
-# - "Interim" PR: pr_commit=true pr_release=false pr_tag=false (no tag/release)
-# - Pre-release:  pr_commit=true pr_release=false pr_tag=true (tag + TestPyPI)
-# - Release:      pr_commit=true pr_release=true pr_tag=true (annotated + PyPI)
-#
-# [Only releases use annotated tags so `git describe` ignores pre-releases.]
 # [Also note pr_tag=true implies pr_commit=true so latter test may be omitted.]
 #
 # The TESTS job also computes two other outputs to coordinate (upload/download)
@@ -132,7 +123,7 @@ jobs:
       - name: 'Checkout repository'
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          # The `git describe` COMMIT_TAG output requires these fetch-* options.
+          # The tag detection and git describe outputs require these fetch-* options.
           fetch-depth: 0
           fetch-tags: true
           persist-credentials: false
@@ -142,47 +133,42 @@ jobs:
 
       - name: 'Compute outputs for other jobs'
         id: computed
-        run: >
+        run: |
           {
             # All outputs from this job need to be sanitized if they are based
             # on user-supplied input in the PR including commits and comments.
             # Sanitize user-supplied git tags and poetry config with `tr -cd`
-            export LC_ALL=C;
-            COMMIT_TAG=$(git describe | tr -cd '[:alnum:]_.-') &&
-              echo "COMMIT_TAG=$COMMIT_TAG" >&2 ;
+            export LC_ALL=C
             VERSION_TAG="v$(poetry version --short | tr -cd '[:alnum:]_.-' |
-              sed -e 's/a/-alpha./' -e 's/b/-beta./' -e 's/rc/-rc./')" &&
-                echo "VERSION_TAG=$VERSION_TAG" ;
-            case "$COMMIT_TAG" in
-              *-[abr]*-[1-9]*-*)
-                exec >&2
-                echo "The COMMIT_TAG that 'git describe' created is based on" ;
-                echo "a pre-release tag, which prevents proper generation" ;
-                echo "of new releases!" ;
-                echo "Make sure git describe is not using --tags, and use" ;
-                echo "'git show' to check if the pre-release base tag is" ;
-                echo "an annotated tag like release tags."
-                exit 1 ;;
-              "${VERSION_TAG}")
-                echo "ARTIFACT_NAME=" ;
-                echo "pr_commit=false" ; echo "pr_tag=false" ;
-                echo "pr_release=false" ; echo "RELEASE_NAME=" ;;
-              "${VERSION_TAG}"-*)
-                echo "ARTIFACT_NAME=" ;
-                echo "pr_commit=true" ; echo "pr_tag=false" ;
-                echo "pr_release=false" ; echo "RELEASE_NAME=" ;;
-              *)
-                echo "ARTIFACT_NAME=dist-reliabot-$VERSION_TAG" ;
-                echo "pr_commit=true" ; echo "pr_tag=true" ;
-                case "$VERSION_TAG" in
-                  *-*)
-                    echo "pr_release=false" ;
-                    echo "RELEASE_NAME=Pre-release $VERSION_TAG" ;;
-                  *)
-                    echo "pr_release=true" ;
-                    echo "RELEASE_NAME=Release $VERSION_TAG" ;;
-                esac ;
-            esac ;
+                sed -e 's/a/-alpha./' -e 's/b/-beta./' -e 's/rc/-rc./')" &&
+              echo "VERSION_TAG=$VERSION_TAG"
+            # "Peel" annotated tag SHA to get actual code commit
+            VERIFY_TAG="refs/tags/${VERSION_TAG}^{commit}"
+            if TAG_COMMIT=$(git rev-parse -q --verify "$VERIFY_TAG"); then
+              # Existing tag has already been published
+              echo "ARTIFACT_NAME="
+              echo "pr_tag=false"
+              echo "pr_release=false"
+              echo "RELEASE_NAME="
+              if [ "$TAG_COMMIT" = "$(git rev-parse HEAD)" ]; then
+                echo "pr_commit=false"
+              else
+                echo "pr_commit=true"
+              fi
+            else
+              # New tag needs to be published (and exists in repo after merge)
+              echo "ARTIFACT_NAME=dist-reliabot-$VERSION_TAG"
+              echo "pr_commit=true"
+              echo "pr_tag=true"
+              case "$VERSION_TAG" in
+                *-*)
+                  echo "pr_release=false"
+                  echo "RELEASE_NAME=Pre-release $VERSION_TAG" ;;
+                *)
+                  echo "pr_release=true"
+                  echo "RELEASE_NAME=Release $VERSION_TAG" ;;
+              esac
+            fi
           } >> "$GITHUB_OUTPUT"
 
       - name: 'Set up Python'

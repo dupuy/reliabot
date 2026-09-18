@@ -76,28 +76,53 @@ jobs:
 
       - name: 'Load metadata'
         id: metadata
-        run: | # zizmor: ignore[github-env] values are sanitized with tr -cd
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: | # zizmor: ignore[github-env] values are sanitized with safe()
           # Use grep to protect against metachars in folder name
           METADATA_FILE=$(find "$ARTIFACTS_DIR" -name metadata.json |
                           grep -E '^[0-9A-Za-z/._-]+$' | head -n 1)
-          {
-            if [ -z "$METADATA_FILE" ]; then
-              echo "skip=true"
-              exit 0
-            fi
+          if [ -z "$METADATA_FILE" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
 
-            # Extract values using jq and set as outputs
+          safe() { tr -cd "${1:-'[:alnum:]_.-'}"; } # default allowed if not set
+
+          pr_tag=$(jq -r '.pr_tag // empty' "$METADATA_FILE" | safe)
+          VERSION_TAG=$(jq -r '.VERSION_TAG // empty' "$METADATA_FILE" | safe)
+
+          if [ "$pr_tag" != "true" ]; then
+            echo "pr_tag is not true — skipping." >&2
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Check if tag already exists in the repository
+          if gh api "repos/$GH_REPO/git/ref/tags/$VERSION_TAG" >/dev/null 2>&1
+          then
+            echo "Tag $VERSION_TAG already exists in $GH_REPO — skipping." >&2
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          {
             echo "skip=false"
             echo "DIST=$(dirname "$METADATA_FILE")"
             for K in ARTIFACT_NAME pr_release pr_tag RELEASE_NAME VERSION_TAG
             do
-              echo "$K=$(jq -r '.["'"$K"'"]' "$METADATA_FILE" |
-                          tr -cd '[:alnum:]_.-')" # sanitize the JSON values
+              unset ALLOWED
+              if [ "$K" = "RELEASE_NAME" ]; then
+                ALLOWED='[:alnum:] _.-' # Support "Release v1.2.3"
+              fi
+              echo "$K=$(jq -r --arg k "$K" '.[$k] // empty' "$METADATA_FILE" |
+                          safe ${ALLOWED+"$ALLOWED"})"
             done
           } | tee -a "$GITHUB_ENV" "$GITHUB_OUTPUT" # and also stdout
 
       - name: 'Generate hashes'
         id: hash
+        if: steps.metadata.outputs.skip == 'false'
         run: |
           {
             cd "$ARTIFACTS_DIR" &&
@@ -303,6 +328,7 @@ jobs:
           git push origin "$VERSION_TAG"
 
   provenance:
+    # runs-on: is not allowed for reusable workflows like this one
     needs: [prepare, test-release, pypi-release]
     if: >
       always() && (

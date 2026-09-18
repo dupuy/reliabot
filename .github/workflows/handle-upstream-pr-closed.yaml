@@ -50,13 +50,13 @@ jobs:
         run: |
           ERR=0
           STATUS=Synced
-          SYNC_MSG="$UPSTREAM \`$BASE\` to $REPO after merging PR"
+          MSG="$UPSTREAM \`$BASE\` to $REPO after merging PR"
           if ! OUT=$(gh repo sync "$REPO" -b "$BASE" 2>&1); then
             ERR=1
             STATUS="Failed to sync"
-            SYNC_MSG="$SYNC_MSG:$(echo)$OUT"
+            MSG="$MSG:$(echo)$OUT"
           fi
-          BODY="$STATUS $SYNC_MSG"
+          BODY="$STATUS $MSG"
           GH_TOKEN="$UPSTREAM_PR_TOKEN" \
             gh pr comment "$PR_NUMBER" --repo "$UPSTREAM" --body "$BODY" ||
           exit "$ERR"
@@ -68,14 +68,11 @@ jobs:
           BRANCH: 'repos/${{ env.REPO }}/git/refs/heads/${{ env.HEAD }}'
         run: |
           ERR=0
-          STATUS=Deleted
-          DELETE_MSG="branch \`$HEAD\` from $REPO after closing PR"
           if ! OUT=$(gh api --method DELETE "$BRANCH" 2>&1); then
             ERR=1
-            STATUS="Failed to delete"
-            SYNC_MSG="$SYNC_MSG:$(echo)$OUT"
+            MSG="Failed to delete branch \`$HEAD\` from $REPO after closing PR"
+            BODY="$MSG$(echo)$OUT"
+            GH_TOKEN="$UPSTREAM_PR_TOKEN" \
+              gh pr comment "$PR_NUMBER" --repo "$UPSTREAM" --body "$BODY"
           fi
-          BODY="$STATUS $DELETE_MSG"
-          GH_TOKEN="$UPSTREAM_PR_TOKEN" \
-          gh pr comment "$PR_NUMBER" --repo "$UPSTREAM" --body "$BODY"
           exit "$ERR"

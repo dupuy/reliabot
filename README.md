@@ -241,7 +241,7 @@ loops:
 2. Reliabot
 3. YAML formatter
 
-It is helpful, though not strictly required, to adjust the reliabot settings in
+It's helpful, though not strictly required, to adjust the reliabot settings in
 `dependabot.yml` to match indentation and other settings of the YAML formatter.
 
 ## Reliabot script

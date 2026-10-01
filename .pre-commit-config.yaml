@@ -222,7 +222,7 @@ repos:
 
   # Python
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.16.8
+    rev: v0.16.10
     hooks:
       # Run the linter.
       - id: ruff
@@ -289,13 +289,13 @@ repos:
     hooks:
       - id: dead
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.16.8
+    rev: v0.16.10
     hooks:
       # Run the formatter.
       - id: ruff-format
   - repo: https://github.com/python-poetry/poetry
     # see https://python-poetry.org/docs/pre-commit-hooks/#faq
-    rev: '2.4.3'
+    rev: '2.5.1'
     hooks:
       - id: poetry-lock
       # NOTE: poetry-check complains about tools.poetry settings that can't
@@ -304,7 +304,7 @@ repos:
 
   # Poetry 2.0 removed poetry-export hook - see README.md in this repo
   - repo: https://github.com/python-poetry/poetry-plugin-export
-    rev: '1.10.0'
+    rev: '1.10.1'
     hooks:
       - id: poetry-export
         args:
@@ -346,7 +346,7 @@ repos:
         exclude: tests/
 
   - repo: https://github.com/errata-ai/vale
-    rev: v3.22.0
+    rev: v3.24.0
     hooks:
       - id: vale
         exclude: CHANGELOG*|LICENSE|humans[.]txt|requirements.*|styles/

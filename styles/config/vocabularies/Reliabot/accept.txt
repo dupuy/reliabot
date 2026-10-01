@@ -29,6 +29,7 @@ formatters
 fuzzer
 gitleaks
 gitlint
+hoc
 ipsos
 libFuzzer
 markdownlint

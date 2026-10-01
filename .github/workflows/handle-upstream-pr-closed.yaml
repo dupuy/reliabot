@@ -17,6 +17,7 @@ jobs:
 
     env:
       BASE: ${{ github.event.client_payload.base }}
+      DEFAULT: ${{ github.event.repository.default_branch }}
       HEAD: ${{ github.event.client_payload.head }}
       MERGED: ${{ github.event.client_payload.merged }}
       PR_NUMBER: ${{ github.event.client_payload.pr_number }}
@@ -39,14 +40,25 @@ jobs:
           if $MERGED; then OUTCOME=merged; else OUTCOME=closed; fi
           echo "Upstream $UPSTREAM PR #$PR_NUMBER from $HEAD to $BASE $OUTCOME"
 
+      - name: 'Get upstream repo and default branch'
+        id: upstream
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api "repos/$REPO" \
+          --jq '"default=\(.parent.default_branch)
+          parent=\(.parent.full_name)"' >> "$GITHUB_OUTPUT"
+
       - name: 'Sync'
         if: >
-          github.event.client_payload.head_repo == github.repository &&
-          github.event.client_payload.merged
+          github.event.client_payload.merged &&
+          env.BASE != '' && env.BASE == steps.upstream.outputs.default &&
+          env.UPSTREAM == steps.upstream.outputs.parent
         continue-on-error: true
         env:
           # Fine-grained PAT with Contents & Workflows: Read and write
-          GH_TOKEN: secrets.SYNC_TOKEN
+          GH_TOKEN: ${{ secrets.SYNC_TOKEN }}
         run: |
           ERR=0
           STATUS=Synced
@@ -58,15 +70,20 @@ jobs:
           fi
           BODY="$STATUS $MSG"
           GH_TOKEN="$UPSTREAM_PR_TOKEN" \
-            gh pr comment "$PR_NUMBER" --repo "$UPSTREAM" --body "$BODY" ||
+            gh pr comment "$PR_NUMBER" --repo "$UPSTREAM" --body "$BODY" &&
           exit "$ERR"
 
       - name: 'Delete PR head branch'
-        if: github.event.client_payload.head_repo == github.repository
+        # TODO: check non-200 for github.com/$REPO/branches/$HEAD/protection ?
+        #       (gh should fail delete of protected branch, better to be safe)
+        if: >
+          env.HEAD != env.DEFAULT && env.HEAD != '' &&
+          env.HEAD != steps.upstream.outputs.default &&
+          github.event.client_payload.head_repo == github.repository
         continue-on-error: true
         env:
           BRANCH: 'repos/${{ env.REPO }}/git/refs/heads/${{ env.HEAD }}'
-          GH_TOKEN: secrets.GITHUB_TOKEN
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           ERR=0
           if ! OUT=$(gh api --method DELETE "$BRANCH" 2>&1); then

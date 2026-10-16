@@ -95,4 +95,5 @@ def keep_all(_: str) -> bool:
 if __name__ == "__main__":
     atheris.Setup(sys.argv, test_one_input)
     sys.argv.append("--re")  # disable RE2
+    reliabot.init_regex_engine(sys.argv)
     atheris.Fuzz()

@@ -44,6 +44,9 @@ from __future__ import annotations
 import _thread
 import contextlib
 import os
+
+# noinspection unused-imports
+import re  # noqa: TC003  # init_regex_engine() may re-bind to re2
 import signal
 import subprocess
 import sys
@@ -191,7 +194,7 @@ def time_limit(seconds: float) -> Generator[None]:
             timer.cancel()
 
 
-RE2 = False
+RE_INITIALIZED = False  # Set by init_regex_engine() once it has run.
 RE_OPTION = "--re"
 RE_WARNING = f"""
 
@@ -200,31 +203,17 @@ RE_WARNING = f"""
   or use initial '{RE_OPTION}' option to force system 're' and suppress this.
 """
 
-if len(sys.argv) > 1 and sys.argv[1] == RE_OPTION:
-    sys.argv.pop(1)
-else:
-    try:  # to avoid terrible consequences for pathological RE matching.
-        # noinspection unused-imports
-        import re2 as re
-
-        RE2 = True
-    except ImportError:
-        dedup_warn(f"Can't import 're2', falling back to 're'.{RE_WARNING}")
-    else:  # Generate fallback warning if re2 package can't handle regexp
-        re.set_fallback_notification(re.FALLBACK_WARNING)
-
-if not RE2:
-    import re
-
 COMMENT_PREFIX = "# reliabot:"
-COMMENT_PREFIX_MATCH = re.compile(rf"\s*{COMMENT_PREFIX}")
+# Compiled by init_regex_engine().
+COMMENT_PREFIX_MATCH: re.Pattern | None = None
 
 DEFAULT_INTERVAL = "monthly"
 
 DEPENDABOT_CONFIG = b"dependabot.yml"
 
 DOCTEST_OPT = "--self-test"  # Command line option for running doctests.
-DOCTEST_OPTION_FLAGS = 0  # This is modified in the re.error exception handler.
+# This is modified by init_regex_engine() on re.error.
+DOCTEST_OPTION_FLAGS = 0
 
 RUAMEL_YAML_NOT_FOUND_ERROR_MESSAGE = """
 
@@ -246,7 +235,8 @@ else:
     from ruamel.yaml.reader import ReaderError
 
 DOT_YAML = r"[.]ya?ml"
-DOT_YAML_REGEX = re.compile(rf"{DOT_YAML}$")  # used for search, not full match
+# Used for search, not full match; compiled by init_regex_engine().
+DOT_YAML_REGEX: re.Pattern | None = None
 
 # Based on dependabot-core; replace GITHUB_ACTIONS with ecosystem in this URL:
 # https://github.com/search?q=org:dependabot+path:GITHUB_ACTIONS+required_files_message&type=code
@@ -293,17 +283,68 @@ ECOSYSTEM_RE_FILES = (
 ECOS = {k: f"(?P<{k}>{v})" for k, v in ECOS.items()}
 ECOSYSTEM_RE_PATTERN = "|".join(ECOS.values())
 
-ECOSYSTEM_REGEX: re.Pattern | None = None
-try:  # It's easy to mess up these regexes. Don't let that break the self test.
-    ECOSYSTEM_REGEX = re.compile(ECOSYSTEM_RE_PATTERN)
-except re.error:  # pragma: no cover
-    print("Internal error - bad regex in ECOS map", file=sys.stderr)
-    if len(sys.argv) != 2 or sys.argv[1] != DOCTEST_OPT:
-        print(f"  Diagnose with {sys.argv[0]} {DOCTEST_OPT}", file=sys.stderr)
-        sys.exit(int(Err.INTERNAL))
-    import doctest
+ECOSYSTEM_REGEX: re.Pattern | None = None  # See init_regex_engine() below.
 
-    DOCTEST_OPTION_FLAGS = doctest.FAIL_FAST  # Reduce noise from broken tests.
+
+# pylint: disable=global-statement,import-outside-toplevel
+def init_regex_engine(argv: list[str]) -> None:
+    """Select the regular expression engine and compile this module's regexes.
+
+    Deferred from import time to avoid side effects. `main()` calls this first;
+    multiple calls are harmless. External callers that don't run main() must
+    call this function first, before any reliabot functions that use regexes,
+    or any attempt to use the compiled regular expressions.
+
+    Uses the 're2' package if it can be imported, unless a `--re` argument is
+    present to force use of the system 're'.
+
+    :param argv: command line arguments
+
+    >>> args = ["reliabot.py", RE_OPTION, "--self-test"]
+    >>> saved_args = args
+    >>> init_regex_engine(args)
+    >>> RE_INITIALIZED and ECOSYSTEM_REGEX is not None
+    True
+    >>> saved_args == args
+    True
+    """
+    # noinspection global-undefined
+    global re, RE_INITIALIZED  # noqa: PLW0603
+    global COMMENT_PREFIX_MATCH  # noqa: PLW0603
+    global DOT_YAML_REGEX, ECOSYSTEM_REGEX  # noqa: PLW0603
+    global DOCTEST_OPTION_FLAGS  # noqa: PLW0603
+
+    if RE_INITIALIZED:
+        return
+    RE_INITIALIZED = True
+
+    if RE_OPTION not in argv:
+        try:  # to avoid terrible consequences for pathological RE matching.
+            # noinspection unused-imports
+            import re2  # noqa: PLC0415
+        except ImportError:
+            dedup_warn(
+                f"Can't import 're2', falling back to 're'.{RE_WARNING}"
+            )
+        else:  # Generate fallback warning if re2 package can't handle regexp
+            re2.set_fallback_notification(re2.FALLBACK_WARNING)
+            re = re2
+
+    COMMENT_PREFIX_MATCH = re.compile(rf"\s*{COMMENT_PREFIX}")
+    DOT_YAML_REGEX = re.compile(rf"{DOT_YAML}$")
+    try:  # It's easy to mess up the regexes. Don't let it break the self test.
+        ECOSYSTEM_REGEX = re.compile(ECOSYSTEM_RE_PATTERN)
+    except re.error:  # pragma: no cover
+        print("Internal error - bad regex in ECOS map", file=sys.stderr)
+        if DOCTEST_OPT not in argv:
+            print(f"  Diagnose with {argv[0]} {DOCTEST_OPT}", file=sys.stderr)
+            sys.exit(int(Err.INTERNAL))
+        # pylint: disable-next=import-outside-toplevel
+        import doctest  # noqa: PLC0415
+
+        # Reduce noise from broken tests
+        DOCTEST_OPTION_FLAGS = doctest.FAIL_FAST
+
 
 EMITTER_INDENTS = {"mapping": 4, "offset": 2, "sequence": 4}
 EMITTER_SETTINGS: dict = EMITTER_INDENTS | {"width": 76, "yaml-start": True}
@@ -376,12 +417,14 @@ def main(optargv: list[str] | None = None) -> int:
     0
     >>> test_dir = "testdir/github/"
     >>> test_conf = f"{test_dir}/.github/{fsdecode(DEPENDABOT_CONFIG)}"
-    >>> os.unlink(test_conf) if exists(test_conf) else None
+    >>> if exists(test_conf):
+    ...     os.unlink(test_conf)
     >>> os.chdir(test_dir)
     >>> main(["reliabot.py", OPT_UPDATE])
     4
     >>> os.chdir("../..")
-    >>> _ = os.unlink(test_conf) if exists(test_conf) else None
+    >>> if exists(test_conf):
+    ...     os.unlink(test_conf)
     """
     check = False
     modified = False
@@ -390,6 +433,7 @@ def main(optargv: list[str] | None = None) -> int:
     conf: CommentedMap | dict = {}
 
     argv = list(optargv or sys.argv)
+    init_regex_engine(argv)
     try:
         while len(argv) > 1 and argv[1].startswith("-"):
             if argv[1] == "--":
@@ -402,6 +446,8 @@ def main(optargv: list[str] | None = None) -> int:
                 argv.pop(1)
                 argv.append(".")
                 check = True
+            elif argv[1] == RE_OPTION:  # handled above by init_regex_engine()
+                argv.pop(1)
             elif argv[1] in OPT_USES_MAP:
                 cmdopt = argv.pop(1)
                 if len(argv) > 1:
@@ -539,7 +585,7 @@ def main(optargv: list[str] | None = None) -> int:
     return int(Err.UPDATED) if check and modified else 0
 
 
-def resolve_gitdir_file(git_file: bytes, repo_path: bytes) -> bytes | None:
+def resolve_gitdir_file(git_file: bytes, repo_path: bytes) -> bytes:
     """Resolve the real Git directory referenced by a worktree `.git` file.
 
     In a Git worktree checkout, `.git` is a *file* (not a directory)
@@ -563,21 +609,23 @@ def resolve_gitdir_file(git_file: bytes, repo_path: bytes) -> bytes | None:
     ... )
     'testdir/git/.git'
     >>> resolve_gitdir_file(join(TESTDIR, TEST_NOT_DIR), TESTDIR)  # empty file
+    b''
     >>> resolve_gitdir_file(join(TESTDIR, TEST_GIT), TESTDIR)  # a directory
+    b''
     """
     try:
         with open(git_file, "rb") as gitdir_file:
             lines = gitdir_file.readlines()
     except OSError:
-        return None
+        return b""
     if len(lines) != 1 or not lines[0].endswith(b"\n"):
-        return None
+        return b""
     line = lines[0][:-1]
     if not line.startswith(GITDIR_PREFIX):
-        return None
+        return b""
     target = line[len(GITDIR_PREFIX) :].strip()
     if not target:
-        return None
+        return b""
     if not isabs(target):
         target = join(repo_path, target)
     return normpath(target)
@@ -618,7 +666,7 @@ def check_git_repository(path: bytes) -> None:
         raise RuntimeError(msg)
     if not isdir(git_dir):
         real_git_dir = resolve_gitdir_file(git_dir, path)
-        if real_git_dir is not None:
+        if real_git_dir != b"":
             real_git_str = fsdecode(real_git_dir)
             dedup_warn(f"On worktree '{path_str}' of '{real_git_str}'")
             if isdir(real_git_dir):
@@ -682,7 +730,7 @@ def extract_settings(
         if config.ca.comment is not None:  # type: ignore[union-attr]
             has_config = True
         # fmt: off
-        comments = [comment.value for comment # attribute/type errors handled
+        comments = [comment.value for comment  # attribute/type errors handled
                     in config.ca.comment[1]]  # type: ignore[union-attr]
         # fmt: on
     except (AttributeError, IndexError, TypeError):
@@ -695,9 +743,9 @@ def extract_settings(
         return settings
 
     for comment in comments:
-        offset = COMMENT_PREFIX_MATCH.match(comment)
-        if offset:
-            get_comment_settings(settings, comment[offset.end() :])
+        match = COMMENT_PREFIX_MATCH.match(comment)  # type: ignore[union-attr]
+        if match:
+            get_comment_settings(settings, comment[match.end() :])
     return settings
 
 
@@ -879,7 +927,12 @@ def find_ecosystems(
             for key, val in match.groupdict().items():
                 if val is not None:
                     ecosystems[join("/", dir_name)].add(key.replace("_", "-"))
-        if dir_name == workflows and DOT_YAML_REGEX.search(filename.lower()):
+        if (
+            DOT_YAML_REGEX.search(  # type: ignore[union-attr]
+                filename.lower()
+            )
+            and dir_name == workflows
+        ):
             ecosystems["/"].add(fsdecode(GITHUB_ACTIONS))
     if not any_files:
         msg = f"'{fsdecode(path)}' has no files tracked by Git."

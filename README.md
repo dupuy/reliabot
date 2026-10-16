@@ -86,9 +86,9 @@ files tracked in Git, including both committed and staged files.
 
 ```console
 reliabot$ ./reliabot/reliabot.py
-Usage: reliabot.py [--re] [OPTIONS]... [--] GIT_REPO
-   OPTIONS: --insecure | --update
-(use '--' if GIT_REPO starts with '-', or see script source)
+usage: reliabot.py [-h] [--re] [--insecure]
+       [--update | --self-test] [--] [GIT_REPO]
+reliabot.py: error: GIT_REPO is required
 ```
 
 <!-- $?=2 -->
@@ -248,13 +248,27 @@ It's helpful, though not strictly required, to adjust the reliabot settings in
 
 ### Options
 
-- `--re` – As the first argument, this option disables any attempt to use RE2,
-  along with error or warning messages when those attempts fail.
+- `--insecure` – This option turns off the _new_ Reliabot output behavior
+  (creating a temporary file in the target directory and renaming it to
+  `dependabot.yml`) and restores the _old_ behavior of overwriting an existing
+  `dependabot.yml` file. The old behavior risks configuration loss on partial
+  write failures (full filesystems, etc.) and could be vulnerable to exploits
+  if Reliabot is running with elevated privileges. This option is provided for
+  backward compatibility with symlinks or directories without write access, and
+  is **not recommended** for general use.
 
-- `--self-test`– As the only argument this runs the `doctest` unit tests.
+- `--re` – This option disables any attempt to use RE2, along with error or
+  warning messages when those attempts fail. This option is no longer required
+  to be the first one.
 
-- `--update` – As the only argument, this runs `reliabot` on the current
-  directory, returning exit code 4 if it made any changes to the file.
+- `--self-test` – This option runs the `doctest` self-diagnostic tests, and
+  does not take a `GIT_REPO` argument.
+
+- `--update` – This option defaults to the current directory when there is no
+  `GIT_REPO` argument and returns exit code 4 if it makes any changes to the
+  `dependabot.yml` file.
+
+- `-h`, `--help` – Show usage and option help, then exit.
 
 ## FAQ
 

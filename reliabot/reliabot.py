@@ -42,6 +42,7 @@ in the `testdir` hierarchy that cannot be added to the Git repository:
 from __future__ import annotations
 
 import _thread
+import argparse
 import contextlib
 import os
 
@@ -78,7 +79,7 @@ class Err(IntEnum):
     """Error exit codes for reliabot."""
 
     RUNTIME = 1  # Nonexistent or inappropriate repository path.
-    USAGE = 2  # Invalid options, argument types, or number of arguments.
+    USAGE = 2  # dead:disable # argparse errors
     CONFIG = 3  # Invalid Dependabot (or pre-commit) configuration in file.
     UPDATED = 4  # Dependabot configuration was or would be modified.
     INTERNAL = 9  # You found a bug in this program!
@@ -86,24 +87,6 @@ class Err(IntEnum):
 
 class TimeLimitError(Exception):
     """Exception raised when a time limit is exceeded."""
-
-
-def usage() -> None:
-    """Print usage message for invalid command args; exit with status 2.
-
-    >>> usage()
-    Traceback (most recent call last):
-    ...
-    SystemExit: 2
-    """
-    command = basename(sys.argv[0])
-    dedup_warn(f"Usage: {command} [--re] [OPTIONS]... [--] GIT_REPO")
-    dedup_warn("   OPTIONS: --insecure | --update")
-    dedup_warn("(use '--' if GIT_REPO starts with '-', or see script source)")
-    # "Internal" options (must be last argument – no GIT_REPO allowed):
-    # --self-test – run doctests in sources
-    # --update-pre-commit-files – update pre-commit-* reliabot* files: entries.
-    sys.exit(int(Err.USAGE))
 
 
 def error(message: str, *, debug_hint: bool = True) -> None:
@@ -287,7 +270,9 @@ ECOSYSTEM_REGEX: re.Pattern | None = None  # See init_regex_engine() below.
 
 
 # pylint: disable=global-statement,import-outside-toplevel
-def init_regex_engine(argv: list[str]) -> None:
+def init_regex_engine(
+    *, force_re: bool = False, self_testing: bool = False
+) -> None:
     """Select the regular expression engine and compile this module's regexes.
 
     Deferred from import time to avoid side effects. `main()` calls this first;
@@ -295,17 +280,14 @@ def init_regex_engine(argv: list[str]) -> None:
     call this function first, before any reliabot functions that use regexes,
     or any attempt to use the compiled regular expressions.
 
-    Uses the 're2' package if it can be imported, unless a `--re` argument is
-    present to force use of the system 're'.
+    Uses the 're2' package if it can be imported, unless *force_re* is true.
 
-    :param argv: command line arguments
+    :param force_re: use the system 're' without trying 're2' (`--re` option).
+    :param self_testing: running the self-test, so a regex failure is diagnosed by
+        the tests rather than exiting (`--self-test` option).
 
-    >>> args = ["reliabot.py", RE_OPTION, "--self-test"]
-    >>> saved_args = args
-    >>> init_regex_engine(args)
+    >>> init_regex_engine(force_re=True, self_testing=True)
     >>> RE_INITIALIZED and ECOSYSTEM_REGEX is not None
-    True
-    >>> saved_args == args
     True
     """
     # noinspection global-undefined
@@ -318,7 +300,7 @@ def init_regex_engine(argv: list[str]) -> None:
         return
     RE_INITIALIZED = True
 
-    if RE_OPTION not in argv:
+    if not force_re:
         try:  # to avoid terrible consequences for pathological RE matching.
             # noinspection unused-imports
             import re2  # noqa: PLC0415
@@ -336,8 +318,10 @@ def init_regex_engine(argv: list[str]) -> None:
         ECOSYSTEM_REGEX = re.compile(ECOSYSTEM_RE_PATTERN)
     except re.error:  # pragma: no cover
         print("Internal error - bad regex in ECOS map", file=sys.stderr)
-        if DOCTEST_OPT not in argv:
-            print(f"  Diagnose with {argv[0]} {DOCTEST_OPT}", file=sys.stderr)
+        if not self_testing:
+            print(
+                f"  Diagnose with {sys.argv[0]} {DOCTEST_OPT}", file=sys.stderr
+            )
             sys.exit(int(Err.INTERNAL))
         # pylint: disable-next=import-outside-toplevel
         import doctest  # noqa: PLC0415
@@ -394,6 +378,113 @@ U_FFFC = "\ufffc"  # Unicode object replacement character
 WARN_KEYS: set[str] = set()
 
 
+def parse_args(argv: list[str]) -> argparse.Namespace:
+    """Parse command line arguments and options, in any order.
+
+    Invalid arguments or option combinations exit with status 2 (`Err.USAGE`).
+
+    :param argv: command name and arguments.
+    :returns: namespace with `force_re`, `insecure`, `command` (None, or one of
+        `OPT_UPDATE`, `OPT_UPDATE_PRE_COMMIT` or `DOCTEST_OPT`) and `git_repo`.
+
+    >>> parse_args(["reliabot.py", "--insecure", "--re", "repo"])
+    Namespace(force_re=True, insecure=True, command=None, git_repo='repo')
+    >>> parse_args(["reliabot.py", "--", "-repo"]).git_repo
+    '-repo'
+    >>> parse_args(["reliabot.py", "--re", OPT_UPDATE]).command
+    '--update'
+    >>> parse_args(["reliabot.py", "--insecure", OPT_UPDATE]).insecure
+    True
+    >>> parse_args(["reliabot.py", DOCTEST_OPT, "--re"]).command
+    '--self-test'
+    >>> for bad in (
+    ...     [],  # No repository.
+    ...     ["repo", "repo2"],  # Too many arguments.
+    ...     ["--unknown", "repo"],  # Unknown option.
+    ...     ["--self_test"],  # Unknown option, with a hint to use dashes.
+    ...     ["--update", DOCTEST_OPT],  # Mutually exclusive commands.
+    ...     [OPT_UPDATE_PRE_COMMIT, DOCTEST_OPT],
+    ...     [DOCTEST_OPT, "--insecure"],  # Internal command with an option.
+    ... ):
+    ...     try:
+    ...         parse_args(["reliabot.py", *bad])
+    ...     except SystemExit as exit_err:
+    ...         print(exit_err.code)
+    2
+    2
+    2
+    2
+    2
+    2
+    2
+    """
+    parser = argparse.ArgumentParser(
+        prog=basename(argv[0]),
+        usage=(
+            "%(prog)s [-h] [--re] [--insecure]\n"
+            "       [--update | --self-test] [--] [GIT_REPO]"
+        ),
+        description="Create or update Dependabot configuration in a Git repo.",
+        epilog="Use '--' before GIT_REPO if its name starts with '-'.",
+        allow_abbrev=False,  # Don't match --update as an abbreviation of others.
+    )
+    parser.add_argument(
+        RE_OPTION,
+        dest="force_re",
+        action="store_true",
+        help="use the system 're' package instead of trying 're2'",
+    )
+    parser.add_argument(
+        OPT_INSECURE,
+        action="store_true",
+        help="follow symlinks and write the configuration file in place",
+    )
+    commands = parser.add_mutually_exclusive_group()
+    commands.add_argument(
+        OPT_UPDATE,
+        dest="command",
+        action="store_const",
+        const=OPT_UPDATE,
+        help="exit code 4 if modified; GIT_REPO defaults to current directory",
+    )
+    commands.add_argument(
+        OPT_UPDATE_PRE_COMMIT,
+        dest="command",
+        action="store_const",
+        const=OPT_UPDATE_PRE_COMMIT,
+        help=argparse.SUPPRESS,  # update patterns in .pre-commit-config.yaml
+    )
+    commands.add_argument(
+        DOCTEST_OPT,
+        dest="command",
+        action="store_const",
+        const=DOCTEST_OPT,
+        help="run the self-diagnostics (doctests)",
+    )
+    parser.add_argument(
+        "git_repo",
+        metavar="GIT_REPO",
+        nargs="?",
+        help="path of the Git repository (parent of the '.git' directory)",
+    )
+
+    args, unknown = parser.parse_known_args(argv[1:])
+    if unknown:
+        msg = f"unrecognized arguments: {' '.join(unknown)}"
+        for arg in unknown:
+            if arg.startswith("-") and "_" in arg:  # an easy error to make
+                msg += f"\n  Did you mean '{arg.replace('_', '-')}'?"
+        parser.error(msg)
+    if args.command is None:
+        if args.git_repo is None:
+            parser.error("GIT_REPO is required")
+    elif args.command != OPT_UPDATE and args.git_repo is not None:
+        parser.error(f"{args.command} does not take a GIT_REPO argument")
+    elif args.command != OPT_UPDATE and args.insecure:
+        parser.error(f"{args.command} cannot be used with {OPT_INSECURE}")
+    return args
+
+
 # pylint: disable=too-many-locals
 def main(optargv: list[str] | None = None) -> int:
     """Create or update Dependabot configuration in a Git repo.
@@ -426,50 +517,24 @@ def main(optargv: list[str] | None = None) -> int:
     >>> if exists(test_conf):
     ...     os.unlink(test_conf)
     """
-    check = False
     modified = False
-    secure = True
     update_status = "Updating"
     conf: CommentedMap | dict = {}
 
-    argv = list(optargv or sys.argv)
-    init_regex_engine(argv)
-    try:
-        while len(argv) > 1 and argv[1].startswith("-"):
-            if argv[1] == "--":
-                argv.pop(1)
-                break
-            if argv[1] == OPT_INSECURE:
-                argv.pop(1)
-                secure = False
-            elif argv[1] == OPT_UPDATE:
-                argv.pop(1)
-                argv.append(".")
-                check = True
-            elif argv[1] == RE_OPTION:  # handled above by init_regex_engine()
-                argv.pop(1)
-            elif argv[1] in OPT_USES_MAP:
-                cmdopt = argv.pop(1)
-                if len(argv) > 1:
-                    dedup_warn(f"Option '{cmdopt}' must be the last", cmdopt)
-                    usage()
-                return OPT_USES_MAP[cmdopt]()
-            else:
-                dedup_warn(f"Unknown option '{argv[1]}'", argv[1])
-                if "_" in argv[1]:  # an easy error to make but hard to see
-                    use_dashes = argv[1].replace("_", "-")
-                    dedup_warn(f"  Did you mean '{use_dashes}'?", use_dashes)
-                usage()
-
-        if len(argv) != 2:
-            usage()
-    except IndexError:
-        usage()
+    args = parse_args(list(optargv or sys.argv))
+    # Regex setup needs the parsed options, so it can't be done any sooner.
+    init_regex_engine(
+        force_re=args.force_re, self_testing=args.command == DOCTEST_OPT
+    )
+    if args.command in OPT_USES_MAP:
+        return OPT_USES_MAP[args.command]()
+    check = args.command == OPT_UPDATE
+    secure = not args.insecure
 
     if not sys.warnoptions:
         warnings.simplefilter("ignore")
 
-    repo_dir = argv[1].encode(FS_ENCODING, "surrogatepass")
+    repo_dir = (args.git_repo or ".").encode(FS_ENCODING, "surrogatepass")
     dconf = join(repo_dir, GITHUB_DEPENDABOT)
     d_name = fsdecode(dconf)
 

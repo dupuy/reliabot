@@ -177,49 +177,27 @@ def time_limit(seconds: float) -> Generator[None]:
             timer.cancel()
 
 
-RE_INITIALIZED = False  # Set by init_regex_engine() once it has run.
-RE_OPTION = "--re"
-RE_WARNING = f"""
-
-  Reliabot works better with the 're2' regular expression package.
-  See https://github.com/dupuy/reliabot/#installation for install instructions,
-  or use initial '{RE_OPTION}' option to force system 're' and suppress this.
-"""
+# "GLOBAL_CONSTANTS" are initialized only once (not always where declared)
+# but they appear in this file in LANG=C sorted order, This can be verified
+# with the following commands that should return an empty diff:
+#
+# $ grep -E '^[A-Z_0-9]+(:| =)' reliabot/reliabot.py > "/tmp/G$$"
+# $ LANG=C sort /tmp/G > "/tmp/Gs$$"
+# $ diff /tmp/G "/tmp/Gs$$"
 
 COMMENT_PREFIX = "# reliabot:"
-# Compiled by init_regex_engine().
-COMMENT_PREFIX_MATCH: re.Pattern | None = None
+COMMENT_PREFIX_MATCH: re.Pattern  # Compiled by init_regex_engine().
 
 DEFAULT_INTERVAL = "monthly"
 
 DEPENDABOT_CONFIG = b"dependabot.yml"
 
 DOCTEST_OPT = "--self-test"  # Command line option for running doctests.
-# This is modified by init_regex_engine() on re.error.
-DOCTEST_OPTION_FLAGS = 0
-
-RUAMEL_YAML_NOT_FOUND_ERROR_MESSAGE = """
-
-  Reliabot requires ruamel.yaml to preserve comments in dependabot.yml files.
-  See https://github.com/dupuy/reliabot/#installation for install instructions.
-"""
-try:
-    # ruamel.yaml preserves comments, PyYAML doesn't.
-    from ruamel.yaml import YAML
-except ModuleNotFoundError as module_not_found:
-    error(
-        f"{module_not_found} {RUAMEL_YAML_NOT_FOUND_ERROR_MESSAGE}",
-        debug_hint=False,
-    )
-else:
-    from ruamel.yaml.comments import CommentedMap, CommentedSeq
-    from ruamel.yaml.error import YAMLError
-    from ruamel.yaml.parser import ParserError
-    from ruamel.yaml.reader import ReaderError
+DOCTEST_OPTION_FLAGS = 0  # Modified by init_regex_engine() on re.error.
 
 DOT_YAML = r"[.]ya?ml"
-# Used for search, not full match; compiled by init_regex_engine().
-DOT_YAML_REGEX: re.Pattern | None = None
+DOT_YAML_RE: re.Pattern  # Search, not match; compiled by init_regex_engine().
+
 
 # Based on dependabot-core; replace GITHUB_ACTIONS with ecosystem in this URL:
 # https://github.com/search?q=org:dependabot+path:GITHUB_ACTIONS+required_files_message&type=code
@@ -230,7 +208,7 @@ DOT_YAML_REGEX: re.Pattern | None = None
 # which also shows ones whose source folders don't match their names, like
 # https://github.com/search?q=org:dependabot+path:GIT_SUBMODULES+required_files_message&type=code
 
-ECOS = {  # This map is modified below to wrap each RE in a named group.
+ECOS = {  # Final overall pattern wraps each RE in a group named by the key.
     "bundler": r"gem(s[.]rb|file)|[\w.-]*[.]gemspec",
     "cargo": r"cargo[.]toml",
     "composer": r"composer[.]json",
@@ -251,22 +229,98 @@ ECOS = {  # This map is modified below to wrap each RE in a named group.
 # Combine regexes into pre-commit file pattern
 ECOSYSTEM_FILE_ACTIONS = f"[.]github/workflows/[^/]*{DOT_YAML}"
 ECOSYSTEM_FILE_DEPENDABOT = "[.]github/dependabot[.]yml"
-ECOSYSTEM_FILE_PATTERNS = list(ECOS.values())
-ECOSYSTEM_FILE_PATTERNS.append(ECOSYSTEM_FILE_ACTIONS)
-ECOSYSTEM_FILE_PATTERNS.append(ECOSYSTEM_FILE_DEPENDABOT)
+ECOSYSTEM_FILE_PATTERNS = [
+    *ECOS.values(),
+    ECOSYSTEM_FILE_ACTIONS,
+    ECOSYSTEM_FILE_DEPENDABOT,
+]
 ECOSYSTEM_INDENT = "\n  "
 ECOSYSTEM_JOIN = f"|{ECOSYSTEM_INDENT}"
-ECOSYSTEM_RE_FILES = (
+ECOSYSTEM_PATHS_RE = (
     f"(?x)(^|/)({ECOSYSTEM_INDENT}"
     + ECOSYSTEM_JOIN.join(ECOSYSTEM_FILE_PATTERNS)
     + f"{ECOSYSTEM_INDENT})$"
 )
 
-# Convert regexes to named groups with ecosystem names.
-ECOS = {k: f"(?P<{k}>{v})" for k, v in ECOS.items()}
-ECOSYSTEM_RE_PATTERN = "|".join(ECOS.values())
+ECOSYSTEM_RE: re.Pattern  # See init_regex_engine() below.
 
-ECOSYSTEM_REGEX: re.Pattern | None = None  # See init_regex_engine() below.
+# Convert regexes to named groups with ecosystem names.
+ECOSYSTEM_RE_GROUPS = {k: f"(?P<{k}>{v})" for k, v in ECOS.items()}
+ECOSYSTEM_RE_MATCHER = "|".join(ECOSYSTEM_RE_GROUPS.values())
+
+EMITTER_INDENTS = {"mapping": 4, "offset": 2, "sequence": 4}
+EMITTER_SETTINGS: dict = EMITTER_INDENTS | {"width": 76, "yaml-start": True}
+EXCLUSIONS: dict[str, set[str]] = {"ignore": set(), "keep": set()}
+
+FS_ENCODING = sys.getfilesystemencoding()
+
+GITDIR_PREFIX = b"gitdir:"  # Marks a `.git` *file* in a Git worktree.
+
+GITHUB = b".github"
+GITHUB_ACTIONS = b"github-actions"
+GITHUB_DEPENDABOT = join(GITHUB, DEPENDABOT_CONFIG)
+GITHUB_WORKFLOWS = join(GITHUB, b"workflows")
+
+GIT_CMD = "/usr/bin/git" if os.name == "posix" else "git"
+GIT_DIR = b".git"
+GIT_LS = [GIT_CMD, "ls-files"]
+
+NLSP = "\n "
+
+OPT_INSECURE = "--insecure"  # To follow symlinks on update.
+OPT_UPDATE = "--update"  # For pre-commit, returning Err.UPDATE on changes.
+OPT_UPDATE_PRE_COMMIT = "--update-pre-commit"  # To update pre-commit configs.
+
+PRE_COMMIT_CONFIG = ".pre-commit-config.yaml"
+PRE_COMMIT_HOOKS = ".pre-commit-hooks.yaml"
+
+PURE = True  # Use pure Python parser
+
+RE_INITIALIZED = False  # Set by init_regex_engine() once it has run.
+RE_OPTION = "--re"
+RE_WARNING = f"""
+
+  Reliabot works better with the 're2' regular expression package.
+  See https://github.com/dupuy/reliabot/#installation for install instructions,
+  or use initial '{RE_OPTION}' option to force system 're' and suppress this.
+"""
+
+RUAMEL_YAML_NOT_FOUND_ERROR_MESSAGE = """
+
+  Reliabot requires ruamel.yaml to preserve comments in dependabot.yml files.
+  See https://github.com/dupuy/reliabot/#installation for install instructions.
+"""
+try:
+    # ruamel.yaml preserves comments, PyYAML doesn't.
+    from ruamel.yaml import YAML
+except ModuleNotFoundError as module_not_found:
+    error(
+        f"{module_not_found} {RUAMEL_YAML_NOT_FOUND_ERROR_MESSAGE}",
+        debug_hint=False,
+    )
+else:
+    from ruamel.yaml.comments import CommentedMap, CommentedSeq
+    from ruamel.yaml.error import YAMLError
+    from ruamel.yaml.parser import ParserError
+    from ruamel.yaml.reader import ReaderError
+
+SECURE_MAX_MODE = 0o666  # Maximum file mode (rw-rw-rw-) unless --insecure
+
+TESTDIR = b"testdir"  # dead:disable
+TEST_CONFIGURED = b"configured"  # dead:disable
+TEST_GIT = b"git"  # dead:disable
+TEST_GITHUB = b"github"  # dead:disable
+TEST_NOT_DIR = b"not-dir"  # dead:disable
+TEST_NOT_GIT = b"not-git"  # dead:disable
+TEST_WORKTREE = b"worktree"  # dead:disable
+TEST_WORKTREE_BAD_PREFIX = b"worktree-bad-prefix"  # dead:disable
+TEST_WORKTREE_MISSING = b"worktree-missing"  # dead:disable
+
+TRUTHY = {"false": 0, "off": 0, "on": 1, "true": 1}
+
+U_FFFC = "\ufffc"  # Unicode object replacement character
+
+WARN_KEYS: set[str] = set()
 
 
 # pylint: disable=global-statement,import-outside-toplevel
@@ -287,13 +341,13 @@ def init_regex_engine(
         the tests rather than exiting (`--self-test` option).
 
     >>> init_regex_engine(force_re=True, self_testing=True)
-    >>> RE_INITIALIZED and ECOSYSTEM_REGEX is not None
+    >>> RE_INITIALIZED and ECOSYSTEM_RE is not None
     True
     """
     # noinspection global-undefined
     global re, RE_INITIALIZED  # noqa: PLW0603
     global COMMENT_PREFIX_MATCH  # noqa: PLW0603
-    global DOT_YAML_REGEX, ECOSYSTEM_REGEX  # noqa: PLW0603
+    global DOT_YAML_RE, ECOSYSTEM_RE  # noqa: PLW0603
     global DOCTEST_OPTION_FLAGS  # noqa: PLW0603
 
     if RE_INITIALIZED:
@@ -313,9 +367,9 @@ def init_regex_engine(
             re = re2
 
     COMMENT_PREFIX_MATCH = re.compile(rf"\s*{COMMENT_PREFIX}")
-    DOT_YAML_REGEX = re.compile(rf"{DOT_YAML}$")
+    DOT_YAML_RE = re.compile(rf"{DOT_YAML}$")
     try:  # It's easy to mess up the regexes. Don't let it break the self test.
-        ECOSYSTEM_REGEX = re.compile(ECOSYSTEM_RE_PATTERN)
+        ECOSYSTEM_RE = re.compile(ECOSYSTEM_RE_MATCHER)
     except re.error:  # pragma: no cover
         print("Internal error - bad regex in ECOS map", file=sys.stderr)
         if not self_testing:
@@ -328,54 +382,6 @@ def init_regex_engine(
 
         # Reduce noise from broken tests
         DOCTEST_OPTION_FLAGS = doctest.FAIL_FAST
-
-
-EMITTER_INDENTS = {"mapping": 4, "offset": 2, "sequence": 4}
-EMITTER_SETTINGS: dict = EMITTER_INDENTS | {"width": 76, "yaml-start": True}
-EXCLUSIONS: dict[str, set[str]] = {"ignore": set(), "keep": set()}
-
-FS_ENCODING = sys.getfilesystemencoding()
-
-GITHUB = b".github"
-GITHUB_ACTIONS = b"github-actions"
-GITHUB_DEPENDABOT = join(GITHUB, DEPENDABOT_CONFIG)
-GITHUB_WORKFLOWS = join(GITHUB, b"workflows")
-
-GIT_CMD = "/usr/bin/git" if os.name == "posix" else "git"
-GIT_DIR = b".git"
-GIT_LS = [GIT_CMD, "ls-files"]
-GITDIR_PREFIX = b"gitdir:"  # Marks a `.git` *file* in a Git worktree.
-
-NLSP = "\n "
-
-OPT_INSECURE = "--insecure"  # To follow symlinks on update.
-OPT_UPDATE = "--update"  # For pre-commit, returning Err.UPDATE on changes.
-OPT_UPDATE_PRE_COMMIT = "--update-pre-commit"  # To update pre-commit configs.
-# OPT_USES_MAP is updated just after each function in it is defined.
-OPT_USES_MAP: dict[str, Callable] = {}  # Mapping from options to functions.
-
-PRE_COMMIT_CONFIG = ".pre-commit-config.yaml"
-PRE_COMMIT_HOOKS = ".pre-commit-hooks.yaml"
-
-PURE = True  # Use pure Python parser
-
-SECURE_MAX_MODE = 0o666  # Maximum file mode (rw-rw-rw-) unless --insecure
-
-TESTDIR = b"testdir"  # dead:disable
-TEST_CONFIGURED = b"configured"  # dead:disable
-TEST_GIT = b"git"  # dead:disable
-TEST_GITHUB = b"github"  # dead:disable
-TEST_NOT_DIR = b"not-dir"  # dead:disable
-TEST_NOT_GIT = b"not-git"  # dead:disable
-TEST_WORKTREE = b"worktree"  # dead:disable
-TEST_WORKTREE_BAD_PREFIX = b"worktree-bad-prefix"  # dead:disable
-TEST_WORKTREE_MISSING = b"worktree-missing"  # dead:disable
-
-TRUTHY = {"false": 0, "off": 0, "on": 1, "true": 1}
-
-U_FFFC = "\ufffc"  # Unicode object replacement character
-
-WARN_KEYS: set[str] = set()
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
@@ -473,7 +479,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         msg = f"unrecognized arguments: {' '.join(unknown)}"
         for arg in unknown:
             if arg.startswith("-") and "_" in arg:  # an easy error to make
-                msg += f"\n  Did you mean '{arg.replace('_', '-')}'?"
+                msg += f"\n  Did you mean '{arg.replace('_', '-')}' (dashes)?"
         parser.error(msg)
     if args.command is None:
         if args.git_repo is None:
@@ -526,8 +532,8 @@ def main(optargv: list[str] | None = None) -> int:
     init_regex_engine(
         force_re=args.force_re, self_testing=args.command == DOCTEST_OPT
     )
-    if args.command in OPT_USES_MAP:
-        return OPT_USES_MAP[args.command]()
+    if args.command in X_OPTION_MAP:
+        return X_OPTION_MAP[args.command]()
     check = args.command == OPT_UPDATE
     secure = not args.insecure
 
@@ -579,7 +585,9 @@ def main(optargv: list[str] | None = None) -> int:
             dedup_warn("Configuration parse error (bad top level?)")
             return Err.CONFIG
 
-        settings = extract_settings(conf, EMITTER_SETTINGS | EXCLUSIONS)
+        settings = extract_settings(
+            conf, EMITTER_SETTINGS | {key: set() for key in EXCLUSIONS}
+        )
 
         exclude = configure_exclusions(settings)
 
@@ -808,7 +816,7 @@ def extract_settings(
         return settings
 
     for comment in comments:
-        match = COMMENT_PREFIX_MATCH.match(comment)  # type: ignore[union-attr]
+        match = COMMENT_PREFIX_MATCH.match(comment)
         if match:
             get_comment_settings(settings, comment[match.end() :])
     return settings
@@ -972,7 +980,7 @@ def find_ecosystems(
     :param ignored: Matching function that returns whether dir path is ignored.
     :returns: A map of relative directory paths to sets of ecosystem types.
 
-    >>> ECOSYSTEM_REGEX is not None  # Regex fail check for FAIL_FAST self-test
+    >>> ECOSYSTEM_RE is not None  # Regex fail check for FAIL_FAST self-test
     True
     >>> config_dir = join(TESTDIR, b"configured")
     >>> dont_ignore = lambda dir_path: False
@@ -987,17 +995,12 @@ def find_ecosystems(
         dir_name, filename = split(file.decode("utf-8"))  # Use fsdecode()?
         if ignored(dir_name):
             continue
-        match = ECOSYSTEM_REGEX.fullmatch(filename)  # type: ignore[union-attr]
+        match = ECOSYSTEM_RE.fullmatch(filename)
         if match:
             for key, val in match.groupdict().items():
                 if val is not None:
                     ecosystems[join("/", dir_name)].add(key.replace("_", "-"))
-        if (
-            DOT_YAML_REGEX.search(  # type: ignore[union-attr]
-                filename.lower()
-            )
-            and dir_name == workflows
-        ):
+        if DOT_YAML_RE.search(filename.lower()) and dir_name == workflows:
             ecosystems["/"].add(fsdecode(GITHUB_ACTIONS))
     if not any_files:
         msg = f"'{fsdecode(path)}' has no files tracked by Git."
@@ -1292,9 +1295,6 @@ def update_pre_commit_files(folder: str = ".") -> int:
     return Err.UPDATED if modified else 0
 
 
-OPT_USES_MAP[OPT_UPDATE_PRE_COMMIT] = update_pre_commit_files
-
-
 def update_reliabot_file_pattern(hook: CommentedMap) -> bool:
     """Update reliabot file pattern in a pre-commit hook.
 
@@ -1302,8 +1302,8 @@ def update_reliabot_file_pattern(hook: CommentedMap) -> bool:
     :returns: True if it updates the hook, otherwise False.
     :raises KeyError: if the hook lacks 'id' or 'files'.
     """
-    if hook["id"] == "reliabot" and hook["files"] != ECOSYSTEM_RE_FILES:
-        hook["files"] = ECOSYSTEM_RE_FILES
+    if hook["id"] == "reliabot" and hook["files"] != ECOSYSTEM_PATHS_RE:
+        hook["files"] = ECOSYSTEM_PATHS_RE
         return True
     return False
 
@@ -1317,10 +1317,10 @@ def update_pre_commit_file_patterns(config_file: TextIO) -> bool:
     :raises KeyError: if list lacks 'id', map lacks 'repos', 'repo' or 'hooks'.
 
     >>> import re as pcre  # Python PCRE needed for (?x) in YAML configs.
-    >>> _ = pcre.compile(ECOSYSTEM_RE_FILES)
-    >>> ECOSYSTEM_FILE_ACTIONS in ECOSYSTEM_RE_FILES
+    >>> _ = pcre.compile(ECOSYSTEM_PATHS_RE)
+    >>> ECOSYSTEM_FILE_ACTIONS in ECOSYSTEM_PATHS_RE
     True
-    >>> "?P<" not in ECOSYSTEM_RE_FILES  # Ensure it doesn't have named groups.
+    >>> "?P<" not in ECOSYSTEM_PATHS_RE  # Ensure it doesn't have named groups.
     True
     >>> minimal = StringIO("- id: something-else\n")
     >>> update_pre_commit_file_patterns(minimal)
@@ -1441,19 +1441,22 @@ def self_test() -> int:
     return 1 if failed else 0
 
 
-OPT_USES_MAP[DOCTEST_OPT] = self_test
+X_OPTION_MAP: dict[str, Callable] = {  # Mapping from options to functions.
+    DOCTEST_OPT: self_test,
+    OPT_UPDATE_PRE_COMMIT: update_pre_commit_files,
+}
 
-CHECK_GIT_REPOSITORY = "check_git_repository"
-CONFIG_EMITTER = "config_emitter"
-EXCLUSIONS_MATCH = "Exclusions.match"
-FIND_ECOSYSTEMS = "find_ecosystems"
-MAIN = "main"
-SAFE_DUMP = "safe_dump"
-UPDATE_PRE_COMMIT_FILE_PATTERNS = "update_pre_commit_file_patterns"
-VALIDATE_DEPENDABOT_CONFIG = "validate_dependabot_config"
+_CHECK_GIT_REPOSITORY = "check_git_repository"
+_CONFIG_EMITTER = "config_emitter"
+_EXCLUSIONS_MATCH = "Exclusions.match"
+_FIND_ECOSYSTEMS = "find_ecosystems"
+_MAIN = "main"
+_SAFE_DUMP = "safe_dump"
+_UPDATE_PRE_COMMIT_FILE_PATTERNS = "update_pre_commit_file_patterns"
+_VALIDATE_DEPENDABOT_CONFIG = "validate_dependabot_config"
 
 __test__ = {
-    CHECK_GIT_REPOSITORY: """
+    _CHECK_GIT_REPOSITORY: """
 >>> check_git_repository(join(TESTDIR, TEST_NOT_DIR))  # doctest: +ELLIPSIS
 Traceback (most recent call last):
 ...
@@ -1476,7 +1479,7 @@ On worktree 'testdir/worktree-missing' of 'testdir/does-not-exist'
 Bad Git repo ...: worktree gitdir ... is not a directory.
 >>> sys.stderr = stderr
 """,
-    CONFIG_EMITTER: r"""
+    _CONFIG_EMITTER: r"""
 >>> test_file = "testdir/github/action.yml"
 >>> with open(test_file, "r", encoding="utf-8") as yaml_file:
 ...     config = YAML(pure=PURE).load(yaml_file)
@@ -1495,7 +1498,7 @@ Bad Git repo ...: worktree gitdir ... is not a directory.
 >>> wrap_regex = "\n[^\n]{" + f"{slop}" + "}\n"
 >>> re.compile(wrap_regex).search(output)  # Check width wrap.
 """,
-    EXCLUSIONS_MATCH: r"""
+    _EXCLUSIONS_MATCH: r"""
 >>> dirs = [
 ...     "",  # root
 ...     ".hidden-subdir",
@@ -1533,7 +1536,7 @@ Bad Git repo ...: worktree gitdir ... is not a directory.
 ... }
 """,
     # Regex compilation failure test first, for FAIL_FAST self-diagnostic
-    FIND_ECOSYSTEMS: """
+    _FIND_ECOSYSTEMS: """
 >>> for name, regex in ECOS.items():
 ...     try: _ = re.compile(regex)
 ...     except re.error as r: print(f"Bad ECOS[{name}] regex: {r}")
@@ -1554,7 +1557,7 @@ True
 ...     if subdir not in ecos["/" + subdir]:
 ...         print(f"'{subdir}' not found in /{subdir}")
 """,
-    MAIN: r"""
+    _MAIN: r"""
 >>> stderr = sys.stderr
 >>> sys.stderr = sys.stdout  # also capture dedup_warn() stderr messages
 >>> main(["reliabot"])
@@ -1651,7 +1654,7 @@ True
 >>> sys.stderr = stderr
 >>> os.unlink(invalid_file)
 """,
-    SAFE_DUMP: r"""
+    _SAFE_DUMP: r"""
 >>> stderr = sys.stderr
 >>> sys.stderr = sys.stdout  # also capture dedup_warn() stderr messages
 >>> io_string = StringIO()
@@ -1675,15 +1678,14 @@ expected <block end>, but found '?'
 ...     loaded = yaml_file.read()
 ...     _ = yaml_file.seek(0, SEEK_SET)
 ...     config = YAML(pure=PURE).load(yaml_file)
->>> settings = EMITTER_SETTINGS
->>> settings["width"] = 500
+>>> settings = EMITTER_SETTINGS | {"width": 500}  # A new dict, not an alias.
 >>> reset(io_string)
 >>> spaces = re.compile(" +")
->>> safe_dump(config, EMITTER_SETTINGS, io_string)
+>>> safe_dump(config, settings, io_string)
 >>> spaces.sub(" ", io_string.getvalue()) + "...\n" == spaces.sub(" ", loaded)
 True
 """,
-    UPDATE_PRE_COMMIT_FILE_PATTERNS: r"""
+    _UPDATE_PRE_COMMIT_FILE_PATTERNS: r"""
 >>> err1 = StringIO()
 >>> update_pre_commit_file_patterns(err1)
 Traceback (most recent call last):
@@ -1720,7 +1722,7 @@ TypeError: string indices must be integers, not 'str'
 ...   config_str = StringIO(hook)
 ...   print(f"    update: {update_pre_commit_file_patterns(config_str)}")
 ...   result = config_str.getvalue()
-...   print(f"    regex-seen: {ECOSYSTEM_RE_FILES[:10] in result}")
+...   print(f"    regex-seen: {ECOSYSTEM_PATHS_RE[:10] in result}")
 ...   print(f"    must-replace: {'MUST_REPLACE' not in result}")
 ...   print(f"    must-not-remove: {'MUST_NOT_REMOVE' in result}")
 # pre-commit-hooks.yaml
@@ -1734,7 +1736,7 @@ TypeError: string indices must be integers, not 'str'
     must-replace: True
     must-not-remove: True
 """,
-    VALIDATE_DEPENDABOT_CONFIG: """
+    _VALIDATE_DEPENDABOT_CONFIG: """
 >>> test_conf = {"version": 2}
 >>> validate_dependabot_config(test_conf)  # doctest: +ELLIPSIS
 Traceback (most recent call last):

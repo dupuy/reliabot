@@ -67,7 +67,9 @@ def test_one_input(data: bytes) -> None:
         # 3. Test Dependabot settings extraction from comments
         try:
             settings = reliabot.extract_settings(
-                config, reliabot.EMITTER_SETTINGS | reliabot.EXCLUSIONS
+                config,
+                reliabot.EMITTER_SETTINGS
+                | {key: set() for key in reliabot.EXCLUSIONS},
             )
         except Exception:
             raise

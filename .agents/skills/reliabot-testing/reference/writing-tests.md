@@ -5,8 +5,8 @@ Reliabot's own testing convention (from CONTRIBUTING.md):
 - **Typical usage** goes in the function's docstring as a doctest — keep it
   minimal and illustrative, since the docstring is also user-facing help.
 - **Bug-fix regressions and corner cases** go in the `__test__` dict at the
-  bottom of `reliabot/reliabot.py`, keyed by a descriptive `SCREAMING_CASE`
-  name near the function they cover (like `VALIDATE_DEPENDABOT_CONFIG`). This
+  bottom of `reliabot/reliabot.py`, keyed by a descriptive `_SCREAMING_CASE`
+  name near the function they cover (like `_VALIDATE_DEPENDABOT_CONFIG`). This
   keeps docstrings readable while still giving full doctest coverage.
 - For a bug fix: write the test first, confirm it **fails** against the current
   code, then fix the code and confirm it passes.

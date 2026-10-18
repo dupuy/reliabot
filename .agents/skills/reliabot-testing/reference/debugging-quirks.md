@@ -2,12 +2,13 @@
 
 The `reliabot --self-test` command runs every doctest in the module in a single
 Python process, and Reliabot's end-user warnings go through `dedup_warn()`,
-which only prints a given `(message, key)` once per *process* via a global
-`WARN_KEYS` set. If the local environment (missing `re2`, a different Python
-minor version, etc.) causes `--self-test` to run doctests in a different order,
-a warning like `Removed obsolete 'npm' entry in '/'` may appear in a different
-part of output than the doctest expects, producing a spurious
-`N passed and 2 failed` result even though nothing is actually broken.
+which prints a message with a given non-empty key only once per
+`warning_scope()` (`main()` opens a new scope for each run). Any doctests that
+call functions other than `main()` directly aren't in a scope unless they open
+one with `with warning_scope():`, so their keyed warnings are never
+de-duplicated, and doctests that capture standard error
+(`sys.stderr = sys.stdout`) see every warning. Warnings printed with no key are
+never de-duplicated.
 
 If `--self-test` fails, and there are no code changes near the failing example,
 re-run with `tox -e py312` or compare against a clean CI run before concluding

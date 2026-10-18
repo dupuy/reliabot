@@ -79,7 +79,7 @@ def tidy(text: str) -> str:
     for i, j in enumerate(order):
         try:
             newlabels.append(f"[{i + 1}]: {labels[j]}")
-        except KeyError:  # noqa: PERF203
+        except KeyError:
             # Warn about missing label, but continue processing others.
             missing_ref = (
                 f"Missing/empty reference [{i + 1}] (originally [{j}])"

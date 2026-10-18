@@ -7,6 +7,12 @@ and follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html) for
 releases.
 
 ## [1.0.1] - 2026-10-18
+
+### BREAKING CHANGES
+- Reliabot updates `dependabot.yml` by create a new temporary file in the folder and renaming it,
+  instead of overwriting an existing file (which may lose or break configuration on partial errors).
+  - To restore previous behavior (for unwritable directories or symlinked dependabot) add `--insecure` option.
+
 ### Details
 
 #### Changed 🔄

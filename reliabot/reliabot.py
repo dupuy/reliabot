@@ -56,6 +56,7 @@ import threading
 import traceback
 import warnings
 from collections import defaultdict
+from contextvars import Context, ContextVar
 from enum import IntEnum
 from io import SEEK_SET, StringIO
 from os.path import (
@@ -108,18 +109,66 @@ def error(message: str, *, debug_hint: bool = True) -> None:
 
 
 def dedup_warn(message: str, key: str | None = None) -> None:
-    """Print warning to stderr if non-empty key has not been warned before.
+    r"""Print warning to stderr if non-empty key has not been warned before.
 
     These stderr messages for end-users do not use Python Warnings, which are
     intended for developers.
 
+    Keys are only de-duplicated within a `warning_scope()` (`main()` makes one
+    for each run). Outside a scope, or with no key (or an empty one), every
+    message is printed.
+
     :param message: message to print to stderr.
     :param key: de-duplication key: only warns first instance of key value.
+
+    >>> err = StringIO()
+    >>> with contextlib.redirect_stderr(err), warning_scope():
+    ...     dedup_warn("A", "k")
+    ...     dedup_warn("B", "k")  # Same key, so not printed.
+    ...     dedup_warn("C", "other")
+    ...     dedup_warn("D")  # No key, always printed.
+    ...     dedup_warn("E")
+    >>> err.getvalue()
+    'A\nC\nD\nE\n'
+    >>> err = StringIO()  # No de-duplication outside a scope or across scopes.
+    >>> with contextlib.redirect_stderr(err):
+    ...     dedup_warn("F", "k")
+    ...     dedup_warn("G", "k")
+    ...     with warning_scope():
+    ...         dedup_warn("H", "k")
+    ...     with warning_scope():
+    ...         dedup_warn("I", "k")
+    >>> err.getvalue()
+    'F\nG\nH\nI\n'
     """
-    if key is None or key not in WARN_KEYS:
-        print(message, file=sys.stderr)
-        if key:
-            WARN_KEYS.add(key)
+    # WARN_KEYS may not exist yet if error() is called during import.
+    if key and (warned := WARN_KEYS.get(None)) is not None:
+        if key in warned:
+            return
+        warned.add(key)
+    print(message, file=sys.stderr)
+
+
+@contextlib.contextmanager
+def warning_scope() -> Generator[None]:
+    """Run a block in which `dedup_warn()` remembers the keys it has seen.
+
+    Each scope starts with no keys, so one run's warnings never suppress
+    another's in the same process (tests, fuzzing, other callers of `main()`).
+
+    >>> WARN_KEYS.get(None) is None
+    True
+    >>> with warning_scope():
+    ...     WARN_KEYS.get(None)
+    set()
+    >>> WARN_KEYS.get(None) is None
+    True
+    """
+    token = WARN_KEYS.set(set())
+    try:
+        yield
+    finally:
+        WARN_KEYS.reset(token)
 
 
 @contextlib.contextmanager
@@ -320,7 +369,9 @@ TRUTHY = {"false": 0, "off": 0, "on": 1, "true": 1}
 
 U_FFFC = "\ufffc"  # Unicode object replacement character
 
-WARN_KEYS: set[str] = set()
+# De-duplication keys already warned about in the current run (a set made by
+# warning_scope(), unset outside any scope); the ContextVar itself is constant.
+WARN_KEYS: ContextVar[set[str]] = ContextVar("WARN_KEYS")
 
 
 # pylint: disable=global-statement,import-outside-toplevel
@@ -491,7 +542,6 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     return args
 
 
-# pylint: disable=too-many-locals
 def main(optargv: list[str] | None = None) -> int:
     """Create or update Dependabot configuration in a Git repo.
 
@@ -522,7 +572,16 @@ def main(optargv: list[str] | None = None) -> int:
     >>> os.chdir("../..")
     >>> if exists(test_conf):
     ...     os.unlink(test_conf)
+    >>> WARN_KEYS.get(None) is None  # No de-duplication state outlives a run.
+    True
     """
+    with warning_scope():
+        return _run(optargv)
+
+
+# pylint: disable=too-many-locals
+def _run(optargv: list[str] | None) -> int:
+    """Implement `main()` (see there) inside its warning scope."""
     modified = False
     update_status = "Updating"
     conf: CommentedMap | dict = {}
@@ -1432,11 +1491,14 @@ def self_test() -> int:
 
     flags = DOCTEST_OPTION_FLAGS
     mod = None
-    (failed, tests) = doctest.testmod(mod, optionflags=flags)
+    # Run doctests in an empty context so they start outside any warning scope.
+    (failed, tests) = Context().run(doctest.testmod, mod, optionflags=flags)
     if tests == 0:  # pragma: no cover
         # self_test from module wrapper __main__
         mod = sys.modules["reliabot"].reliabot
-        (failed, tests) = doctest.testmod(mod, optionflags=flags)
+        (failed, tests) = Context().run(
+            doctest.testmod, mod, optionflags=flags
+        )
     print(f"Passed {tests - failed} of {tests} doctests.")
     return 1 if failed else 0
 

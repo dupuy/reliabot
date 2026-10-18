@@ -94,7 +94,13 @@ def keep_all(_: str) -> bool:
     return True
 
 
+def scoped_test_one_input(data: bytes) -> None:
+    """Fuzz one input in its own warning scope, so inputs don't affect others."""
+    with reliabot.warning_scope():
+        test_one_input(data)
+
+
 if __name__ == "__main__":
-    atheris.Setup(sys.argv, test_one_input)
+    atheris.Setup(sys.argv, scoped_test_one_input)
     reliabot.init_regex_engine(force_re=True)  # disable RE2
     atheris.Fuzz()

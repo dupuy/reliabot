@@ -1,1 +1,1 @@
-docs/CHANGELOG-1.md
+docs/CHANGELOG-2.md

@@ -10,7 +10,11 @@ import os
 import sys
 
 import atheris  # pylint: disable=import-error
+
+# noinspection unresolved-references
 from ruamel.yaml.error import YAMLError
+
+# noinspection unresolved-references
 from ruamel.yaml.reader import ReaderError
 
 # Import Reliabot modules
@@ -19,6 +23,7 @@ from ruamel.yaml.reader import ReaderError
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 with atheris.instrument_imports():
+    # noinspection unresolved-references
     from ruamel.yaml import YAML
 
     from reliabot import reliabot  # pylint: disable=import-error

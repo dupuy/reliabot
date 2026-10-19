@@ -143,7 +143,7 @@ def main() -> int:
         help="(multiple) Markdown file(s) for reference link tidying",
         metavar="FILE",
         nargs="*",
-        type=argparse.FileType("r+"),
+        type=argparse.FileType("r+"),  # pylint: disable=deprecated-class
     )
     args = parser.parse_args()
     if not args.files:

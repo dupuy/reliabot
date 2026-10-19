@@ -90,7 +90,7 @@ permissions:
 jobs:
   tests:
     if: github.repository == 'dupuy/reliabot'
-    runs-on: ubuntu-24.04 # ubuntu-26.04 once in public beta
+    runs-on: ubuntu-26.04
 
     outputs:
       VERSION_TAG: ${{ steps.computed.outputs.VERSION_TAG }}
@@ -195,7 +195,7 @@ jobs:
         run: 'poetry run tox -e py'
 
   build:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
 
     # Build for pull requests AND for release-related push events to main.
     if: >
@@ -247,7 +247,7 @@ jobs:
         if: env.pr_commit == 'true'
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
-          python-version: '>=3.9 <3.15'
+          python-version: '>=3.10 <=3.14'
           cache: 'poetry'
 
       - name: 'Build distribution packages'
@@ -296,7 +296,8 @@ jobs:
           ARTIFACT_NAME=$(echo "$ARTIFACT_NAME" | tr -cd '[:alnum:]_.-')
           pr_release=$(echo "$pr_release" | tr -cd '[:alnum:]_.-')
           pr_tag=$(echo "$pr_tag" | tr -cd '[:alnum:]_.-')
-          RELEASE_NAME=$(echo "$RELEASE_NAME" | tr -cd '[:alnum:]_.-')
+          # RELEASE_NAME has a space ("Release v1.2.3"), unlike the other values
+          RELEASE_NAME=$(echo "$RELEASE_NAME" | tr -cd '[:alnum:] _.-')
           VERSION_TAG=$(echo "$VERSION_TAG" | tr -cd '[:alnum:]_.-')
           cat <<EOF >"$METADATA_FILE"
           {

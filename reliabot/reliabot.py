@@ -846,6 +846,7 @@ def load_dependabot_config(config_yml: bytes) -> CommentedMap | dict:
     return config
 
 
+# noinspection type-hints
 def extract_settings(
     config: CommentedMap | CommentedSeq | dict, defaults: dict[str, Any]
 ) -> dict[str, Any]:
@@ -1241,6 +1242,7 @@ def create_dependabot_config(ecosystems: dict[str, set]) -> list[dict]:
     return config["updates"]
 
 
+# noinspection type-hints
 def safe_dump(
     config: CommentedMap | CommentedSeq | dict | list,
     settings: dict[str, Any],

@@ -114,6 +114,7 @@ def tidy_file(input_file: TextIO, output_file: TextIO | None = None) -> bool:
         output_file = input_file
     print(tidied, end="", file=output_file)
     if output_file == input_file:
+        # noinspection unresolved-references
         output_file.truncate()
     return original == tidied
 

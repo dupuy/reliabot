@@ -9,7 +9,9 @@ from __future__ import annotations
 import os
 import sys
 
-import atheris
+import atheris  # pylint: disable=import-error
+from ruamel.yaml.error import YAMLError
+from ruamel.yaml.reader import ReaderError
 
 # Import Reliabot modules
 
@@ -19,10 +21,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 with atheris.instrument_imports():
     from ruamel.yaml import YAML
 
-    from reliabot import reliabot
-
-from ruamel.yaml.error import YAMLError
-from ruamel.yaml.reader import ReaderError
+    from reliabot import reliabot  # pylint: disable=import-error
 
 
 def test_one_input(data: bytes) -> None:
@@ -49,9 +48,6 @@ def test_one_input(data: bytes) -> None:
     except NotImplementedError:
         # Expected errors due to ruamel.yaml "limitations", now handled
         return
-    except Exception:
-        # Unexpected errors in YAML parsing
-        raise
 
     # 2. Test Dependabot configuration validation
     if isinstance(config, (dict, reliabot.CommentedMap)):
@@ -61,32 +57,21 @@ def test_one_input(data: bytes) -> None:
         except ValueError:
             # Expected validation errors
             return
-        except Exception:
-            raise
 
         # 3. Test Dependabot settings extraction from comments
-        try:
-            settings = reliabot.extract_settings(
-                config,
-                reliabot.EMITTER_SETTINGS
-                | {key: set() for key in reliabot.EXCLUSIONS},
-            )
-        except Exception:
-            raise
+        settings = reliabot.extract_settings(
+            config,
+            reliabot.EMITTER_SETTINGS
+            | {key: set() for key in reliabot.EXCLUSIONS},
+        )
 
         # 4. Test exclusions configuration
-        try:
-            reliabot.configure_exclusions(settings)
-        except Exception:
-            raise
+        reliabot.configure_exclusions(settings)
 
         # 5. Test Dependabot configuration update
-        try:
-            with reliabot.time_limit(10.0):
-                ecos = {"/": {"npm"}}
-                reliabot.update_dependabot_config(config, ecos, keep_all)
-        except Exception:
-            raise
+        with reliabot.time_limit(10.0):
+            ecos = {"/": {"npm"}}
+            reliabot.update_dependabot_config(config, ecos, keep_all)
 
 
 def keep_all(_: str) -> bool:

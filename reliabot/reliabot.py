@@ -579,7 +579,11 @@ def main(optargv: list[str] | None = None) -> int:
         return _run(optargv)
 
 
-# pylint: disable=too-many-locals
+# FIXME: Too many branches (22/15) Ruff limit is 12
+# FIXME: Too many local variables (32/15) Ruff limit is >=32 ?
+# FIXME: Too many return statements (10/6)
+# FIXME: Too many statements (97/60) Ruff limit is 50 but counts 92 statements
+# pylint: disable=too-many-branches,too-many-locals,too-many-return-statements,too-many-statements
 def _run(optargv: list[str] | None) -> int:
     """Implement `main()` (see there) inside its warning scope."""
     modified = False
@@ -1067,6 +1071,8 @@ def find_ecosystems(
     return ecosystems
 
 
+# FIXME: Too many local variables (17/15)
+# pylint: disable=too-many-locals
 def update_dependabot_config(
     config: dict, ecosystems: dict[str, Any], kept: Callable[[str], bool]
 ) -> bool:

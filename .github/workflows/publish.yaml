@@ -360,6 +360,8 @@ jobs:
     needs: [prepare, generate-provenance]
     # Only run if generate-provenance succeeds and this is a tagged release
     if: >
+      !failure() && !cancelled() &&
+      needs.generate-provenance.result == 'success' &&
       needs.prepare.outputs.skip == 'false' &&
       needs.prepare.outputs.pr_tag == 'true'
 

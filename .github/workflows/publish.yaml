@@ -64,7 +64,7 @@ jobs:
         # If there are no artifacts, this was not a release merge/push
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ARTIFACTS: >
+          ARTIFACTS: >-
             ${{ env.GH_REPO }}/actions/runs/${{ env.BUILD_RUN_ID }}/artifacts
         run: |
           if COUNT=$(gh api "repos/$ARTIFACTS" --jq '.total_count') &&

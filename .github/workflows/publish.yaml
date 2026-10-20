@@ -402,6 +402,8 @@ jobs:
     needs: [prepare, upload-provenance]
     # Only run if upload succeeds, and it's a full release (pr_release is true)
     if: >
+      !failure() && !cancelled() &&
+      needs.upload-provenance.result == 'success' &&
       needs.prepare.outputs.skip == 'false' &&
       needs.prepare.outputs.pr_tag == 'true' &&
       needs.prepare.outputs.pr_release == 'true'

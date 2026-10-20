@@ -82,9 +82,9 @@ major minor patch prerelease release: \
 	pre-commit-update
 	git add .pre-commit-config.yaml
 	@NEXT=`git-cliff -c bump.toml --bumped-version | sed 's/-.*//'`; \
-	case "$@/`poetry version`" in                                    \
-	  prerelease/reliabot*[abrc]*) VERSION=$@ ;;                     \
-	  prerelease/*) poetry version "$${NEXT#v}"; VERSION=$@ ;;       \
+	case "$@/`poetry version --short`" in                            \
+	  prerelease/*[abc]*) VERSION=$@ ;;                             \
+	  prerelease/*) VERSION="$${NEXT}a0" ;;                          \
 	  release/*) VERSION="$${NEXT}" ;;                               \
 	  *) VERSION=$@ ;;                                               \
 	esac; poetry version "$${VERSION#v}"

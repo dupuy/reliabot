@@ -28,14 +28,14 @@ concurrency:
 env:
   ARTIFACTS_DIR: artifacts
   GH_REPO: ${{ github.repository }}
-  RUN_ID: ${{ github.event.workflow_run.id }}
+  BUILD_RUN_ID: ${{ github.event.workflow_run.id }}
 
 jobs:
   prepare:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     permissions:
-      contents: read
       actions: read # Needed to download artifacts
+      contents: read
     # Security: only run if the triggering workflow succeeds, and it's a push.
     if: >
       github.event.workflow_run.event == 'push' &&
@@ -64,13 +64,14 @@ jobs:
         # If there are no artifacts, this was not a release merge/push
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ARTIFACTS: ${{ env.GH_REPO }}/actions/runs/${{ env.RUN_ID }}/artifacts
+          ARTIFACTS: >
+            ${{ env.GH_REPO }}/actions/runs/${{ env.BUILD_RUN_ID }}/artifacts
         run: |
           if COUNT=$(gh api "repos/$ARTIFACTS" --jq '.total_count') &&
               [ "$COUNT" -gt 0 ]; then
-            gh run download "$RUN_ID" --dir "$ARTIFACTS_DIR"
+            gh run download "$BUILD_RUN_ID" --dir "$ARTIFACTS_DIR"
           else
-            echo "No artifacts from run $RUN_ID — nothing to publish."
+            echo "No artifacts from run $BUILD_RUN_ID — nothing to publish." >&2
             mkdir -p "$ARTIFACTS_DIR"
           fi
 
@@ -82,6 +83,7 @@ jobs:
           # Use grep to protect against metachars in folder name
           METADATA_FILE=$(find "$ARTIFACTS_DIR" -name metadata.json |
                           grep -E '^[0-9A-Za-z/._-]+$' | head -n 1)
+          # Skip all later jobs in publish workflow if no artifacts are created
           if [ -z "$METADATA_FILE" ]; then
             echo "skip=true" >> "$GITHUB_OUTPUT"
             exit 0
@@ -130,7 +132,7 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
   test-release:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs: prepare
     # Only run if prepare succeeds, and it's a prerelease (pr_release is false)
     if: >
@@ -148,10 +150,10 @@ jobs:
       VERSION_TAG: ${{ needs.prepare.outputs.VERSION_TAG }}
 
     permissions:
-      id-token: write # Trusted publishing requires this permission
+      actions: read # Needed to download artifacts
       attestations: write
       contents: write # Needed for draft release creation
-      actions: read # Needed to download artifacts
+      id-token: write # Trusted publishing requires this permission
 
     steps:
       - name: 'Harden runner'
@@ -176,9 +178,8 @@ jobs:
       - name: 'Download artifacts'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_REPO: ${{ github.repository }}
         run: |
-          gh run download "$RUN_ID" --dir "$ARTIFACTS_DIR"
+          gh run download "$BUILD_RUN_ID" --dir "$ARTIFACTS_DIR"
 
       - name: 'Sign built artifacts'
         uses: sigstore/gh-action-sigstore-python@790bc6befb9d733738f18d8f895854b453640ec9 # v3.5.0
@@ -222,7 +223,7 @@ jobs:
           repository-url: https://test.pypi.org/legacy/
 
   pypi-release:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs: prepare
     # Only run if prepare succeeds, and it's a full release (pr_release is true)
     if: >
@@ -240,10 +241,10 @@ jobs:
       VERSION_TAG: ${{ needs.prepare.outputs.VERSION_TAG }}
 
     permissions:
-      id-token: write # Trusted publishing requires this permission
+      actions: read # Needed to download artifacts
       attestations: write
       contents: write # Needed for annotated tag push
-      actions: read # Needed to download artifacts
+      id-token: write # Trusted publishing requires this permission
 
     steps:
       - name: 'Harden runner'
@@ -275,9 +276,8 @@ jobs:
       - name: 'Download artifacts'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_REPO: ${{ github.repository }}
         run: |
-          gh run download "$RUN_ID" --dir "$ARTIFACTS_DIR"
+          gh run download "$BUILD_RUN_ID" --dir "$ARTIFACTS_DIR"
 
       - name: 'Sign built artifacts'
         uses: sigstore/gh-action-sigstore-python@790bc6befb9d733738f18d8f895854b453640ec9 # v3.5.0
@@ -305,6 +305,19 @@ jobs:
           attestations: true
           packages-dir: 'pypi_dist/'
 
+      - name: 'Create and push annotated tag'
+        # This must come before release-action: if the tag doesn't exist, that
+        # step creates a lightweight tag, causing the annotated push to fail.
+        env:
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          # Annotated tag for full release (not prerelease). Tag the commit that
+          # was built; the checkout is the latest main, which may be newer.
+          git tag -a "$VERSION_TAG" -F "$DIST/release-notes.md" "$HEAD_SHA"
+          git push origin "$VERSION_TAG"
+
       - name: 'Create release'
         uses: step-security/release-action@a0d8e0f90f554c15366ca2c9046bf4090d24adbe # v1.21.0
         with:
@@ -312,22 +325,14 @@ jobs:
           artifactErrorsFailBuild: true
           artifacts: '${{ env.DIST }}/*'
           bodyFile: '${{ env.DIST }}/release-notes.md'
-          draft: false
+          commit: ${{ github.event.workflow_run.head_sha }}
+          draft: true
           name: '${{ env.RELEASE_NAME }}'
           prerelease: false
           tag: '${{ env.VERSION_TAG }}'
           updateOnlyUnreleased: true
-          commit: ${{ github.event.workflow_run.head_sha }}
 
-      - name: 'Create and push annotated tag'
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
-          # Annotated tag for full release (not prerelease)
-          git tag -a "$VERSION_TAG" -F "$DIST/release-notes.md"
-          git push origin "$VERSION_TAG"
-
-  provenance:
+  generate-provenance:
     # runs-on: is not allowed for reusable workflows like this one
     needs: [prepare, test-release, pypi-release]
     if: >
@@ -337,8 +342,8 @@ jobs:
       )
     permissions:
       actions: read
-      id-token: write
       contents: write
+      id-token: write
     cache-mode: read
     # MUST use @v2.* version pin rather than a hash, required for SLSA Level 3
     # zizmor: ignore[unpinned-uses]
@@ -346,5 +351,78 @@ jobs:
     with:
       base64-subjects: ${{ needs.prepare.outputs.hashes }}
       provenance-name: 'reliabot.intoto.jsonl'
-      upload-assets: true
-      upload-tag-name: ${{ needs.prepare.outputs.VERSION_TAG }}
+      # Avoid action-gh-release bug using GET /repos/*/*/releases/tags/{tag}
+      # endpoint that does not return draft releases - don't upload directly
+      upload-assets: false
+
+  upload-provenance:
+    runs-on: ubuntu-26.04
+    needs: [prepare, generate-provenance]
+    # Only run if generate-provenance succeeds and this is a tagged release
+    if: >
+      needs.prepare.outputs.skip == 'false' &&
+      needs.prepare.outputs.pr_tag == 'true'
+
+    env:
+      DIST: ${{ needs.prepare.outputs.DIST }}
+      VERSION_TAG: ${{ needs.prepare.outputs.VERSION_TAG }}
+
+    permissions:
+      actions: read # Needed to download artifacts
+      contents: write # Needed to update _release_ artifacts
+
+    steps:
+      - name: 'Harden runner'
+        uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        with:
+          disable-sudo: true
+          egress-policy: audit
+          allowed-endpoints: >
+            api.github.com:443
+            uploads.github.com:443
+
+      - name: 'Download provenance artifact'
+        # With `upload-assets: false` in provenance job, slsa-github-generator
+        # saves reliabot.intoto.jsonl as an artifact of this workflow run.
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh run download "$GITHUB_RUN_ID" --name reliabot.intoto.jsonl
+
+      - name: 'Upload provenance to draft release'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # --clobber lets "Re-run failed jobs" succeed after a partial upload
+          gh release upload "$VERSION_TAG" reliabot.intoto.jsonl --clobber
+
+  finalize-release:
+    runs-on: ubuntu-26.04
+    needs: [prepare, upload-provenance]
+    # Only run if upload succeeds, and it's a full release (pr_release is true)
+    if: >
+      needs.prepare.outputs.skip == 'false' &&
+      needs.prepare.outputs.pr_tag == 'true' &&
+      needs.prepare.outputs.pr_release == 'true'
+
+    env:
+      DIST: ${{ needs.prepare.outputs.DIST }}
+      VERSION_TAG: ${{ needs.prepare.outputs.VERSION_TAG }}
+
+    permissions:
+      contents: write # Needed to update release status
+
+    steps:
+      - name: 'Harden runner'
+        uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        with:
+          disable-sudo: true
+          egress-policy: audit
+          allowed-endpoints: >
+            api.github.com:443
+
+      - name: 'Publish release'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # --verify-tag prevents immutably publishing a lightweight tag
+          gh release edit "$VERSION_TAG" --draft=false --verify-tag

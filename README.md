@@ -168,7 +168,7 @@ reliabot$ pip3 install -q 'reliabot[re2]'
 ```
 
 > ⚠️The `re2` extra (which depends on [pyre2-updated][7]) only works for Python
-> 3.10 to 3.13. If you have to use another Python version, use the
+> 3.11 to 3.13. If you have to use another Python version, use the
 > [`--re` option][8] to turn off warnings about failure to load `re2`.
 
 > Note: this extra was previously known as `re2-wheels` and that name is also

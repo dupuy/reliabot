@@ -233,15 +233,13 @@ repos:
     hooks:
       - id: pyupgrade
         args:
-          # TODO: update to --py311-plus in November 2026
-          - --py310-plus
+          - --py311-plus
   - repo: https://github.com/asottile/reorder-python-imports
     rev: v3.19.0
     hooks:
       - id: reorder-python-imports
         args:
-          # TODO: update to --py311-plus in November 2026
-          - --py310-plus
+          - --py311-plus
           # remove from __future__ import annotations when py314 is minimum
           - --add-import=from __future__ import annotations
         files: ^(?!setup.py$).*[.]py$

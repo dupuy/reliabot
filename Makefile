@@ -147,7 +147,7 @@ $(TOOLS): $(TOOL_DIR)/pipx
 
 $(TOOL_DIR)/pipx:
 	python3 -m pip install --upgrade --user pip
-	python3 -m pip install --upgrade --user certifi pipx
+	python3 -m pip install --upgrade --user 'certifi>=2026.10.19' pipx
 	python3 -m pipx install --force pipx
 	yes | python3 -m pip uninstall pipx
 	$(TOOL_DIR)/pipx ensurepath

@@ -243,7 +243,7 @@ the `--self-test` argument:
 ```console
 reliabot$ export PYTHON_WARNINGS=ignore # optional
 reliabot$ reliabot/reliabot.py --self-test 2>/dev/null || true
-Passed 190 of 190 doctests.
+Passed 206 of 206 doctests.
 ```
 
 The complete Reliabot test suite of Reliabot runs with `tox`. You can run them

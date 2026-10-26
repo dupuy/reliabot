@@ -202,6 +202,7 @@ optional = true
 
 [tool.poetry.group.testing.dependencies]
 tox = "^4.52.0"
+tox-uv = "^1.0"
 
 [tool.poetry.extras]
 # NOTE: Original pyre2 no longer supported as Python >= 3.11 is now required

@@ -156,6 +156,24 @@ virtualenv. (Omit `-q` to see progress and warnings.)
 reliabot$ pip3 install -q reliabot
 ```
 
+If you use [`uv`][7], install Reliabot as an isolated command-line tool. `uv`
+creates a dedicated virtual environment for it and puts the `reliabot` command
+in its tool directory on your `PATH`:
+
+```shell
+uv tool install reliabot
+```
+
+To run Reliabot once without installing it, use `uvx` (a shortcut for
+`uv tool run`):
+
+```shell
+uvx reliabot --help
+```
+
+To install Reliabot into the current virtual environment instead (like `pip`),
+use `uv pip install reliabot`.
+
 #### Installing with RE2
 
 You can improve the reliability and performance of Reliabot, and prevent
@@ -167,14 +185,30 @@ Linux/BSD tools to install the `re2` package).
 reliabot$ pip3 install -q 'reliabot[re2]'
 ```
 
-> ⚠️The `re2` extra (which depends on [pyre2-updated][7]) only works for Python
+With `uv`, use the same extra:
+
+```shell
+uv tool install 'reliabot[re2]'
+```
+
+or, to run it once without installing:
+
+```shell
+uvx --from 'reliabot[re2]' reliabot --help
+```
+
+> ⚠️The `re2` extra (which depends on [pyre2-updated][8]) only works for Python
 > 3.11 to 3.13. If you have to use another Python version, use the
-> [`--re` option][8] to turn off warnings about failure to load `re2`.
+> [`--re` option][9] to turn off warnings about failure to load `re2`. With
+> `uv` you can select a compatible Python for the tool, for example
+> `uv tool install --python 3.12 'reliabot[re2]'`.
 
 > Note: this extra was previously known as `re2-wheels` and that name is also
 > maintained for compatibility, but the shorter name is now preferred.
 
-Once installed, you can add the Python binary directory to your `PATH`.
+Once installed, you can add the Python binary directory to your `PATH`. If
+`uv tool install` warns that the tool directory is not on your `PATH`, run
+`uv tool update-shell` and restart your shell.
 
 ### As an executable script
 
@@ -185,6 +219,13 @@ the (default) Python environment, but can be convenient for _ad hoc_ use. The
 `pyre2-updated` package and RE2 C library are **not** required, but you'll have
 to use `--re` to suppress warnings about failure to load RE2 if missing.
 
+With `uv`, you can skip installing `ruamel.yaml` and run the script in a
+temporary environment that `uv` creates for it:
+
+```shell
+uv run --with ruamel.yaml reliabot.py --help
+```
+
 ### As a `pre-commit` hook
 
 > Note: installation from PyPI is _not_ required for use as a `pre‑commit`
@@ -192,10 +233,12 @@ to use `--re` to suppress warnings about failure to load RE2 if missing.
 > virtual environment for executions from Git hooks or the `pre‑commit`
 > command.
 
-The [pre‑commit documentation][9] has detailed instructions for installing and
+The [pre‑commit documentation][10] has detailed instructions for installing and
 configuring `pre‑commit`. After you:
 
-1. install `pre‑commit`,
+1. install `pre‑commit` (for example, with `pip install pre-commit` or
+   `uv tool install pre-commit`; adding `--with pre-commit-uv` to the latter
+   makes `pre‑commit` use `uv` to create hook environments),
 
 2. add a `.pre‑commit-config.yaml` configuration, for example by running:
 
@@ -208,7 +251,7 @@ configuring `pre‑commit`. After you:
 3. install the Git hooks for your repository,
 
 add the following to the `repos` entry in `.pre‑commit‑config.yaml`
-([Installing with RE2][10] explains the motivation for the
+([Installing with RE2][11] explains the motivation for the
 `additional_dependencies` line, which also requires the C++ RE2 library):
 
 ```yaml
@@ -274,17 +317,18 @@ It's helpful, though not strictly required, to adjust the reliabot settings in
 
 ### Does Reliabot work with Renovate?
 
-No. [Renovate][11] detects all supported dependency information in repositories
+No. [Renovate][12] detects all supported dependency information in repositories
 and manages them unless `packageRules` configure it to ignore them, so Reliabot
-isn't needed. As [Renovate configuration][12] is quite complex, creating a tool
+isn't needed. As [Renovate configuration][13] is quite complex, creating a tool
 to manage that would be challenging.
 
 ### Can you install Reliabot with Homebrew?
 
-There is no [Homebrew][13] formula for Reliabot yet, but any contributions for
-one are welcome. To install it for the command line, use `pip`, `poetry` or any
-other Python package manager. If you only use it for `pre-commit` checks, you
-don't need to install anything, just add it to `.pre-commit-config.yaml`.
+There is no [Homebrew][14] formula for Reliabot yet, but any contributions for
+one are welcome. To install it for the command line, use `pip`, `uv`, `poetry`
+or any other Python package manager. If you only use it for `pre-commit`
+checks, you don't need to install anything, just add it to
+`.pre-commit-config.yaml`.
 
 ### Can Reliabot generate a PR to update Dependabot configuration?
 
@@ -364,7 +408,7 @@ supports some other special cases:
 - Paths ending in `/*` match subdirectories only.
 - Paths ending in `/` match the directory and all subdirectories.
 
-Full details are in [the implementation][14].
+Full details are in [the implementation][15].
 
 ### Indentation
 
@@ -434,9 +478,9 @@ If any indentation setting appears more than once, Reliabot uses the last one.
 If you need more control of the formatting of `.pre‑commit-config.yaml`, you
 can configure pre-commit to use a YAML formatter like one of these:
 
-- [prettier][15] (use mapping=2 offset=2 sequence=4 for compatibility)
-- [Golang `yamlfmt`][16]
-- [Python `yamlfmt`][17] (also uses `ruamel.yaml` and its configuration
+- [prettier][16] (use mapping=2 offset=2 sequence=4 for compatibility)
+- [Golang `yamlfmt`][17]
+- [Python `yamlfmt`][18] (also uses `ruamel.yaml` and its configuration
   settings).
 
 If you do use another formatter, it's helpful to adjust the reliabot settings
@@ -455,7 +499,7 @@ for indentation in `dependabot.yml` to match your formatter configuration.
 
 ### Suppressing YAML start markers
 
-YAML files can have a [“document start” line][18] with three hyphens (`---`)
+YAML files can have a [“document start” line][19] with three hyphens (`---`)
 before the YAML content of the file. This marks the start of a YAML document.
 Although YAML checkers may complain if it's missing, it isn't required.
 Reliabot adds this line to `dependabot.yml` if you leave it out—if that's a
@@ -473,7 +517,7 @@ the end of a `dependabot.yml` file as these files have no reason to use one.
 
 ### YAML version
 
-The `ruamel.yaml` parser [follows the YAML 1.2 specification][19], but if you
+The `ruamel.yaml` parser [follows the YAML 1.2 specification][20], but if you
 need to use YAML 1.1 features you can do so by specifying the YAML version
 before the document start marker, like this:
 
@@ -500,16 +544,17 @@ before the document start marker, like this:
 [4]: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/about-dependabot-version-updates
 [5]: https://pre-commit.com/
 [6]: https://pre-commit.ci/
-[7]: https://pypi.org/project/pyre2-updated
-[8]: #options
-[9]: https://pre-commit.com/#quick-start
-[10]: #installing-with-re2
-[11]: https://docs.renovatebot.com/
-[12]: https://docs.renovatebot.com/configuration-options
-[13]: https://brew.sh/
-[14]: https://github.com/dupuy/reliabot/blame/1a44935/reliabot/reliabot.py#L460-L470
-[15]: https://prettier.io/docs/en/precommit#option-2-pre-commithttpsgithubcompre-commitpre-commit
-[16]: https://github.com/google/yamlfmt
-[17]: https://github.com/jumanjihouse/pre-commit-hook-yamlfmt
-[18]: https://www.yaml.info/learn/document.html#start
-[19]: https://yaml.dev/doc/ruamel.yaml/pyyaml/#Defaulting_to_YAML_1.2_support
+[7]: https://docs.astral.sh/uv/
+[8]: https://pypi.org/project/pyre2-updated
+[9]: #options
+[10]: https://pre-commit.com/#quick-start
+[11]: #installing-with-re2
+[12]: https://docs.renovatebot.com/
+[13]: https://docs.renovatebot.com/configuration-options
+[14]: https://brew.sh/
+[15]: https://github.com/dupuy/reliabot/blame/1a44935/reliabot/reliabot.py#L460-L470
+[16]: https://prettier.io/docs/en/precommit#option-2-pre-commithttpsgithubcompre-commitpre-commit
+[17]: https://github.com/google/yamlfmt
+[18]: https://github.com/jumanjihouse/pre-commit-hook-yamlfmt
+[19]: https://www.yaml.info/learn/document.html#start
+[20]: https://yaml.dev/doc/ruamel.yaml/pyyaml/#Defaulting_to_YAML_1.2_support

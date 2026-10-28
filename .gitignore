@@ -24,3 +24,9 @@ cobertura.xml
 .DS_Store
 .AppleDouble
 .LSOverride
+
+
+# APM dependencies
+apm_modules/
+skills/
+.claude

@@ -1,0 +1,10 @@
+# apm.yml  — commit this and apm.lock.yaml
+name: reliabot
+version: 1.1.0
+description: Maintain GitHub Dependabot configuration files
+
+targets: [claude] # AI harnesses to deploy to
+dependencies:
+  apm:
+    - rearc/ai-toolkit/packages/rearc-default-stack # curated capability
+    - rearc/ai-toolkit/packages/rearc-base-readonly # recommended safety posture

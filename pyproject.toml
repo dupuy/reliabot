@@ -195,7 +195,7 @@ ruff = ">=0.16.10,<0.18.0"
 optional = true
 
 [tool.poetry.group.fuzz.dependencies]
-atheris = "^3.0.0, !=3.1.0" # 3.1.0 lacks required source distribution file
+atheris = ">=3,<4" # 3.1.0 lacks required source distribution file
 
 [tool.poetry.group.testing]
 optional = true

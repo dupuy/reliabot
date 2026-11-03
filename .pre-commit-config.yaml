@@ -257,6 +257,7 @@ repos:
         additional_dependencies:
           - ruamel.yaml
           - setuptools # ModuleNotFoundError: No module named 'pkg_resources'
+          - typing_extensions # No module named 'typing_extensions'
         args:
           - --messages-only
           - --doc-warnings

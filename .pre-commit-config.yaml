@@ -106,8 +106,12 @@ repos:
       - id: prettier
         args: [--single-quote]
         # ,github/workflows changes are handled by local prettier-workflows*
-        exclude: >
-          fuzz/corpus|styles/|testdir/github/action[.]yml|^[.]github/workflows/
+        exclude: "\
+          fuzz/corpus\
+          |styles/\
+          |testdir/github/action[.]yml\
+          |^[.]github/workflows/\
+          |[.]lock[.]yaml$"
         exclude_types: [markdown]
   - repo: https://github.com/codespell-project/codespell
     rev: v2.4.3
@@ -146,7 +150,7 @@ repos:
                 truthy: { check-keys: false}
               }
             }
-        exclude: fuzz/corpus|styles/|testdir/github/action[.]yml
+        exclude: fuzz/corpus|styles/|testdir/github/action[.]yml|[.]lock[.]yaml
 
   # Shell
   - repo: https://github.com/shellcheck-py/shellcheck-py
@@ -175,7 +179,7 @@ repos:
       - id: actionlint-shellcheck
   - repo: https://github.com/zizmorcore/zizmor-pre-commit
     # Zizmor static workflow security checker
-    rev: v1.31.1
+    rev: v1.32.0
     hooks:
       - id: zizmor
         args: [-q, --fix]
@@ -222,7 +226,7 @@ repos:
 
   # Python
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.17.2
+    rev: v0.17.3
     hooks:
       # Run the linter.
       - id: ruff
@@ -245,7 +249,7 @@ repos:
         files: ^(?!setup.py$).*[.]py$
         stages: [manual] # prevent whitespace battle with ruff --format (Black)
   - repo: https://github.com/PyCQA/prospector
-    rev: v1.19.1
+    rev: v1.20.0
     hooks:
       - id: prospector
         # Needed for pylint import checks.
@@ -253,6 +257,7 @@ repos:
         additional_dependencies:
           - ruamel.yaml
           - setuptools # ModuleNotFoundError: No module named 'pkg_resources'
+          - typing_extensions # No module named 'typing_extensions'
         args:
           - --messages-only
           - --doc-warnings
@@ -266,7 +271,7 @@ repos:
         args: [-c, pyproject.toml]
         additional_dependencies: ['bandit[toml]']
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v2.4.0
+    rev: v2.4.1
     hooks:
       - id: mypy
   - repo: https://github.com/pre-commit/pygrep-hooks
@@ -287,7 +292,7 @@ repos:
     hooks:
       - id: dead
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.17.2
+    rev: v0.17.3
     hooks:
       # Run the formatter.
       - id: ruff-format
@@ -344,7 +349,7 @@ repos:
         exclude: tests/
 
   - repo: https://github.com/errata-ai/vale
-    rev: v3.25.1
+    rev: v3.26.0
     hooks:
       - id: vale
         exclude: CHANGELOG*|LICENSE|humans[.]txt|requirements.*|styles/
@@ -388,7 +393,7 @@ repos:
 
   # Git commit messages
   - repo: https://github.com/compilerla/conventional-pre-commit
-    rev: v4.4.0
+    rev: v4.5.0
     hooks:
       - id: conventional-pre-commit
         stages: [commit-msg]

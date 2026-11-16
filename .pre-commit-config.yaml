@@ -337,7 +337,7 @@ repos:
         exclude: docs/CHANGELOG-.*|styles/|tests/
 
   - repo: https://github.com/markdownlint/markdownlint
-    rev: 7810020e1bf3cb3eef0733cd754bc5bc00a5de5a # frozen: v0.18.1
+    rev: 54b2597eb40d50a16a51d717744239d52218fd5b # frozen: v0.13.0
     hooks:
       - id: markdownlint
         args: [--style=.mdl-style.rb]
@@ -402,7 +402,7 @@ repos:
         files: .pre-commit-config.yaml|pyproject.toml
         stages: [manual, pre-commit]
         args:
-          - '--keep=markdownlint' # Install too slow for pre-commit.ci
+          - '--keep=markdownlint' # Install >v0.13.0 too slow for pre-commit.ci
           - '--verbose'
           - '--warnings'
   - repo: local

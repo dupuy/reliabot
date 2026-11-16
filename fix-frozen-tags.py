@@ -134,8 +134,7 @@ def report_unfrozen(unfrozen: dict[str, str], *, has_frozen: bool) -> None:
 def resolve_rev(line: str, rev: re.Match[str], url: str, where: str) -> str:
     """Verify and update the frozen tag comment for a pinned revision line.
 
-    Returns:
-        An empty string if the current line is correct, or a replacement line
+    :returns: An empty string if the current line is correct, or a replacement
         (which can be identical if it cannot find a matching tag).
     """
     sha, current = rev["sha"], rev["tag"]

@@ -15,7 +15,7 @@ default_stages: [pre-commit]
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v6.0.0
+    rev: 3e8a8703264a2f4a69428a0aa4dcb512790b2c8c # frozen: v6.0.0
     hooks:
       # - id: autopep8-wrapper
       #  args: ['-i', '--ignore=E501']
@@ -101,7 +101,7 @@ repos:
 
   # Global
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v3.1.0
+    rev: ffb6a759a979008c0e6dff86e39f4745a2d9eac4 # frozen: v3.1.0
     hooks:
       - id: prettier
         args: [--single-quote]
@@ -110,17 +110,17 @@ repos:
           fuzz/corpus|styles/|testdir/github/action[.]yml|^[.]github/workflows/
         exclude_types: [markdown]
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.4.3
+    rev: 57b21406f092110c18776e39b0bda50d37c945c8 # frozen: v2.4.3
     hooks:
       - id: codespell
         args: [-L, 'intoto,pullrequest,pullrequests']
         exclude: styles/
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.30.1
+    rev: 83d9cd684c87d95d656c1458ef04895a7f1cbd8e # frozen: v8.30.1
     hooks:
       - id: gitleaks
   - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
-    rev: '3.11.1'
+    rev: 'e8b4e28241a9ae8296ba6e4a491b5da4eda73283' # frozen: 3.11.1
     hooks:
       - id: editorconfig-checker
         alias: ec
@@ -129,7 +129,7 @@ repos:
 
   # YAML
   - repo: https://github.com/adrienverge/yamllint
-    rev: v1.38.0
+    rev: cba56bcde1fdd01c1deb3f945e69764c291a6530 # frozen: v1.38.0
     hooks:
       - id: yamllint
         args:
@@ -150,13 +150,13 @@ repos:
 
   # Shell
   - repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: v0.11.0.1-1
+    rev: a6564f5d57444e123433a5c9af733e3975c77229 # frozen: v0.11.0.1-1
     hooks:
       - id: shellcheck
         # shellcheck Python installer relies on old setuptools API
         language_version: '3.11'
   - repo: https://github.com/scop/pre-commit-shfmt
-    rev: v3.14.1-1
+    rev: 479be5958357ba5ab65ce47172117348516860e9 # frozen: v3.14.1-1
     hooks:
       # Choose one of:
       # - id: shfmt-docker # Docker image (requires Docker to run)
@@ -170,12 +170,12 @@ repos:
   - repo: https://github.com/kjanat/actionlint
     # (previously https://github.com/rhysd/actionlint v1.7.3)
     # Includes ShellCheck on workflow scripts
-    rev: v1.17
+    rev: 220b76cfa568e00ed8b3c476898f849a722b88e2 # frozen: v1.17.1
     hooks:
       - id: actionlint-shellcheck
   - repo: https://github.com/zizmorcore/zizmor-pre-commit
     # Zizmor static workflow security checker
-    rev: v1.31.1
+    rev: 06a39750ec31860bb44f2acf67182c40016cd1e7 # frozen: v1.32.0
     hooks:
       - id: zizmor
         args: [-q, --fix]
@@ -222,20 +222,20 @@ repos:
 
   # Python
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.17.2
+    rev: ef6cf06c079dd6b299dfc720b0f14400c9d168e1 # frozen: v0.17.5
     hooks:
       # Run the linter.
       - id: ruff
         args: [--fix]
         name: 'ruff --fix'
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.22.0
+    rev: f22ea0651f4355c655cc581f67813c991c74a312 # frozen: v3.22.0
     hooks:
       - id: pyupgrade
         args:
           - --py311-plus
   - repo: https://github.com/asottile/reorder-python-imports
-    rev: v3.19.0
+    rev: 4690733311bbfba33558e4d50a7f0092c64d78d8 # frozen: v3.19.0
     hooks:
       - id: reorder-python-imports
         args:
@@ -245,7 +245,7 @@ repos:
         files: ^(?!setup.py$).*[.]py$
         stages: [manual] # prevent whitespace battle with ruff --format (Black)
   - repo: https://github.com/PyCQA/prospector
-    rev: v1.19.1
+    rev: 43f9d3f86c526e8e27dac80a48d76be03e1a66d3 # frozen: v1.20.0
     hooks:
       - id: prospector
         # Needed for pylint import checks.
@@ -253,6 +253,7 @@ repos:
         additional_dependencies:
           - ruamel.yaml
           - setuptools # ModuleNotFoundError: No module named 'pkg_resources'
+          - typing_extensions # No module named 'typing_extensions'
         args:
           - --messages-only
           - --doc-warnings
@@ -260,17 +261,17 @@ repos:
           - --tool=pylint # comment out if you get "pylint: astroid-error ..."
           - --tool=dodgy
   - repo: https://github.com/PyCQA/bandit
-    rev: '1.9.4'
+    rev: '92ae8b82fb422a639f0ed8d99e96cea769594e08' # frozen: 1.9.4
     hooks:
       - id: bandit
         args: [-c, pyproject.toml]
         additional_dependencies: ['bandit[toml]']
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v2.4.0
+    rev: ad26ebfa797fcb9b8f83275937c1c1d6e126719c # frozen: v2.4.1
     hooks:
       - id: mypy
   - repo: https://github.com/pre-commit/pygrep-hooks
-    rev: v1.10.0
+    rev: 3a6eb0fadf60b3cccfd80bad9dbb6fae7e47b316 # frozen: v1.10.0
     hooks:
       - id: python-check-blanket-noqa
       - id: python-check-blanket-type-ignore
@@ -283,17 +284,17 @@ repos:
       # - id: rst-inline-touching-normal
       - id: text-unicode-replacement-char
   - repo: https://github.com/asottile/dead
-    rev: v2.1.0
+    rev: 2cf8b462e06c27930d692496c9026640b0ed89d8 # frozen: v2.1.0
     hooks:
       - id: dead
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.17.2
+    rev: ef6cf06c079dd6b299dfc720b0f14400c9d168e1 # frozen: v0.17.5
     hooks:
       # Run the formatter.
       - id: ruff-format
   - repo: https://github.com/python-poetry/poetry
     # see https://python-poetry.org/docs/pre-commit-hooks/#faq
-    rev: '2.5.1'
+    rev: '94b6e35b9091991887aa54feeb3771a86d3bd692' # frozen: 2.5.1
     hooks:
       - id: poetry-lock
       # NOTE: poetry-check complains about tools.poetry settings that can't
@@ -302,7 +303,7 @@ repos:
 
   # Poetry 2.0 removed poetry-export hook - see README.md in this repo
   - repo: https://github.com/python-poetry/poetry-plugin-export
-    rev: '1.10.1'
+    rev: 'a83af64e9bd101f561b9be4fdc54fdc75abbbe23' # frozen: 1.10.1
     hooks:
       - id: poetry-export
         args:
@@ -319,8 +320,8 @@ repos:
         entry: ./tidy-md-refs.py
         types: [markdown]
         exclude: tests/
-  - repo: https://github.com/executablebooks/mdformat
-    rev: '1.0.0'
+  - repo: https://github.com/hukkin/mdformat
+    rev: '82912cdaea4fb830f751504486a7879c70526547' # frozen: 1.0.0
     hooks:
       - id: mdformat
         args:
@@ -337,14 +338,14 @@ repos:
         exclude: docs/CHANGELOG-.*|styles/|tests/
 
   - repo: https://github.com/markdownlint/markdownlint
-    rev: v0.13.0
+    rev: 54b2597eb40d50a16a51d717744239d52218fd5b # frozen: v0.13.0
     hooks:
       - id: markdownlint
         args: [--style=.mdl-style.rb]
         exclude: tests/
 
   - repo: https://github.com/errata-ai/vale
-    rev: v3.25.1
+    rev: 4ce91ef208b37f9ac2894766e8cd7b33ffe3baed # frozen: v3.27.0
     hooks:
       - id: vale
         exclude: CHANGELOG*|LICENSE|humans[.]txt|requirements.*|styles/
@@ -381,14 +382,14 @@ repos:
 
   # Docker
   - repo: https://github.com/hadolint/hadolint
-    rev: v2.15.1
+    rev: 2eece55955ced00200be9729e9728cb7dacca505 # frozen: v2.15.1
     hooks:
       - id: hadolint
         args: ['--failure-threshold=info']
 
   # Git commit messages
   - repo: https://github.com/compilerla/conventional-pre-commit
-    rev: v4.4.0
+    rev: 33b50eb042bee26eac0ee96ad84aa9c1b4dccdd8 # frozen: v4.5.0
     hooks:
       - id: conventional-pre-commit
         stages: [commit-msg]
@@ -396,15 +397,23 @@ repos:
 
   # Pre-commit
   - repo: https://gitlab.com/vojko.pribudic.foss/pre-commit-update
-    rev: v0.10.0
+    rev: b09f43ffbb3529a643f6616844e226148c622d3c # frozen: v0.10.0
     hooks:
       - id: pre-commit-update
         files: .pre-commit-config.yaml|pyproject.toml
         stages: [manual, pre-commit]
         args:
-          - '--keep=markdownlint' # Install too slow for pre-commit.ci
+          - '--keep=markdownlint' # Install >v0.13.0 too slow for pre-commit.ci
           - '--verbose'
           - '--warnings'
+  - repo: local
+    hooks:
+      # pre-commit-update bumps SHA pins but not the `# frozen: <tag>` comments
+      - id: fix-frozen-tags
+        name: verify frozen tags on SHA-pinned revs
+        entry: ./fix-frozen-tags.py
+        language: python
+        files: ^\.pre-commit-config\.yaml$
   - repo: meta
     hooks:
       - id: check-hooks-apply
@@ -449,6 +458,7 @@ ci:
   autoupdate_schedule: 'quarterly' # ideally: 'never'
   # Checks to disable on pre-commit.ci (sadly, not autoupdate)
   skip:
+    - fix-frozen-tags
     - hadolint
     - markdown-link-check
     - poetry-lock

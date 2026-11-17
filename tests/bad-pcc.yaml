@@ -1,0 +1,92 @@
+# Test file for fix-frozen-tags.py
+#
+# This is a pre-commit-config.yaml file but don't use it for that!
+#
+# reliabot: mapping=2 offset=2 sequence=4 width=75
+default_install_hook_types:
+  - pre-commit
+default_stages: [pre-commit]
+
+repos:
+  # Valid entry
+  - repo: https://github.com/dupuy/reliabot
+    rev: 8e5b9c6333ab277b2ba5b1ad0f8cc78527a57e9d # frozen: v1.1.0
+    hooks:
+      - id: reliabot
+
+  # Unpeeled annotated tag
+  - repo: https://github.com/dupuy/reliabot
+    rev: 0e99a43c78f8fbb36f7336b0895d5201c04a79a9 # frozen: v1.0.2
+    hooks:
+      - id: reliabot
+
+  # Incorrect frozen tag comment
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: 3e8a8703264a2f4a69428a0aa4dcb512790b2c8c # frozen: v1.0.0
+    hooks:
+      - id: check-added-large-files
+
+  # Missing frozen tag comment
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: 83d9cd684c87d95d656c1458ef04895a7f1cbd8e
+    hooks:
+      - id: gitleaks
+
+  # Nonexistent SHA
+  - repo: https://github.com/dupuy/reliabot
+    rev: 0000000000000000000000000000000000000000
+    hooks:
+      - id: reliabot
+
+  # Short SHA
+  - repo: https://github.com/dupuy/reliabot
+    rev: 12345678901234567890123456789012345678
+    hooks:
+      - id: reliabot
+
+  # No SHA (unfrozen)
+  - repo: https://github.com/pre-commit/pygrep-hooks
+    rev: v1.10.0
+    hooks:
+      - id: python-check-blanket-noqa
+
+  # No hooks
+  - repo: https://github.com/dupuy/reliabot
+    rev: 8e5b9c6333ab277b2ba5b1ad0f8cc78527a57e9d # frozen: v1.1.0
+
+  # No rev
+  - repo: https://github.com/asottile/dead
+    hooks:
+      - id: dead
+
+  # Bad repo
+  - repo: https://github.com/reallyreallydead/dead
+    rev: ffffffffffffffffffffffffffffffffffffffff
+    hooks:
+      - id: dead
+
+  # Bad server
+  - repo: https://example.com/nothing-there
+    rev: 0000000000000000000000000000000000000000
+    hooks:
+      - id: nope
+
+  # Local hook
+  - repo: local
+    hooks:
+      # pre-commit-update bumps SHA pins but not the `# frozen: <tag>` comments
+      - id: fix-frozen-tags
+        name: verify frozen tags on SHA-pinned revs
+        entry: ./fix-frozen-tags.py
+        language: python
+        files: ^\.pre-commit-config\.yaml$
+
+  # Meta hook
+  - repo: meta
+    hooks:
+      - id: check-hooks-apply
+      - id: check-useless-excludes
+
+ci:
+  skip:
+    - fix-frozen-tags

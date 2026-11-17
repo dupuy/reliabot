@@ -458,6 +458,7 @@ ci:
   autoupdate_schedule: 'quarterly' # ideally: 'never'
   # Checks to disable on pre-commit.ci (sadly, not autoupdate)
   skip:
+    - fix-frozen-tags
     - hadolint
     - markdown-link-check
     - poetry-lock
